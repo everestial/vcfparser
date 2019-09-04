@@ -4,6 +4,7 @@
 from collections import namedtuple,OrderedDict
 import shlex
 import itertools
+import warnings
 import gzip
 
 
@@ -113,11 +114,24 @@ class VcfParser:
         header_line = next(_record_lines)
         record_keys = header_line.lstrip('#').strip('\n').split('\t')
         sample_names = record_keys[9:]
-        
 
         for record_line in _record_lines:
             rec_dict =dict(zip(record_keys, record_line.strip('\n').split('\t')))
-            mapped_info = dict(s.split('=',1) for s in rec_dict['INFO'].split(';') if '=' in s)
+            info_str = rec_dict['INFO']
+
+            # inorder to encorpate those infos without "=" in records
+            try:
+                mapped_info = dict(s.split('=',1) for s in info_str.split(';')) 
+            except ValueError:
+                warnings.warn(f"This info tag doesnot have '=' sign in info : {info_str}.\
+                    Such keys will be populated with '.' values")
+                mapped_info = {}
+                for s in info_str.split(';'):
+                    if '=' in s:
+                        k, v = s.split('=')
+                        mapped_info[k] = v
+                    else:
+                        mapped_info[s] = '.'
             mapped_dict = map_format_tags_to_sample_values(rec_dict, sample_names, iupac= iupac)
             mapped_dict['INFO'] = mapped_info
             record = namedtuple('Record', mapped_dict.keys())(**mapped_dict)
