@@ -7,6 +7,7 @@ class _MetadataParser:
     """
     Parses meta information from vcf files.
     """
+
     def __init__(self, line, tag):
         self.lines = line
         self.tag = tag
@@ -58,7 +59,6 @@ class _MetadataParser:
         tags_dict = self.split_to_dict(string)
         return tags_dict
 
-
     def parse_format_info_filter(self):
         """
         Parse the FORMAT, INFO, FILTER from the VCF file. 
@@ -67,4 +67,3 @@ class _MetadataParser:
         string = self.lines.rstrip("\n").rstrip(">").replace(self.tag, "")
         tags_dict = self.split_to_dict(string)
         return tags_dict
-

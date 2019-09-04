@@ -2,12 +2,13 @@
 Some utility function to convert format tags to sample values
 """
 
+
 def map_format_tags_to_sample_values(record_dict, sample_names, iupac):
     """map format tags to sample values in VCF file"""
 
-    len_format_tags = len(record_dict['FORMAT'])
-    split_format_tags = record_dict['FORMAT'].split(":")
-    ref_and_alts = [record_dict['REF']] + record_dict['ALT'].split(',')
+    len_format_tags = len(record_dict["FORMAT"])
+    split_format_tags = record_dict["FORMAT"].split(":")
+    ref_and_alts = [record_dict["REF"]] + record_dict["ALT"].split(",")
 
     for name in sample_names:
         sample_value_string = record_dict[name]
@@ -22,13 +23,12 @@ def map_format_tags_to_sample_values(record_dict, sample_names, iupac):
         # map the format tags to the sample values
         mapped_format_sample = dict(zip(split_format_tags, sample_values))
 
-
         if iupac:
             for tag in iupac:
                 numeric_tag = mapped_format_sample[tag]
                 iupac_tag = convert_genotypes(ref_and_alts, numeric_tag)
 
-                # update the genotype values 
+                # update the genotype values
                 mapped_format_sample[tag] = iupac_tag
 
         # update the sample record (tags, values) in the record_dict
@@ -38,16 +38,17 @@ def map_format_tags_to_sample_values(record_dict, sample_names, iupac):
     # then return the record dict
     return record_dict
 
+
 def convert_genotypes(ref_and_alt, numeric_genotype):
-    iupac_genotype = []  # default value 
-    
+    iupac_genotype = []  # default value
+
     for its in numeric_genotype:
         try:
             if type(int(its)) is int:
                 iupac_genotype.append(ref_and_alt[int(its)])
         except ValueError:
             iupac_genotype.append(its)
-                
-    iupac_genotype = ''.join(iupac_genotype)       
-    
-    return iupac_genotype  
+
+    iupac_genotype = "".join(iupac_genotype)
+
+    return iupac_genotype

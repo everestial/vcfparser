@@ -2,9 +2,10 @@ import pytest
 from vcf_parser import VcfParser
 
 
+vcf_object = VcfParser("input_test.vcf")
+
 def test_info_dict():
-    vcf_object = VcfParser("input_test.vcf")
-    metainfo = vcf_object.parse_metadata()
+    metainfo = vcf_object.parse_metadata()  
     assert metainfo.fileformat == "VCFv4.2"
 
     expected_filters = [
@@ -156,3 +157,20 @@ def test_info_dict():
         {"ID": "TS", "Type": "Test", "Description": "Allele count in genotypes"},
     ]
     assert metainfo.infos_ == expected_info
+
+    assert metainfo.sample_names == ['ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
+
+
+def test_record():
+    records = vcf_object.parse_records()
+    first_record = next(records)
+
+    expected_record = "Record(CHROM='2', POS='15881018', ID='.', REF='G', ALT='A,C', QUAL='5082.45', FILTER='PASS', INFO={'AC': '2,0', 'AF': '1.00', 'AN': '8', 'BaseQRankSum': '-7.710e-01', 'ClippingRankSum': '0.00', 'DP': '902', 'ExcessHet': '0.0050', 'FS': '0.000', 'InbreedingCoeff': '0.8004', 'MLEAC': '12,1', 'MLEAF': '0.462,0.038', 'MQ': '60.29', 'MQRankSum': '0.00', 'QD': '33.99', 'ReadPosRankSum': '0.260', 'SF': '0,1,2,3,4,5,6', 'SOR': '0.657', 'set': 'HignConfSNPs'}, FORMAT='GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC', ms01e=, ms02g={'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, ms03g={'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, ms04h={'GT': '1/1', 'PI': '.', 'GQ': '6', 'PG': '1/1', 'PM': '.', 'PW': '1/1', 'AD': '0,2', 'PL': '49,6,0,.,.,.', 'DP': '2', 'PB': '.', 'PC': '.'}, MA611={'GT': '0/0', 'PI': '.', 'GQ': '78', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '29,0,0', 'PL': '0,78,1170,78,1170,1170', 'DP': '29', 'PB': '.', 'PC': '.'}, MA605={'GT': '0/0', 'PI': '.', 'GQ': '9', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '3,0,0', 'PL': '0,9,112,9,112,112', 'DP': '3', 'PB': '.', 'PC': '.'}, MA622={'GT': '0/0', 'PI': '.', 'GQ': '99', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '40,0,0', 'PL': '0,105,1575,105,1575,1575', 'DP': '40', 'PB': '.', 'PC': '.'})"
+
+    assert first_record.CHROM == '2'
+    assert first_record.POS == '15881018'
+    first_rec_info =  "{'AC': '2,0', 'AF': '1.00', 'AN': '8', 'BaseQRankSum': '-7.710e-01', 'ClippingRankSum': '0.00', 'DP': '902', 'ExcessHet': '0.0050', 'FS': '0.000', 'InbreedingCoeff': '0.8004', 'MLEAC': '12,1', 'MLEAF': '0.462,0.038', 'MQ': '60.29', 'MQRankSum': '0.00', 'QD': '33.99', 'ReadPosRankSum': '0.260', 'SF': '0,1,2,3,4,5,6', 'SOR': '0.657', 'set': 'HignConfSNPs'}"
+    assert str(first_record.INFO) == first_rec_info
+    first_sample_val = {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}
+
+    assert first_record.ms01e == first_sample_val
