@@ -44,7 +44,7 @@ class VcfParser:
 
             # get the file version of vcf file
             if lines.startswith('##fileformat'):
-                self.fileformat = lines.strip('##fileformat=')
+                self.fileformat = lines.strip('##fileformat=').rstrip()
 
             elif lines.startswith(r"##GVCFBlock"):
                 self.is_gvcf = True
