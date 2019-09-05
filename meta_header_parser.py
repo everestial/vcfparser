@@ -15,17 +15,11 @@ class MetaDataParser:
         self.alt_= []
         self.other_lines = []
 
-        self.header = ["CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO"]
-        self.header_keys = {
-            "info": ["ID", "Number", "Type", "Description"],
-            "form": ["ID", "Number", "Type", "Description"],
-            "filt": ["ID", "Description"],
-            "alt": ["ID", "Description"],
-            "contig": ["ID", "length"],
-        }
         self.fileformat = None
         self.reference = None
         self.sample_names = []
+        self.is_gvcf = False
+        self.gvcf_blocks = []
 
         self.format_pattern = re.compile(r'''\#\#FORMAT=<
             ID=(?P<id>.+),\s*
@@ -42,6 +36,21 @@ class MetaDataParser:
         splitter.whitespace_split = True
         splitter.whitespace = ","
         tags_dict = dict(pair.split("=") for pair in splitter)
+        return tags_dict
+        
+    @staticmethod
+    def _parse_gvcf_block(lines):
+        """extract the GVCF blocks"""
+        # e.g: ##GVCFBlock55-56=minGQ=55(inclusive),maxGQ=56(exclusive)
+        # converts to {'minGQ': '55(inclusive)', 'maxGQ': '56(exclusive)', 'Block': '55-56'}
+        gvcf_block = re.search("##GVCFBlock(.*?)=", lines, 0).group(1)
+
+        # update tags_dict
+        to_replace = '##GVCFBlock'+ gvcf_block + "="
+
+        string = lines.rstrip(">").replace(to_replace, "")
+        tags_dict = dict(pair.split("=") for pair in string.split(',') )
+        tags_dict["Block"] = gvcf_block
         return tags_dict
 
 
@@ -94,6 +103,10 @@ class MetaDataParser:
 
                 elif line_info[0] == "ALT":
                     self.alt_.append(self.split_to_dict(line_info[1]))
+                
+                elif line_info[0].startswith('GVCF'):
+                    self.is_gvcf = True
+                    self.gvcf_blocks.append(self._parse_gvcf_block(line))
 
                 else:
                     match = self.meta_pattern.match(line)
