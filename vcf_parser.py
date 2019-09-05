@@ -10,6 +10,7 @@ import gzip
 
 from meta_parser import _MetadataParser
 from record_formatter import map_format_tags_to_sample_values
+from meta_header_parser import MetaDataParser
 
 
 class VcfParser:
@@ -27,75 +28,10 @@ class VcfParser:
 
     def parse_metadata(self):
         """ initialize variables to store meta infos"""
-        self.raw_header = ""
-        self.gvcf_blocks = []
-        self.formats_ = []
-        self.infos_ = []
-        self.filters_ = []
-        self.gatk_commands = []
-        self.reference_genome = []
-        self.contig = []
-        self.is_gvcf = False
         # this produces a iterator of meta data lines (lines starting with '#')
         _raw_lines = itertools.takewhile(lambda x: x.startswith("#"), self._file)
-        for lines in _raw_lines:
-            # store the raw headers to print if needed
-            self.raw_header += lines
-
-            # get the file version of vcf file
-            if lines.startswith("##fileformat"):
-                self.fileformat = lines.strip("##fileformat=").rstrip()
-
-            elif lines.startswith(r"##GVCFBlock"):
-                self.is_gvcf = True
-
-                # parse the GVCF blocks data
-                _gvcf_block = _MetadataParser(
-                    lines, tag=r"##GVCFBlock"
-                ).parse_gvcf_block()
-                self.gvcf_blocks.append(_gvcf_block)
-
-                ## extract existing FORMAT, INFO and FILTER tags
-            elif lines.startswith(r"##FORMAT"):
-                self.formats_.append(
-                    _MetadataParser(lines, tag=r"##FORMAT=<").parse_format_info_filter()
-                )
-            elif lines.startswith(r"##INFO"):
-                self.infos_.append(
-                    _MetadataParser(lines, tag=r"##INFO=<").parse_format_info_filter()
-                )
-            elif lines.startswith(r"##FILTER"):
-                self.filters_.append(
-                    _MetadataParser(lines, tag=r"##FILTER=<").parse_format_info_filter()
-                )
-
-            ## extract contig/chromosomes included in the VCF file
-            elif lines.startswith(r"##contig"):
-                self.contig.append(
-                    _MetadataParser(lines, tag=r"##contig=<").parse_contigs()
-                )
-
-            ## extract the name/path of the reference genome
-            elif lines.startswith(r"##reference"):
-                self.reference_genome.append(
-                    _MetadataParser(lines, tag=r"##reference=").parse_reference_genome()
-                )
-
-            ## extract the GATK commands used so far in the preparation of the VCF file
-            elif lines.startswith(r"##GATKCommandLine"):
-                self.gatk_commands.append(
-                    _MetadataParser(
-                        lines, tag=r"##GATKCommandLine"
-                    ).parse_gatk_commands()
-                )
-
-            ## extract sample names
-            elif lines.startswith("#CHROM"):
-                # self.parse_sample_names(lines)
-                self.record_keys = lines.strip("\n").split("\t")
-                self.sample_names = self.record_keys[9:]
-
-        return self
+        return MetaDataParser(_raw_lines)._parse_lines()
+        
 
     def parse_records(self, iupac=None):
         """

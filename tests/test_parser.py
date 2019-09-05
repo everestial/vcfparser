@@ -3,10 +3,13 @@ from vcf_parser import VcfParser
 
 
 vcf_object = VcfParser("input_test.vcf")
+metainfo = vcf_object.parse_metadata()  
 
-def test_info_dict():
-    metainfo = vcf_object.parse_metadata()  
-    assert metainfo.fileformat == "VCFv4.2"
+def test_fileformat():
+     assert metainfo.fileformat == "VCFv4.2"
+
+
+def test_filters():  
 
     expected_filters = [
         {"ID": "LowQual", "Description": "Low quality"},
@@ -21,6 +24,11 @@ def test_info_dict():
     ]
     assert metainfo.filters_ == expected_filters
 
+def test_formats():
+    expected_format = [{'ID': 'AD', 'Number': 'R', 'Type': 'Integer', 'Description': 'Allelic depths for the ref and alt alleles in the order listed'}, {'ID': 'DP', 'Number': '1', 'Type': 'Integer', 'Description': 'Approximate read depth (reads with MQ=255 or with bad mates are filtered)'}, {'ID': 'GQ', 'Number': '1', 'Type': 'Integer', 'Description': 'Genotype Quality'}, {'ID': 'GT', 'Number': '1', 'Type': 'String', 'Description': 'Genotype'}, {'ID': 'MIN_DP', 'Number': '1', 'Type': 'Integer', 'Description': 'Minimum DP observed within the GVCF block'}, {'ID': 'PGT', 'Number': '1', 'Type': 'String', 'Description': 'Physical phasing haplotype information, describing how the alternate alleles are phased in relation to one another'}, {'ID': 'PID', 'Number': '1', 'Type': 'String', 'Description': 'Physical phasing ID information, where each unique ID within a given sample (but not across samples) connects records within a phasing group'}, {'ID': 'PL', 'Number': 'G', 'Type': 'Integer', 'Description': 'Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification'}, {'ID': 'RGQ', 'Number': '1', 'Type': 'Integer', 'Description': 'Unconditional reference genotype confidence, encoded as a phred quality -10*log10 p(genotype call is wrong)'}, {'ID': 'SB', 'Number': '4', 'Type': 'Integer', 'Description': "Per-sample component statistics which comprise the Fisher's Exact Test to detect strand bias."}, {'ID': 'PG', 'Number': '1', 'Type': 'String', 'Description': 'phASER Local Genotype'}, {'ID': 'PB', 'Number': '1', 'Type': 'String', 'Description': 'phASER Local Block'}, {'ID': 'PI', 'Number': '1', 'Type': 'String', 'Description': 'phASER Local Block Index (unique for each block)'}, {'ID': 'PM', 'Number': '1', 'Type': 'String', 'Description': 'phASER Local Block Maximum Variant MAF'}, {'ID': 'PW', 'Number': '1', 'Type': 'String', 'Description': 'phASER Genome Wide Genotype'}, {'ID': 'PC', 'Number': '1', 'Type': 'String', 'Description': 'phASER Genome Wide Confidence'}]    
+    assert metainfo.format_ == expected_format
+
+def test_info():
     expected_info = [
         {
             "ID": "AF",
@@ -158,14 +166,14 @@ def test_info_dict():
     ]
     assert metainfo.infos_ == expected_info
 
-    assert metainfo.sample_names == ['ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
+def test_sample_names():
+    expected_samples = ['ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
+    assert metainfo.sample_names == expected_samples
 
 
 def test_record():
     records = vcf_object.parse_records()
     first_record = next(records)
-
-    expected_record = "Record(CHROM='2', POS='15881018', ID='.', REF='G', ALT='A,C', QUAL='5082.45', FILTER='PASS', INFO={'AC': '2,0', 'AF': '1.00', 'AN': '8', 'BaseQRankSum': '-7.710e-01', 'ClippingRankSum': '0.00', 'DP': '902', 'ExcessHet': '0.0050', 'FS': '0.000', 'InbreedingCoeff': '0.8004', 'MLEAC': '12,1', 'MLEAF': '0.462,0.038', 'MQ': '60.29', 'MQRankSum': '0.00', 'QD': '33.99', 'ReadPosRankSum': '0.260', 'SF': '0,1,2,3,4,5,6', 'SOR': '0.657', 'set': 'HignConfSNPs'}, FORMAT='GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC', ms01e=, ms02g={'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, ms03g={'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, ms04h={'GT': '1/1', 'PI': '.', 'GQ': '6', 'PG': '1/1', 'PM': '.', 'PW': '1/1', 'AD': '0,2', 'PL': '49,6,0,.,.,.', 'DP': '2', 'PB': '.', 'PC': '.'}, MA611={'GT': '0/0', 'PI': '.', 'GQ': '78', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '29,0,0', 'PL': '0,78,1170,78,1170,1170', 'DP': '29', 'PB': '.', 'PC': '.'}, MA605={'GT': '0/0', 'PI': '.', 'GQ': '9', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '3,0,0', 'PL': '0,9,112,9,112,112', 'DP': '3', 'PB': '.', 'PC': '.'}, MA622={'GT': '0/0', 'PI': '.', 'GQ': '99', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '40,0,0', 'PL': '0,105,1575,105,1575,1575', 'DP': '40', 'PB': '.', 'PC': '.'})"
 
     assert first_record.CHROM == '2'
     assert first_record.POS == '15881018'
