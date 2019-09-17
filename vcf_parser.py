@@ -1,24 +1,33 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from collections import namedtuple, OrderedDict
-import shlex
-import itertools
-import warnings
 import gzip
+import itertools
 
-
-from meta_parser import _MetadataParser
-from record_formatter import map_format_tags_to_sample_values
 from meta_header_parser import MetaDataParser
+from record_parser import Record
 
 
 class VcfParser:
     """
     Parses a given vcf file into and outputs metainfo and yields records.
+
+    Methods
+    -------
+    parse_metadata()
+    parse_records()
+
     """
 
     def __init__(self, filename):
+        """
+
+        Parameters
+        ----------
+        filename: file
+            input vcf file that needs to be parsed. bzip files are also supported.
+
+        """
         self.filename = filename
         # assign to support gz compressed files
         self._open = gzip.open if self.filename.endswith(".gz") else open
@@ -26,46 +35,45 @@ class VcfParser:
         self._file = self._open(filename, "rt")
         self._file_copy = self._open(filename, "rt")
 
+    def __del__(self):
+        self._file.close()
+        self._file_copy.close()
+
     def parse_metadata(self):
         """ initialize variables to store meta infos"""
         # this produces a iterator of meta data lines (lines starting with '#')
         _raw_lines = itertools.takewhile(lambda x: x.startswith("#"), self._file)
-        return MetaDataParser(_raw_lines)._parse_lines()
-        
+        return MetaDataParser(_raw_lines).parse_lines()
 
-    def parse_records(self, iupac=None):
+    def parse_records(self, chrom=None, pos_range=None, no_of_recs=1):
+        """ Parse records from file and yield it.
+        Parameters
+        ----------
+        chrom : str
+        pos_range : str
+        no_of_recs : int
+
+        Yields
+        ------
+        Record object on which we can perform different operations and extract required values
+
         """
-        Parse records from file and yield it.
-        """
+
         _record_lines = itertools.dropwhile(
             lambda x: x.startswith("##"), self._file_copy
         )
         header_line = next(_record_lines)
-        record_keys = header_line.lstrip("#").strip("\n").split("\t")
-        sample_names = record_keys[9:]
+        record_keys = header_line.lstrip("#").strip("\n")
 
         for record_line in _record_lines:
-            rec_dict = dict(zip(record_keys, record_line.strip("\n").split("\t")))
-            info_str = rec_dict["INFO"]
+            # in order to select only selected chrom values
+            if chrom or pos_range:
+                ch_val = record_line.split('\t')[0]
+                pos_val = int(record_line.split('\t')[1])
+                start_pos, end_pos = int(pos_range[0]), int(pos_range[1])
 
-            # inorder to encorpate those infos without "=" in records
-            try:
-                mapped_info = dict(s.split("=", 1) for s in info_str.split(";"))
-            except ValueError:
-                warnings.warn(
-                    f"This info tag doesnot have '=' sign in info : {info_str}.\
-                    Such keys will be populated with '.' values"
-                )
-                mapped_info = {}
-                for s in info_str.split(";"):
-                    if "=" in s:
-                        k, v = s.split("=")
-                        mapped_info[k] = v
-                    else:
-                        mapped_info[s] = "."
-            mapped_dict = map_format_tags_to_sample_values(
-                rec_dict, sample_names, iupac=iupac
-            )
-            mapped_dict["INFO"] = mapped_info
-            record = namedtuple("Record", mapped_dict.keys())(**mapped_dict)
-            yield record
+                if ch_val in chrom and start_pos <= pos_val <= end_pos:
+                    yield Record(record_line, record_keys)
+
+            else:
+                yield Record(record_line, record_keys)
