@@ -51,18 +51,19 @@ class Record:
 
         Returns
         -------
-        list of list containing splitted tags
+        list of list
+            list of list containing splitted tags
 
         Examples
         --------
         This functions takes ordered dict of mapped format and sample , format_tag_name
         and computes the separated list of list.
         For eg:
-        order_mapped_samples = OrderedDict([('ms01e',{'GT': './.', 'PI': '.'), ('MA622', 'GT': '0/0','PI': '.'})])
-        tag = 'GT'
-        sample_names = ['ms01e', 'MA622']
-        this function returns:
-        [['.', '.'], ['0', '0']]
+        >>> order_mapped_samples = OrderedDict([('ms01e',{'GT': './.', 'PI': '.'), ('MA622', 'GT': '0/0','PI': '.'})])
+        >>> tag = 'GT'
+        >>> sample_names = ['ms01e', 'MA622']
+        # this function returns:
+        >>> [['.', '.'], ['0', '0']]
 
         """
 
@@ -82,6 +83,7 @@ class Record:
 
         Returns
         -------
+        dict
             dict of sample with values having homoref
 
         Examples
@@ -119,6 +121,7 @@ class Record:
 
         Returns
         -------
+        dict
             dict of sample with values having homoref
 
         """
@@ -150,6 +153,7 @@ class Record:
 
         Returns
         -------
+        dict
             dict of sample with values having homoref
 
         """
@@ -176,6 +180,7 @@ class Record:
 
         Returns
         -------
+         dict
             dict of sample with values having homoref
 
         """
@@ -214,6 +219,7 @@ class Record:
 
         Returns
         -------
+        dict
             dict of sample with values having given allele
 
         """
@@ -238,6 +244,7 @@ class Record:
 
         Returns
         -------
+        dict
             dict of sample with values having given genotype
 
         """
@@ -270,7 +277,8 @@ class Record:
 
         Returns
         -------
-            dict of sample with values having '/' in samples formats 
+         dict
+            dict of sample with values having '/' in samples formats
 
         Examples
         --------
@@ -349,7 +357,11 @@ class Record:
 
         Returns
         -------
-        dict of filtered sample names along with filtered formats
+        dict
+            dict of filtered sample names along with filtered formats
+
+        Examples
+        --------
 
         >>> mapped_sample = {'ms01e': {'GT': './.','PI': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'PC': '.'}}
         >>> get_mapped_samples(self, sample_names= ['ms01e', 'MA611'], formats= ['GT', 'PC'])

@@ -47,6 +47,7 @@ class VcfParser:
 
     def parse_records(self, chrom=None, pos_range=None, no_of_recs=1):
         """ Parse records from file and yield it.
+
         Parameters
         ----------
         chrom : str
