@@ -10,7 +10,7 @@ class MetaDataParser:
         self.header_file = header_file
         self.infos_ = []
         self.filters_ = []
-        self.contig_ = []
+        self.contig = []
         self.format_ = []
         self.alt_ = []
         self.other_lines = []
@@ -85,7 +85,7 @@ class MetaDataParser:
                     self.filters_.append(self.split_to_dict(line_info[1]))
 
                 elif line_info[0] == "contig":
-                    self.contig_.append(self.split_to_dict(line_info[1]))
+                    self.contig.append(self.split_to_dict(line_info[1]))
 
                 elif line_info[0] == "FORMAT":
                     match = self.format_pattern.match(line)
