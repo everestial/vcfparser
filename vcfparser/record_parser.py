@@ -56,14 +56,11 @@ class Record:
 
         Examples
         --------
-        This functions takes ordered dict of mapped format and sample , format_tag_name
-        and computes the separated list of list.
-        For eg:
         >>> order_mapped_samples = OrderedDict([('ms01e',{'GT': './.', 'PI': '.'), ('MA622', 'GT': '0/0','PI': '.'})])
         >>> tag = 'GT'
         >>> sample_names = ['ms01e', 'MA622']
-        # this function returns:
-        >>> [['.', '.'], ['0', '0']]
+        >>> split_tag_from_samples(order_mapped_samples, tag, sample_names)
+        [['.', '.'], ['0', '0']]
 
         """
 

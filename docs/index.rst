@@ -12,15 +12,8 @@ Welcome to Vcfparser's documentation!
 
    README
    installation
-   record_class
+   modules
    AUTHORS
-
-.. automodule:: vcf_parser
-  :members:
-
-.. autoclass:: MetaDataParser
-   :members:
-
 
 
 Indices and tables
