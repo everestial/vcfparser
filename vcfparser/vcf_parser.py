@@ -4,8 +4,8 @@
 import gzip
 import itertools
 
-from meta_header_parser import MetaDataParser
-from record_parser import Record
+from vcfparser.meta_header_parser import MetaDataParser
+from vcfparser.record_parser import Record
 
 
 class VcfParser:
