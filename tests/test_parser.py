@@ -1,5 +1,5 @@
 import pytest
-from vcf_parser import VcfParser
+from vcfparser import VcfParser
 import expected_config as expected
 
 vcf_object = VcfParser("input_test.vcf")
