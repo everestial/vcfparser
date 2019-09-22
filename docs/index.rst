@@ -10,7 +10,6 @@ Welcome to Vcfparser's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   installation
    README
    modules
    AUTHORS
