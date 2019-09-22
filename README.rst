@@ -90,10 +90,14 @@ Similarly, we can loop over rest of the records by following for loop:
 .. code-block:: bash
 
         for record in records:
-        chrom = record.CHROM
-        pos = record.POS
-        id = record.ID
-        ref = record.REF
-        alt = record.ALT
-        qual = record.QUAL
-        filter = record.FILTER
+                chrom = record.CHROM
+                pos = record.POS
+                id = record.ID
+                ref = record.REF
+                alt = record.ALT
+                qual = record.QUAL
+                filter = record.FILTER
+                format_ = record.format_
+                infos = record.get_info_dict()
+                mapped_sample = record.get_mapped_samples()
+

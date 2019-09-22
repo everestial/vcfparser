@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-with open('README.md') as readme_file:
+with open('README.rst') as readme_file:
     readme = readme_file.read()
 
 requirements = []
@@ -27,7 +27,6 @@ setup(
     install_requires=requirements,
     license="MIT license",
     long_description=readme ,
-    long_description_content_type="text/markdown",
     include_package_data=True,
     keywords='vcfparser',
     name='vcfparser',
@@ -36,7 +35,7 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/everestial/vcfparser',
-    version='0.1.6',
+    version='0.1.7',
     zip_safe=False,
 )
 
