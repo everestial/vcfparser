@@ -19,7 +19,7 @@ class Record:
             a line in vcf starting with # CHROM
         """
         self.rec_line = line
-        self.record_vals = self.rec_line.split("\t")
+        self.record_vals = self.rec_line.strip("\n").split("\t")
         self.record_keys = header_line.split("\t")
         self.CHROM = self.record_vals[0]
         self.POS = self.record_vals[1]
@@ -194,10 +194,12 @@ class Record:
         }
 
     def hasSNP(self):
+        # TODO : need to implement 
         if len(self.REF) == 1:
             return True
 
     def hasINDEL(self):
+        # TODO : need to implement 
 
         if len(self.REF) > 1:
             return True
@@ -446,14 +448,16 @@ class Record:
         dict
             dict with key value pair with sample and infos modified
         """
-        mapped_records = dict(*(self.record_keys, self.record_vals))
+        mapped_records = dict(zip(self.record_keys, self.record_vals))
         mapped_records["INFO"] = self.get_info_dict()
         mapped_records["samples"] = self.get_mapped_samples()
         return mapped_records
 
     # functions to add later
     def iupac_to_numeric(self):
+        # TODO
         pass
 
     def deletion_overlapping_variant(self):
+        # TODO
         pass
