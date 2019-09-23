@@ -12,6 +12,7 @@ Welcome to Vcfparser's documentation!
 
    README
    modules
+   advanced_usage
    AUTHORS
 
 
