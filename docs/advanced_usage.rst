@@ -4,9 +4,12 @@ Tutorial on record parser
 =========================
 
 Advanced Tutorial on vcf parser module showing most of the functions.
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 Let's first import ``VcfParser`` module and instantiate an vcf object by 
 passing vcf file as an argument.
+
+Initial setup:
+^^^^^^^^^^^^^^
 
 >>> from vcfparser import VcfParser
 >>> vcf_obj = VcfParser('input_test.vcf')
@@ -22,6 +25,9 @@ Here, records is an generator object and applying next(records) yields the first
 we can access methods of ``Record`` class.
 
 >>> first_record = next(records)
+
+Methods on record object
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can filter infos you want from vcf. By default, all info will be returned as dictionary.
 
