@@ -5,7 +5,6 @@ python:
   - 3.6
   - 3.7
   
-
-# Command to run tests, e.g. python setup.py test
+# Command to run tests
 script: python -m pytest
 

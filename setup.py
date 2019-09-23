@@ -11,7 +11,7 @@ test_requirements = ['pytest', ]
 
 setup(
     author="Kiran Bishwa",
-    author_email='everestial01@gmail.com',
+    author_email='everestial007@gmail.com',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
@@ -35,7 +35,7 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/everestial/vcfparser',
-    version='0.1.7',
+    version='0.1.8',
     zip_safe=False,
 )
 
