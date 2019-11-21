@@ -13,7 +13,7 @@ setup_requirements = ['pytest-runner', ]
 
 test_requirements = ['pytest', ]
 
-extensions = Extension('vcfparser',['vcfparser/*.py'])
+# extensions = [Extension(['vcfparser/*.pyx']]
 
 setup(
     author="Kiran Bishwa",
@@ -38,7 +38,8 @@ setup(
     keywords='vcfparser',
     name='vcfparser',
     packages=find_packages(include=['vcfparser']),
-    ext_modules = cythonize(extensions),
+    
+    ext_modules = cythonize('**/*.pyx', language_level = '3'),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
