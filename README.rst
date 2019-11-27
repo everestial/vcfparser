@@ -36,7 +36,7 @@ To install vcfparser, run this command in your terminal:
 
     $ pip install vcfparser
 
-In order to build from source, you can follow :ref:`advanced tutorial <advanced-install>`
+In order to build from source, you can follow `advanced tutorial <advanced-install>`
 
 
 Usage
