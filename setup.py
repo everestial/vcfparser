@@ -1,6 +1,18 @@
 from setuptools import setup, find_packages
 from setuptools import Extension
-from Cython.Build import cythonize
+
+try:
+    from Cython.Build import cythonize
+    USE_CYTHON = True
+except ImportError:
+    USE_CYTHON = False
+
+def get_ext_modules():
+    if USE_CYTHON:
+        return cythonize(['vcfparser/*.pyx'])  
+    return [Extension("vcfparser.vcf_parser", ['vcfparser/vcf_parser.c']),
+    Extension("vcfparser.record_parser", ['vcfparser/record_parser.c'])
+    ]
 
 
 
@@ -9,7 +21,7 @@ with open('README.rst') as readme_file:
 
 requirements = []
 
-setup_requirements = ['pytest-runner', 'Cython']
+setup_requirements = ['pytest-runner', 'cython>=0.x']
 
 test_requirements = ['pytest', ]
 
@@ -38,12 +50,12 @@ setup(
     keywords='vcfparser',
     name='vcfparser',
     packages=find_packages(),    
-    ext_modules = cythonize(['vcfparser/*.pyx']),
+    ext_modules = get_ext_modules(),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/everestial/vcfparser',
-    version='0.2.0',
+    version='0.2.4',
     zip_safe=False,
 )
 
