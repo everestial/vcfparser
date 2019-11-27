@@ -1,4 +1,0 @@
-['vcfparser.record_parser',
- 'vcfparser.vcf_writer',
- 'vcfparser.meta_header_parser',
- 'vcfparser.vcf_parser']
