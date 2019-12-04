@@ -9,7 +9,7 @@ except ImportError:
 
 def get_ext_modules():
     if USE_CYTHON:
-        return cythonize(['vcfparser/*.pyx'])  
+        return cythonize(['vcfparser/*.pyx'], language_level = 3)  
     return [Extension("vcfparser.vcf_parser", ['vcfparser/vcf_parser.c']),
     Extension("vcfparser.record_parser", ['vcfparser/record_parser.c'])
     ]

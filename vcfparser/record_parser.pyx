@@ -3,10 +3,11 @@ from collections import OrderedDict
 from itertools import zip_longest
 
 
-class Record:
+cdef class Record:
     """
     A class for to store and extract the data lines in the vcf file.
     """
+    cdef bytes line, header_line
     def __init__(self, line, header_line):
         """
         Initializes the class with record lines and header lines.

@@ -8,7 +8,7 @@ from vcfparser.meta_header_parser import MetaDataParser
 from vcfparser.record_parser import Record
 
 
-class VcfParser:
+cdef class VcfParser:
     """
     Parses a given vcf file into and outputs metainfo and yields records.
 
@@ -18,8 +18,10 @@ class VcfParser:
     parse_records()
 
     """
+    cdef:
+        unicode filename
 
-    def __init__(self, filename):
+    def __cinit__(self, filename):
         """
 
         Parameters
