@@ -7,7 +7,13 @@ cdef class Record:
     """
     A class for to store and extract the data lines in the vcf file.
     """
-    cdef bytes line, header_line
+
+    cdef: 
+        str line, header_line, rec_line 
+        readonly list  record_vals, record_keys, ref_alt, FILTER, format_, sample_names, sample_vals
+        readonly str  CHROM, POS, ID, QUAL, info_str, REF, ALT,
+        readonly dict  mapped_sample
+
     def __init__(self, line, header_line):
         """
         Initializes the class with record lines and header lines.
@@ -337,7 +343,7 @@ cdef class Record:
         
         """Private method to map samples with format"""
 
-        mapped_sample_fmt = OrderedDict()
+        mapped_sample_fmt = {}
         for i, name in enumerate(self.sample_names):
             mapped_sample_fmt[name] = dict(
                 zip_longest(self.format_, self.sample_vals[i].split(":"), fillvalue=".")
