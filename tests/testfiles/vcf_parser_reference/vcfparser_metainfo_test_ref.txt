@@ -1,0 +1,15 @@
+fileformat
+VCFv4.2
+
+filters
+[{'ID': 'LowQual', 'Description': 'Low quality'}, {'ID': 'my_indel_filter', 'Description': 'QD < 2.0 || FS > 200.0 || ReadPosRankSum < -20.0'}, {'ID': 'my_snp_filter', 'Description': 'QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0'}]
+
+alt
+[{'ID': 'NON_REF', 'Description': 'Represents any possible alternative allele at this location'}]
+
+sample_names
+['ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
+
+record_keys
+['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
+

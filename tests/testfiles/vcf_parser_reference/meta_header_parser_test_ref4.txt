@@ -1,0 +1,12 @@
+ID
+HQ
+
+Number
+2
+
+Type
+Integer
+
+Description
+Haplotype Quality
+

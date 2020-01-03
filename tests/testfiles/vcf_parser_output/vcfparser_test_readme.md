@@ -1,0 +1,1 @@
+#This folder is to temporarely save the output file of pytest run on vcfparser tests.

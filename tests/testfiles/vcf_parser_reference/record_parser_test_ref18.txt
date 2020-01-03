@@ -1,0 +1,6 @@
+AC
+2,0
+
+BaseQRankSum
+-7.710e-01
+
