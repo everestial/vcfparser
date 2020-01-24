@@ -7,6 +7,7 @@ import json
 import csv
 
 from vcfparser import MetaDataParser
+from vcfparser.meta_header_parser import split_to_dict
 header_file = ""
 meta_header_parser_obj = MetaDataParser(header_file)
 #1 MetaDataParser._parse_gvcf_block
@@ -30,7 +31,7 @@ def test_parse_lines():
 def test_split_to_dict():
     # pass
     string = "<ID=HQ,Number=2,Type=Integer,Description='Haplotype Quality'>"
-    data = meta_header_parser_obj.split_to_dict(string)
+    data = split_to_dict(string)
     write_data_and_check(4, data)
 
 #Helping functions
