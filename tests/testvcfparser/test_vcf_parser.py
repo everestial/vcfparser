@@ -7,23 +7,43 @@ import json
 import csv
 
 from vcfparser import VcfParser
+
 vcf_obj = VcfParser("tests/testfiles/vcf_parser_input/reference_input_test.vcf")
-metainfo_output_file = 'tests/testfiles/vcf_parser_output/vcfparser_metainfo_test_result'
-records_output_file = 'tests/testfiles/vcf_parser_output/vcfparser_records_test_result'
+metainfo_output_file = (
+    "tests/testfiles/vcf_parser_output/vcfparser_metainfo_test_result"
+)
+records_output_file = "tests/testfiles/vcf_parser_output/vcfparser_records_test_result"
+
+
 def test_get_metainfo():
     metainfo = vcf_obj.parse_metadata()
-    
-    data = dict(zip(["fileformat","filters","alt","sample_names","record_keys"],
-                    [metainfo.fileformat, metainfo.filters_, metainfo.alt_, metainfo.sample_names, metainfo.record_keys]))
-    with open(metainfo_output_file + ".txt", "w") as w_file:
-            for key, val in data.items():
-                w_file.write(f"{key}\n")
-                w_file.write(f"{val}\n")
-                w_file.write("\n")
 
-    assert is_same_file("tests/testfiles/vcf_parser_output/vcfparser_metainfo_test_result.txt", 
-                        f"tests/testfiles/vcf_parser_reference/vcfparser_metainfo_test_ref.txt") is True
-    
+    data = dict(
+        zip(
+            ["fileformat", "filters", "alt", "sample_names", "record_keys"],
+            [
+                metainfo.fileformat,
+                metainfo.filters_,
+                metainfo.alt_,
+                metainfo.sample_names,
+                metainfo.record_keys,
+            ],
+        )
+    )
+    with open(metainfo_output_file + ".txt", "w") as w_file:
+        for key, val in data.items():
+            w_file.write(f"{key}\n")
+            w_file.write(f"{val}\n")
+            w_file.write("\n")
+
+    assert (
+        is_same_file(
+            "tests/testfiles/vcf_parser_output/vcfparser_metainfo_test_result.txt",
+            f"tests/testfiles/vcf_parser_reference/vcfparser_metainfo_test_ref.txt",
+        )
+        is True
+    )
+
     os.remove(f"tests/testfiles/vcf_parser_output/vcfparser_metainfo_test_result.txt")
 
 
@@ -58,13 +78,18 @@ def test_get_records():
 
     columns = [key for key in records_list[0]]
     with open(records_output_file + ".txt", "w") as w_file:
-        writer = csv.DictWriter(w_file, fieldnames = columns, delimiter = "\t")
+        writer = csv.DictWriter(w_file, fieldnames=columns, delimiter="\t")
         writer.writeheader()
         writer.writerows(records_list)
 
-    assert is_same_file("tests/testfiles/vcf_parser_output/vcfparser_records_test_result.txt", 
-                        f"tests/testfiles/vcf_parser_reference/vcfparser_records_test_ref.txt") is True
-    
+    assert (
+        is_same_file(
+            "tests/testfiles/vcf_parser_output/vcfparser_records_test_result.txt",
+            f"tests/testfiles/vcf_parser_reference/vcfparser_records_test_ref.txt",
+        )
+        is True
+    )
+
     os.remove(f"tests/testfiles/vcf_parser_output/vcfparser_records_test_result.txt")
 
 

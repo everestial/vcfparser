@@ -1,6 +1,7 @@
 import re
 import shlex
 
+
 class MetaDataParser:
     """Parses a meta lines of the vcf files."""
 
@@ -148,4 +149,3 @@ def split_to_dict(string):
     splitter.whitespace = ","
     tags_dict = dict(pair.split("=", maxsplit=1) for pair in splitter)
     return tags_dict
-

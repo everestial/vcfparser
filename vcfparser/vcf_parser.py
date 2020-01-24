@@ -63,7 +63,7 @@ class VcfParser:
         _record_lines = itertools.dropwhile(
             lambda x: x.startswith("##"), self._file_copy
         )
-        
+
         try:
             header_line = next(_record_lines)
         except StopIteration:

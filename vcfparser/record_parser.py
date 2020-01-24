@@ -481,4 +481,3 @@ class Record:
     def deletion_overlapping_variant(self):
         # TODO
         pass
-
