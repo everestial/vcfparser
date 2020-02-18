@@ -9,7 +9,7 @@ import csv
 from vcfparser import MetaDataParser
 from vcfparser.meta_header_parser import split_to_dict
 
-header_file = ""
+header_file = "tests/testfiles/vcf_parser_input/reference_input_test.vcf"
 meta_header_parser_obj = MetaDataParser(header_file)
 # 1 MetaDataParser._parse_gvcf_block
 def test_parse_gvcf_block():
@@ -33,6 +33,33 @@ def test_parse_lines():
     # data = meta_header_parser_obj.parse_lines()
     # write_data_and_check(3, data)
 
+##TODO:Bishwa - Problem in creating error file.
+# def test_parse_lines_exit1():
+#     fileformat_error = "tests/testfiles/vcf_parser_input/reference_input_test_fileformat_check.vcf"
+#     meta_header_parser_obj2 = MetaDataParser(fileformat_error)
+#     with pytest.raises(IndexError):
+#         meta_header_parser_obj1.parse_lines()
+
+##TODO:Bishwa - Problem in creating error file.
+# def test_parse_lines_exit2():
+#     reference_error = "tests/testfiles/vcf_parser_input/reference_input_test_reference_check.vcf"
+#     meta_header_parser_obj2 = MetaDataParser(reference_error)
+#     with pytest.raises(IndexError):
+#         meta_header_parser_obj2.parse_lines()
+
+##TODO:Bishwa - Problem in creating error file.
+# def test_parse_lines_exit3():
+#     format_error = "tests/testfiles/vcf_parser_input/reference_input_test_format_check.vcf"
+#     meta_header_parser_obj3 = MetaDataParser(format_error)
+#     with pytest.raises(IndexError):
+#         meta_header_parser_obj3.parse_lines()
+
+##TODO:Bishwa - Problem in creating error file.
+# def test_parse_lines_exit4():
+#     error = "tests/testfiles/vcf_parser_input/reference_input_test_error.vcf"
+#     meta_header_parser_obj4 = MetaDataParser(error)
+#     with pytest.raises(SyntaxError):
+#         meta_header_parser_obj4.parse_lines()
 
 # 4 split_to_dict
 def test_split_to_dict():

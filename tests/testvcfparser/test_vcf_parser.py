@@ -5,6 +5,7 @@ import collections
 import sys
 import json
 import csv
+import itertools
 
 from vcfparser import VcfParser
 
@@ -92,6 +93,29 @@ def test_get_records():
 
     os.remove(f"tests/testfiles/vcf_parser_output/vcfparser_records_test_result.txt")
 
+##TODO:Bishwa - Need to test all if else case inside parse_records.
+# def test_parse_records():
+#     records = vcf_obj.parse_records()
+
+#     for record in records:
+
+    
+
+
+##TODO: Bishwa - Could not raise StopIteration
+# def test_get_records_error():
+#     vcf_obj1 = VcfParser("tests/testfiles/vcf_parser_input/reference_input_test_no_header.vcf")
+    
+#     with pytest.raises(StopIteration):
+
+#         _record_lines = itertools.dropwhile(
+#             lambda x: x.startswith("##"), vcf_obj1._file_copy
+#         )
+#         try:
+#             header_line = next(_record_lines)
+#         except StopIteration:
+#             print("File doesnot contain header line.")
+#         record_keys = header_line.lstrip("#").strip("\n")
 
 def is_same_file(file1, file2):
     return filecmp.cmp(file1, file2)

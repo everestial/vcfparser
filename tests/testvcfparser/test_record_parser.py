@@ -45,9 +45,11 @@ def test_isHOMVAR():
 
 
 # 04 Record.isHETVAR
+##TODO:Bishwa - Still showing there is remaining lines of code to test by pytest-cov 
 def test_isHETVAR():
     data = rec_obj.isHETVAR(tag="GT", bases="numeric")
     write_data_and_check(4, data)
+
 
 
 # 05 Record.isMissing
@@ -118,10 +120,10 @@ def test_get_mapped_samples():
 
 # 15 Record.get_mapped_tag_list
 def test_get_mapped_tag_list():
-    pass
+    # pass
     # TODO: Fill sample_names and tag and run test
-    # sample_names = []
-    # tag = []
+    # sample_names = "ms01e"
+    # tag = "any"
     # data = rec_obj.get_mapped_tag_list(sample_names, tag, bases="numeric")
     # write_data_and_check(15, data)
 
@@ -170,6 +172,16 @@ def test_deletion_overlapping_variant():
     # TODO:
     pass
 
+
+re = "tests/testfiles/vcf_parser_output/str_check.txt"
+def test_str_func():
+    result = rec_obj.__str__()
+    with open(re, "w+") as r:
+        r.write(result)
+    output = "tests/testfiles/vcf_parser_reference/str_reference.txt"
+    assert is_same_file(re,output) is True
+
+    os.remove("tests/testfiles/vcf_parser_output/str_check.txt")
 
 # Helping functions
 def write_data_and_check(i, data):
