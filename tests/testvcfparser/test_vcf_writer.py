@@ -9,7 +9,7 @@ import csv
 from vcfparser import VCFWriter
 infilename = "tests/testfiles/vcf_parser_input/reference_input_test.vcf"
 outfilename = "tests/testfiles/vcf_parser_ouput/writer_output_test.txt"
-id = ""
+id = "12345"
 writer_obj = VCFWriter(infilename)
 #1 VCFWriter.add_normal_metadata
 def test_add_normal_metadata():
