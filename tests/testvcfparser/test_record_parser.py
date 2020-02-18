@@ -120,7 +120,7 @@ def test_get_mapped_samples():
 
 # 15 Record.get_mapped_tag_list
 def test_get_mapped_tag_list():
-    # pass
+    pass
     # TODO: Fill sample_names and tag and run test
     # sample_names = "ms01e"
     # tag = "any"
