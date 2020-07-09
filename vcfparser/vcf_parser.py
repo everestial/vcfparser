@@ -31,7 +31,7 @@ class VcfParser:
         self.filename = filename
         # assign to support gz compressed files
         self._open = gzip.open if self.filename.endswith(".gz") else open
-        # to copies of file are created inorder to iterate over metadata and records separately
+        # two copies of file are created inorder to iterate over metadata and records separately
         self._file = self._open(filename, "rt")
         self._file_copy = self._open(filename, "rt")
 
@@ -40,12 +40,16 @@ class VcfParser:
         self._file_copy.close()
 
     def parse_metadata(self):
-        """ initialize variables to store meta infos"""
+        """ initialize variables to store metadata lines of the VCF file """
         # this produces a iterator of meta data lines (lines starting with '#')
         _raw_lines = itertools.takewhile(lambda x: x.startswith("#"), self._file)
         return MetaDataParser(_raw_lines).parse_lines()
 
+    # TODO (Bhuwan, low priority) - Could multiprocessing be invoked here?? with -n flag
+    # multiprocessing should however follow the order (genomic position)
     def parse_records(self, chrom=None, pos_range=None, no_of_recs=1):
+        # TODO (Bhuwan, low priority) - to implement
+        # pos_range = position based: str or str,str or str-str
         """ Parse records from file and yield it.
 
         Parameters
@@ -64,11 +68,14 @@ class VcfParser:
             lambda x: x.startswith("##"), self._file_copy
         )
 
+        # TODO - ask with Bhuwan: What is this try/StopIteration doing?
+        # Do we need the code - if _record_lines.startswith("#CHROM")
         try:
-            header_line = next(_record_lines)
+            header_line = next(_record_lines)  # if _record_lines.startswith("#CHROM")
         except StopIteration:
-            print("File doesnot contain header line.")
-        record_keys = header_line.lstrip("#").strip("\n")
+            print("File doesnot contain the record header line.")
+            sys.exit(0)
+        record_keys = header_line.lstrip("#").strip("\n").split("\t")
 
         for record_line in _record_lines:
             # in order to select only selected chrom values

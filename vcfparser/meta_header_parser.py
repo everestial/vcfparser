@@ -14,6 +14,9 @@ class MetaDataParser:
         self.alt_ = []
         self.other_lines = []
 
+        # test code
+        self.testA = "hey"
+
         self.fileformat = None
         self.reference = []
         self.sample_names = []
@@ -23,7 +26,7 @@ class MetaDataParser:
         self.VCFspec = []
         self.gatk_commands = []
 
-        # to write of header lines only
+        # to write header lines only
         self.raw_meta_data = ""
 
         self._format_pattern = re.compile(
@@ -40,8 +43,8 @@ class MetaDataParser:
     @staticmethod
     def _parse_gvcf_block(lines):
         """extract the GVCF blocks"""
-        # e.g: ##GVCFBlock55-56=minGQ=55(inclusive),maxGQ=56(exclusive)
-        # converts to {'minGQ': '55(inclusive)', 'maxGQ': '56(exclusive)', 'Block': '55-56'}
+        # e.g input: ##GVCFBlock55-56=minGQ=55(inclusive),maxGQ=56(exclusive)
+        # output: {'minGQ': '55(inclusive)', 'maxGQ': '56(exclusive)', 'Block': '55-56'}
         gvcf_block = re.search("##GVCFBlock(.*?)=", lines, 0).group(1)
 
         # update tags_dict
@@ -142,6 +145,8 @@ class MetaDataParser:
         return self
 
 
+# function to split the string at "," and create key-value pair at "="
+# mainly aimed for parsing VCF metadata lines and create dictionary
 def split_to_dict(string):
     string = string.lstrip("<").rstrip(">")
     splitter = shlex.shlex(string, posix=True)
