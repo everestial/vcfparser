@@ -11,3 +11,5 @@ Contributors
 ------------
 
 * Bhuwan Aryal
+
+* Gopal Kisi
