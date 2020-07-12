@@ -15,6 +15,7 @@ Initial setup:
 >>> vcf_obj = VcfParser('input_test.vcf')
 
 We can also pass gzipped vcf file as an argument.
+
 >>> vcf_obj = VcfParser('input_test.vcf.gz')
 
 ``VcfParser`` module  has two main methods:
@@ -26,18 +27,23 @@ Parsing metadata:
 ^^^^^^^^^^^^^^^^^
 
 To parse the metadata information:
+
 >>> metainfo = vcf_obj.parse_metadata()
 
 Metainfo provides several attributes/objects to mine. These informations are provided as a list or dictionary.
 
 To list all the available attributes within metainfo, we can write:
+
 >>> metainfo.__dir__()
 ['header_file', 'infos_', 'filters_', 'contig', 'format_', 'alt_', 'other_lines', 'testA', 'fileformat', 'reference', 'sample_names', 'is_gvcf', 'gvcf_blocks', 'record_keys', 'VCFspec', 'gatk_commands', 'raw_meta_data', '_format_pattern', '_meta_pattern', 'sample_with_pos', '__module__', '__doc__', '__init__', '_parse_gvcf_block', '_parse_gatk_commands', 'parse_lines', '__dict__', '__weakref__', '__repr__', '__hash__', '__str__', '__getattribute__', '__setattr__', '__delattr__', '__lt__', '__le__', '__eq__', '__ne__', '__gt__', '__ge__', '__new__', '__reduce_ex__', '__reduce__', '__subclasshook__', '__init_subclass__', '__format__', '__sizeof__', '__dir__', '__class__']
+
 or we can also give following command:
+
 >>> dir(metainfo) 
 ['VCFspec', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_format_pattern', '_meta_pattern', '_parse_gatk_commands', '_parse_gvcf_block', 'alt_', 'contig', 'fileformat', 'filters_', 'format_', 'gatk_commands', 'gvcf_blocks', 'header_file', 'infos_', 'is_gvcf', 'other_lines', 'parse_lines', 'raw_meta_data', 'record_keys', 'reference', 'sample_names', 'sample_with_pos', 'testA']
 
 We can also call specific attributes from metainfo like:
+
 >>> metainfo.VCFspec
 [{'fileformat': 'VCFv4.2'}, {'GVCF': True}]
 
@@ -53,7 +59,7 @@ Quality'}, {'ID': 'ReadPosRankSum', 'Number': '1', 'Type': 'Float', 'Description
 **Note: Similarly other attributes can be called from "metainfo" object
 
 
-Access VCF records:
+Accessing VCF records:
 ^^^^^^^^^^^^^^^^^^^
 
 >>> records = vcf_obj.parse_records() 
