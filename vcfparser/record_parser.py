@@ -43,7 +43,7 @@ class Record:
                 "Sample values are not presented correctly in given vcf file."
             )
 
-        # TODO for this line
+        # TODO DONE for this line
         # (Bhuwan, high priority): add error message (not exit)
         # that vcf lacks sample information or samples are represented not at right position
 
@@ -245,7 +245,7 @@ class Record:
             if allele in self.mapped_sample[sample][tag]
         }
 
-    # TODO: Bhuwan, Bishwa, high priority
+    # TODO::DONE Bhuwan, Bishwa, high priority
     # bases='iupac' is not returing data.
     def hasVAR(self, genotype="0/0", tag="GT", bases="numeric"):
         """
@@ -397,7 +397,7 @@ class Record:
         >>> get_mapped_samples(self, sample_names= ['ms01e', 'MA611'], formats= ['GT', 'PC'])
         {'ms01e': {'GT': './.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PC': '.'}} 
 
-        # TODO Bishwa - make this new example workable 
+        # TODO ::DONE Bishwa - make this new example workable 
         >>> get_mapped_samples(self, sample_names= ['ms01e', 'MA611'], formats= ['GT', 'PC', 'PG'], gt_base=['GT:iupac', 'PG:iupac'])
         {'ms01e': {'GT': './.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PC': '.'}} 
         # TODO Bishwa - update the output 
@@ -406,7 +406,7 @@ class Record:
         sample_names = sample_names if sample_names else self.sample_names
 
         required_format = formats if formats else self.format_
-        # TODO Bishwa: this may need changing. If no format tag (i.e GT, PG) is given, it just returns numeric, rite??
+        # TODO ::DONE Bishwa: this may need changing. If no format tag (i.e GT, PG) is given, it just returns numeric, rite??
         # TODO another issue: The sample is not generated as "key" in the mapped dictonary. This is fixed? but quirky !
 
         filtered_sample_format = {
@@ -421,7 +421,12 @@ class Record:
 
         else:
             # update the genotype values for the tags requested in "iupac" format
+
             multi_genotype_as_iupac_bases = {}
+
+            # if given gt_bases is in form ['PG:iupac'] ; convert it into [('PG', 'iupac')]
+            if isinstance(gt_bases[0], str):
+                gt_bases = [tuple(x.split(':')) for x in gt_bases]
             for (genotype_tag, genotype_output_format) in gt_bases:
                 if genotype_output_format == "iupac":
                     try:
@@ -452,8 +457,8 @@ class Record:
                             }
 
                     except KeyError:
-                        # TODO Bhuwan/Gopal: Add warning message
-                        print(
+                        # TODO ::DONE Bhuwan/Gopal: Add warning message
+                        warnings.warn(
                             'The format tag "%s" is not available in one or multiple VCF record. '
                             % genotype_tag
                         )
