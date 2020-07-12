@@ -18,8 +18,8 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'Vcfparser'
-copyright = '2019, Bishwa N. Kiran'
-author = 'Bishwa N. Kiran'
+copyright = '2019, Bishwa K. Giri'
+author = 'Bishwa K. Giri'
 
 # The full version, including alpha/beta/rc tags
 release = '0.1.1'
