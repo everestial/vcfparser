@@ -56,7 +56,7 @@ Quality'}, {'ID': 'ReadPosRankSum', 'Number': '1', 'Type': 'Float', 'Description
 >>> metainfo.record_keys
 ['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
 
-**Note: Similarly other attributes can be called from "metainfo" object
+**Note: Similarly other attributes can be called from "metainfo" object**
 
 
 Accessing VCF records:
