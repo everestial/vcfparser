@@ -1,4 +1,4 @@
-vcfparser package
+Vcfparser package
 =================
 
 Submodules

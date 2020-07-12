@@ -11,8 +11,10 @@ Welcome to Vcfparser's documentation!
    :caption: Contents:
 
    README
+   installation
    modules
-   advanced_usage
+   metadata
+   record_parser
    AUTHORS
 
 
