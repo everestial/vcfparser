@@ -95,7 +95,7 @@ Each subsequent record can also be accessed on a for-loop
 
 '15881018'
 
-**Note: following attributes from the "record" object can be called directly** 
+** Note: following attributes from the "record" object can be called directly.** 
 CHROM, POS, REF, ALT, ref_alt, QUAL, FILTER, info_str, format_, sample_names, sample_vals, mapped_sample
 
 It should return the vcf record header.
@@ -117,7 +117,7 @@ To generate the record values of a particular record line as a list.
 >>> record.record_vals
 ['2', '15881106', '.', 'C', 'CA', '33.32', 'PASS', 'AC=0;AF=0.042;AN=6;BaseQRankSum=0.253;ClippingRankSum=0.00;DP=654;ExcessHet=3.0103;FS=0.000;InbreedingCoeff=-0.0469;MLEAC=1;MLEAF=0.042;MQ=60.00;MQRankSum=0.00;QD=6.66;ReadPosRankSum=0.253;SF=4,5,6;SOR=0.223;set=HignConfSNPs', 'GT:AD:PI:PW:PG:PM:GQ:DP:PB:PC:PL', '.', '.', '.', '.', '0/0:20,0:.:0/0:0/0:.:54:20:.:.:0,54,810', '0/0:6,0:.:0/0:0/0:.:18:6:.:.:0,18,206', '0/0:27,0:.:0/0:0/0:.:72:27:.:.:0,72,1080']
 
-**Note: all the remaining example of data extraction is based on this record value.
+**Note: all the remaining example of data extraction is based on this record value.**
 
 The record object containts several attributes and functions to further parse the record using several function.
 
