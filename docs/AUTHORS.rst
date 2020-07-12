@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* Kiran Bishwa <everestial007@gmail.com>
+* Bishwa K. Giri <everestial007@gmail.com>
 
 Contributors
 ------------
