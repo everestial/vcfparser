@@ -2,6 +2,9 @@
 vcfparser
 =========
 
+.. role:: raw-html(raw)
+    :format: html
+
 .. image:: https://img.shields.io/pypi/v/vcfparser.svg
         :target: https://pypi.python.org/pypi/vcfparser
 
@@ -11,7 +14,6 @@ vcfparser
 .. image:: https://readthedocs.org/projects/vcfparser/badge/?version=latest
         :target: https://vcfparser.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
-
 
 
 Python (version >=3.6) package for parsing the genomics and transcriptomics VCF data.
@@ -66,15 +68,13 @@ call the 'vcfparser' package.
 | 
 
 **The standalone "vcfparser" package is available via pip.**
-
-This is the preferred method of installing and using "vcfparser" if custom python scripts/app are being developed.
+This is the preferred method of installing and using **vcfparser** API if custom python scripts/app are being developed.
 
 .. code-block:: console
 
     $ pip install vcfparser
 
-In order to build from source, you can follow `advanced tutorial <advanced-install>`
-TODO Bhuwan/Gopal - Do we have an advanced tutorial? 
+In order to build from source, you can follow :ref:`advance install <advanced-install>`
 
 Cythonize (optional but helpful)
 --------------------------------
@@ -149,7 +149,6 @@ Similarly, we can loop over each record by using a for-loop:
         infos = record.get_info_dict()
         mapped_sample = record.get_mapped_samples()
 
-For more specific use cases please check the examples in the following section:
-
-tutorial on MetaData # TODO (Gopal) - add link here
-tutorial on record parser # TODO - add link here 
+| For more specific use cases please check the examples in the following section:
+| tutorial on MetaData # TODO (Gopal) - add link here
+| tutorial on record parser # TODO - add link here 
