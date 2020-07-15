@@ -34,7 +34,8 @@ Features
 Installation
 ------------
 
-`VCFsimplify <https://github.com/everestial/VCF-Simplify>`_ **uses vcfparser API, so the package is readily available if VCFsimplify is already installed.**
+`VCFsimplify <https://github.com/everestial/VCF-Simplify>`_ uses vcfparser API, so the package is readily available if VCFsimplify is already installed.
+This is only preferred while developing/optimizing **VcfSimplify** along with **vcfparser**.
 
 Navigate to the VCFsimplify directory -> 
 activate python -> 
@@ -65,10 +66,9 @@ call the 'vcfparser' package.
     >>> from vcfparser import VcfParser
     >>>
 
-| 
-
-**The standalone "vcfparser" package is available via pip.**
-This is the preferred method of installing and using **vcfparser** API if custom python scripts/app are being developed.
+|
+| **Preferred installation method:** 
+| Pip is the preferred method of installing and using **vcfparser** API if custom python scripts/app are being developed.
 
 .. code-block:: console
 
@@ -133,7 +133,7 @@ Please fix that issue - strip('\n') in the line before parsing.
 
 |
 
-Similarly, we can loop over each record by using a for-loop:
+Alternately, we can loop over each record by using a for-loop:
 
 .. code-block:: bash
 
