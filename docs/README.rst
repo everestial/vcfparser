@@ -34,7 +34,8 @@ Features
 Installation
 ------------
 
-`VCFsimplify <https://github.com/everestial/VCF-Simplify>`_ uses vcfparser API, so the package is readily available if VCFsimplify is already installed.
+| **Method A:**
+| `VCFsimplify <https://github.com/everestial/VCF-Simplify>`_ uses vcfparser API, so the package is readily available if VCFsimplify is already installed.
 This is only preferred while developing/optimizing **VcfSimplify** along with **vcfparser**.
 
 Navigate to the VCFsimplify directory -> 
@@ -67,15 +68,18 @@ call the 'vcfparser' package.
     >>>
 
 |
-| **Preferred installation method:** 
+| **Method B (preferred method):** 
 | Pip is the preferred method of installing and using **vcfparser** API if custom python scripts/app are being developed.
 
 .. code-block:: console
 
     $ pip install vcfparser
 
-In order to build from source, you can follow :ref:`advance install <advanced-install>`
+|
+| **Method C:**
+| For offline install, or in order to build from the source code, follow :ref:`advance install <advanced-install>`.
 
+|
 Cythonize (optional but helpful)
 --------------------------------
 The installed "vcfparser" package can be cythonized to optimize performance.
@@ -91,7 +95,7 @@ Usage
 >>> from vcfparser import VcfParser
 >>> vcf_obj = VcfParser('input_test.vcf')
 
-Get meta information about the vcf file
+Get metadata information from the vcf file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 >>> metainfo = vcf_obj.parse_metadata()
@@ -107,10 +111,10 @@ Get meta information about the vcf file
 ['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
 
 
-Get Records from vcf file
+Get Records from the vcf file
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 >>> records = vcf_obj.parse_records() 
-# Note: Records are returned as generator. 
+    # Note: Records are returned as generator. 
 >>> first_record = next(records)
 >>> first_record.CHROM
 '2'
@@ -132,7 +136,6 @@ i.e: 'PC': '.\n'
 Please fix that issue - strip('\n') in the line before parsing. 
 
 |
-
 Alternately, we can loop over each record by using a for-loop:
 
 .. code-block:: bash
