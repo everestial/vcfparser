@@ -1,4 +1,6 @@
 
+.. _record-parser-tutorial:
+
 =========================
 Tutorial on record parser
 =========================

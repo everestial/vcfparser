@@ -1,3 +1,4 @@
+.. _metadata-tutorial:
 
 =========================
 Tutorial on MetaData
