@@ -6,7 +6,7 @@ Tutorial on MetaData
 Advanced Tutorial on vcf parser module showing most of the functions.
 
 Let's first import ``VcfParser`` module and instantiate an vcf object by 
-passing vcf file as an argument.
+passing \*.vcf file as an argument.
 
 Initial setup:
 ^^^^^^^^^^^^^^
@@ -18,9 +18,10 @@ We can also pass gzipped vcf file as an argument.
 
 >>> vcf_obj = VcfParser('input_test.vcf.gz')
 
-``VcfParser`` module  has two main methods:
-- parse_metadata: It contains information related the header lines 
-- parse_records: It contains methods to retrieve record values from the vcf file.
+|
+``VcfParser`` **module  has two main methods:** 
+    - **parse_metadata:** It contains methods for extracting information related to the metadata header. 
+    - **parse_records:** It contains methods for retrieving the record values from the vcf file.
 
 
 Parsing metadata:
@@ -30,19 +31,20 @@ To parse the metadata information:
 
 >>> metainfo = vcf_obj.parse_metadata()
 
-Metainfo provides several attributes/objects to mine. These informations are provided as a list or dictionary.
+Metainfo provides several attributes and objects that helps in extracting specific metadata information. 
+These informations are reported as a list or dictionary.
 
-To list all the available attributes within metainfo, we can write:
+To list all the available attributes within metainfo do:
 
 >>> metainfo.__dir__()
-['header_file', 'infos_', 'filters_', 'contig', 'format_', 'alt_', 'other_lines', 'testA', 'fileformat', 'reference', 'sample_names', 'is_gvcf', 'gvcf_blocks', 'record_keys', 'VCFspec', 'gatk_commands', 'raw_meta_data', '_format_pattern', '_meta_pattern', 'sample_with_pos', '__module__', '__doc__', '__init__', '_parse_gvcf_block', '_parse_gatk_commands', 'parse_lines', '__dict__', '__weakref__', '__repr__', '__hash__', '__str__', '__getattribute__', '__setattr__', '__delattr__', '__lt__', '__le__', '__eq__', '__ne__', '__gt__', '__ge__', '__new__', '__reduce_ex__', '__reduce__', '__subclasshook__', '__init_subclass__', '__format__', '__sizeof__', '__dir__', '__class__']
+['header_file', 'infos_', 'filters_', 'contig', 'format_', 'alt_', 'other_lines', 'fileformat', 'reference', 'sample_names', 'is_gvcf', 'gvcf_blocks', 'record_keys', 'VCFspec', 'gatk_commands', 'raw_meta_data', '_format_pattern', '_meta_pattern', 'sample_with_pos', '__module__', '__doc__', '__init__', '_parse_gvcf_block', '_parse_gatk_commands', 'parse_lines', '__dict__', '__weakref__', '__repr__', '__hash__', '__str__', '__getattribute__', '__setattr__', '__delattr__', '__lt__', '__le__', '__eq__', '__ne__', '__gt__', '__ge__', '__new__', '__reduce_ex__', '__reduce__', '__subclasshook__', '__init_subclass__', '__format__', '__sizeof__', '__dir__', '__class__']
 
-or we can also give following command:
+**or**
 
 >>> dir(metainfo) 
 ['VCFspec', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_format_pattern', '_meta_pattern', '_parse_gatk_commands', '_parse_gvcf_block', 'alt_', 'contig', 'fileformat', 'filters_', 'format_', 'gatk_commands', 'gvcf_blocks', 'header_file', 'infos_', 'is_gvcf', 'other_lines', 'parse_lines', 'raw_meta_data', 'record_keys', 'reference', 'sample_names', 'sample_with_pos', 'testA']
 
-We can also call specific attributes from metainfo like:
+To call the specific objects and attributes do:
 
 >>> metainfo.VCFspec
 [{'fileformat': 'VCFv4.2'}, {'GVCF': True}]
@@ -55,5 +57,3 @@ Quality'}, {'ID': 'ReadPosRankSum', 'Number': '1', 'Type': 'Float', 'Description
 
 >>> metainfo.record_keys
 ['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
-
-**Note: Similarly other attributes can be called from "metainfo" object**
