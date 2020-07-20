@@ -1,35 +1,33 @@
 Vcfparser package
 =================
 
-Submodules
-----------
-
-vcfparser.meta\_header\_parser module
--------------------------------------
-
-.. automodule:: vcfparser.meta_header_parser
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-vcfparser.record\_parser module
--------------------------------
-
-.. automodule:: vcfparser.record_parser
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-vcfparser.vcf\_parser module
-----------------------------
+**Module:** vcfparser.vcf\_parser
+---------------------------------
 
 .. automodule:: vcfparser.vcf_parser
    :members:
    :undoc-members:
    :show-inheritance:
 
-vcfparser.vcf\_writer module
-----------------------------
+**Module:** vcfparser.meta\_header\_parser
+------------------------------------------
+
+.. automodule:: vcfparser.meta_header_parser
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+**Module:** vcfparser.record\_parser
+------------------------------------
+
+.. automodule:: vcfparser.record_parser
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+**Module:** vcfparser.vcf\_writer
+---------------------------------
 
 .. automodule:: vcfparser.vcf_writer
    :members:
