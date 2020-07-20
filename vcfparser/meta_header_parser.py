@@ -13,10 +13,6 @@ class MetaDataParser:
         self.format_ = []
         self.alt_ = []
         self.other_lines = []
-
-        # test code
-        self.testA = "hey"
-
         self.fileformat = None
         self.reference = []
         self.sample_names = []
