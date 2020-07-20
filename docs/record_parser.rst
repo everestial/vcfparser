@@ -3,7 +3,7 @@
 Tutorial on record parser
 =========================
 
-Advanced Tutorial on vcf parser module showing most of the functions.
+Advanced tutorial on vcf parser module showing most of the functions.
 
 Let's first import ``VcfParser`` module and instantiate an vcf object by 
 passing vcf file as an argument.
@@ -18,9 +18,11 @@ We can also pass gzipped vcf file as an argument.
 
 >>> vcf_obj = VcfParser('input_test.vcf.gz')
 
+| 
+
 ``VcfParser`` module  has two main methods:
-- parse_metadata: It contains information related the header lines 
-- parse_records: It contains methods to retrieve record values from the vcf file.
+  - **parse_metadata:** to extract the information from VCF metadata header.
+  - **parse_records:** to retrieve the record values from the vcf file.
 
 
 Accessing VCF records:
