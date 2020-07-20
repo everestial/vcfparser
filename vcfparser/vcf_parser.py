@@ -10,7 +10,7 @@ from vcfparser.record_parser import Record
 
 class VcfParser:
     """
-    Parses a given vcf file into and outputs metainfo and yields records.
+    Parse metadata and yield record from the input VCF.
 
     Methods
     -------
@@ -77,22 +77,29 @@ class VcfParser:
             sys.exit(0)
         record_keys = header_line.lstrip("#").strip("\n").split("\t")
 
+        if pos_range:
+            if not '-' in pos_range:
+                #TODO: Gopal (Add warning message here)
+                print('The position range should be separated by "-"')
+            pos_range = pos_range.split("-")
+
         for record_line in _record_lines:
+            record_line = record_line.split("\t")
             # in order to select only selected chrom values
             if chrom and pos_range:
-                ch_val = record_line.split("\t")[0]
-                pos_val = int(record_line.split("\t")[1])
+                ch_val = record_line[0]
+                pos_val = int(record_line[1])
                 start_pos, end_pos = int(pos_range[0]), int(pos_range[1])
-                if ch_val in chrom and start_pos <= pos_val <= end_pos:
+                if ch_val == chrom and start_pos <= pos_val <= end_pos:
                     yield Record(record_line, record_keys)
 
             elif chrom:
-                ch_val = record_line.split("\t")[0]
-                if ch_val in chrom:
+                ch_val = record_line[0]
+                if ch_val == chrom:
                     yield Record(record_line, record_keys)
 
             elif pos_range:
-                pos_val = record_line.split("\t")[0]
+                pos_val = int(record_line[1])
                 start_pos, end_pos = int(pos_range[0]), int(pos_range[1])
                 if start_pos <= pos_val <= end_pos:
                     yield Record(record_line, record_keys)
