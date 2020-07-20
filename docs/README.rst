@@ -35,7 +35,9 @@ Installation
 ------------
 
 | **Method A:**
+
 | `VCFsimplify <https://github.com/everestial/VCF-Simplify>`_ uses vcfparser API, so the package is readily available if VCFsimplify is already installed.
+
 This is only preferred while developing/optimizing **VcfSimplify** along with **vcfparser**.
 
 Navigate to the VCFsimplify directory -> 
@@ -77,11 +79,14 @@ call the 'vcfparser' package.
 
 |
 | **Method C:**
+
 | For offline install, or in order to build from the source code, follow :ref:`advance install <advanced-install>`.
 
 |
+
 Cythonize (optional but helpful)
 --------------------------------
+
 The installed "vcfparser" package can be cythonized to optimize performance.
 Cythonizing the package can increase the speed of the parser by about x.x - y.y (?) times. 
 
@@ -96,7 +101,7 @@ Usage
 >>> vcf_obj = VcfParser('input_test.vcf')
 
 Get metadata information from the vcf file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 >>> metainfo = vcf_obj.parse_metadata()
 >>> metainfo.fileformat
@@ -112,7 +117,7 @@ Get metadata information from the vcf file
 
 
 Get Records from the vcf file
-^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 >>> records = vcf_obj.parse_records() 
     # Note: Records are returned as generator. 
 >>> first_record = next(records)
@@ -130,12 +135,14 @@ Get Records from the vcf file
 ['PASS']
 >>> first_record.get_mapped_samples()
 {'ms01e': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms02g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms03g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms04h': {'GT': '1/1', 'PI': '.', 'GQ': '6', 'PG': '1/1', 'PM': '.', 'PW': '1/1', 'AD': '0,2', 'PL': '49,6,0,.,.,.', 'DP': '2', 'PB': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'GQ': '78', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '29,0,0', 'PL': '0,78,1170,78,1170,1170', 'DP': '29', 'PB': '.', 'PC': '.'}, 'MA605': {'GT': '0/0', 'PI': '.', 'GQ': '9', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '3,0,0', 'PL': '0,9,112,9,112,112', 'DP': '3', 'PB': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'GQ': '99', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '40,0,0', 'PL': '0,105,1575,105,1575,1575', 'DP': '40', 'PB': '.', 'PC': '.\n'}}
+
 TODO: Bhuwan (priority - high)
 The very last example "first_record.get_mapped_samples()" is returning the value of the last sample/key with "\n". 
 i.e: 'PC': '.\n'
 Please fix that issue - strip('\n') in the line before parsing. 
 
 |
+
 Alternately, we can loop over each record by using a for-loop:
 
 .. code-block:: bash
@@ -153,5 +160,5 @@ Alternately, we can loop over each record by using a for-loop:
         mapped_sample = record.get_mapped_samples()
 
 | For more specific use cases please check the examples in the following section:
-| tutorial on MetaData # TODO (Gopal) - add link here
-| tutorial on record parser # TODO - add link here 
+| For tutorials in metadata, please follow :ref:`Metadata Tutorial <metadata-tutorial>`.
+| For tutorials in record parser, please follow :ref:`Record Parser Tutorial <record-parser-tutorial>`.
