@@ -10,23 +10,32 @@ from vcfparser.record_parser import Record
 
 class VcfParser:
     """
-    Parse metadata and yield record from the input VCF.
+    A class to parse the metadata information and yield records from the input VCF.
 
     Methods
     -------
     parse_metadata()
     parse_records()
-
     """
+    #TODO (Bhuwan, Gopal): Insert a line break here
+    # Is the above docstring useful somewhere?
+    # Introduce linebreak after each module description 
+    # Use this example and cheatsheet:
+    # https://stackoverflow.com/questions/7033239/how-to-preserve-line-breaks-when-generating-python-docs-using-sphinx 
+    # https://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html#inline-markup-and-special-characters-e-g-bold-italic-verbatim 
 
     def __init__(self, filename):
         """
 
         Parameters
         ----------
-        filename: file
-            input vcf file that needs to be parsed. bzip files are also supported.
 
+        filename: file
+            input vcf file that needs to be parsed. bgzipped files are also supported.
+        Returns:
+            VCF object for iterating and querying.
+        Return type: 
+            Object
         """
         self.filename = filename
         # assign to support gz compressed files
@@ -40,29 +49,60 @@ class VcfParser:
         self._file_copy.close()
 
     def parse_metadata(self):
-        """ initialize variables to store metadata lines of the VCF file """
+        #TODO: 
+        # Add the new keyword called "Uses" to show what functions, classes, modules the current class/module uses
+        # Uses
+        # ----
+        # MetaDataParser class to create MetaData object
+        """ function to parse the metadata information from VCF header. 
+
+        Parameters
+        ----------
+
+        Returns:
+            MetaDataParser object for iterating and querying the metadata information.
+        Return type: 
+            Object
+        """
         # this produces a iterator of meta data lines (lines starting with '#')
         _raw_lines = itertools.takewhile(lambda x: x.startswith("#"), self._file)
         return MetaDataParser(_raw_lines).parse_lines()
 
     # TODO (Bhuwan, low priority) - Could multiprocessing be invoked here?? with -n flag
     # multiprocessing should however follow the order (genomic position)
+    # TODO (Bhuwan, Gopal) properly render the "Uses" flag in this function too. 
     def parse_records(self, chrom=None, pos_range=None, no_of_recs=1):
-        # TODO (Bhuwan, low priority) - to implement
-        # pos_range = position based: str or str,str or str-str
-        """ Parse records from file and yield it.
+        # TODO (Bhuwan, mid priority, research item)
+        # may be replce "no_of_recs" with "nt" i.e number of threads
+
+        """ Parse records and yield it.
 
         Parameters
         ----------
-        chrom : str
-        pos_range : str
+
+        chrom : str 
+            chormosome name or number. Default = None
+        pos_range : tuple
+            genomic position of interest, e.g: (5, 15). Both upper and lower limits are inclusive. 
+            Default = None
         no_of_recs : int
+            number of records to process
+
+        Uses
+        ----
+        Record module to create a Record object
 
         Yields
         ------
-        Record object on which we can perform different operations and extract required values
+        Record object for interating and quering the record information.
 
         """
+        #TODO: 
+        # the Uses is not being rendered properly.
+
+        #TODO (Bhuwan, Bishwa; priority = high)
+        #the no_of_recs is not being used. 
+        # Keep or delete or use it? 
 
         _record_lines = itertools.dropwhile(
             lambda x: x.startswith("##"), self._file_copy
@@ -78,18 +118,15 @@ class VcfParser:
         record_keys = header_line.lstrip("#").strip("\n").split("\t")
 
         if pos_range:
-            if not '-' in pos_range:
-                #TODO: Gopal (Add warning message here)
-                print('The position range should be separated by "-"')
-            pos_range = pos_range.split("-")
+            start_pos, end_pos = int(pos_range[0]), int(pos_range[1])
 
         for record_line in _record_lines:
-            record_line = record_line.split("\t")
+            record_line = record_line.strip("\n").split("\t")
+
             # in order to select only selected chrom values
             if chrom and pos_range:
                 ch_val = record_line[0]
                 pos_val = int(record_line[1])
-                start_pos, end_pos = int(pos_range[0]), int(pos_range[1])
                 if ch_val == chrom and start_pos <= pos_val <= end_pos:
                     yield Record(record_line, record_keys)
 
