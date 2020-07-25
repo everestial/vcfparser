@@ -7,51 +7,52 @@ import sys
 
 class Record:
     """
-    A class for to store and extract the data lines in the vcf file.
+    A class that converts the record lines from input VCF into accessible record object.
     """
 
-    def __init__(self, record_line, record_keys):
+    def __init__(self, record_values, record_keys):
         """
-        Initializes the class with record lines and header lines.
+        Initializes the class with header keys and record values.
 
         Parameters
         ----------
-        record_line: str
-            tab separated data lines (records) lines below # CHROM in vcf file
         record_keys: list
-            a line in vcf starting with # CHROM
+            - list of record keys generated for the record values
+            - generated from string in the VCF that starts with #CHROM
+            - stays the same for a particular VCF file
+        record_values: list
+            - list of record values generated from the VCF record line 
+            - genrated from the lines below # CHROM in VCF file
+            - values are dynamically updated in each for-loop        
         """
-        self.rec_line = record_line
-        self.record_vals = self.rec_line.strip("\n").split("\t")
+        self.rec_line = "\t".join(record_values)
+        self.record_values = record_values
         self.record_keys = record_keys
-        self.CHROM = self.record_vals[0]
-        self.POS = self.record_vals[1]
-        self.ID = self.record_vals[2]
-        self.REF = self.record_vals[3]
-        self.ALT = self.record_vals[4]
-        self.ref_alt = self.REF.split(",") + self.ALT.split(",")
-        self.QUAL = self.record_vals[5]
-        self.FILTER = self.record_vals[6].split(",")
-        self.info_str = self.record_vals[7]
-        self.format_ = self.record_vals[8].split(":")
+        self.CHROM = self.record_values[0]
+        self.POS = self.record_values[1]
+        self.ID = self.record_values[2]
+        self.REF = self.record_values[3]
+        self.ALT = self.record_values[4].split(",")
+        self.ref_alt = self.REF.split(",") + self.ALT
+        self.QUAL = self.record_values[5]
+        self.FILTER = self.record_values[6].split(",")
+        self.info_str = self.record_values[7]
+        self.format_ = self.record_values[8].split(":")
         self.sample_names = self.record_keys[9:] if len(self.record_keys) > 9 else None
 
         try:
-            self.sample_vals = self.record_vals[9:]
+            self.sample_vals = self.record_values[9:]
         except IndexError:
             warnings.warn(
                 "Sample values are not presented correctly in given vcf file."
             )
-
-        # TODO DONE for this line
-        # (Bhuwan, high priority): add error message (not exit)
-        # that vcf lacks sample information or samples are represented not at right position
-
         self.mapped_sample = self._map_fmt_to_samples()
 
+    # TODO - ask question : What is this function used for? 
     def __str__(self):
         return str(self.rec_line)
 
+    #TODO (Bishwa): Rename this function to something appropriate. 
     @staticmethod
     def split_tag_from_samples(order_mapped_samples, tag, sample_names):
         """ Splits the tags of given samples from order_dict of mapped_samples
@@ -83,7 +84,6 @@ class Record:
 
     def isHOMREF(self, tag="GT", bases="numeric"):
         """
-
         Parameters
         ----------
         tag: str
@@ -98,9 +98,8 @@ class Record:
 
         Examples
         --------
-        >>> rec_keys_eg = 'CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	ms01e	ms02g	ms03g	ms04h	MA611	MA605	MA622'
-
-        >>> rec_valeg = '2	15881018	.	G	A,C	5082.45	PASS	AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs	GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.	0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.	0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.	0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.'
+        >>> rec_keys = 'CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	ms01e	ms02g	ms03g	ms04h	MA611	MA605	MA622'
+        >>> rec_val = '2	15881018	.	G	A,C	5082.45	PASS	AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs	GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.	0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.	0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.	0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.'
         >>> from record_parser import Record
         >>> rec_obj = Record(rec_valeg, rec_keys_eg)
         >>> rec_obj.isHOMREF(tag="GT", bases="iupac")
@@ -344,9 +343,9 @@ class Record:
         Examples
         --------
 
-        >>> rec_keys_eg = 'CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	ms01e	ms02g	ms03g	ms04h	MA611	MA605	MA622'
+        >>> rec_keys = 'CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	ms01e	ms02g	ms03g	ms04h	MA611	MA605	MA622'
 
-        >>> rec_valeg = '2	15881018	.	G	A,C	5082.45	PASS	AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs	GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.	0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.	0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.	0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.'
+        >>> rec_val = '2	15881018	.	G	A,C	5082.45	PASS	AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs	GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.	0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.	0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.	0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.'
         >>> from record_parser import Record
         >>> rec_obj = Record(rec_valeg, rec_keys_eg)
         >>> rec_obj.has_phased(tag="GT", bases="iupac")
@@ -578,13 +577,15 @@ class Record:
             dict with key value pair with sample and infos modified
         TODO: Add input and output 
         """
-        mapped_records = dict(zip(self.record_keys, self.record_vals))
+        mapped_records = dict(zip(self.record_keys, self.record_values))
         mapped_records["INFO"] = self.get_info_dict()
         mapped_records["samples"] = self.get_mapped_samples(gt_bases=gt_bases)
         return mapped_records
 
     # functions to add later
     def iupac_to_numeric(self):
+        # input parameters should be ref_alt, iupac_bases = []
+        # returns: list of numeric bases 
         # required for buildVCF ??
         # TODO
         pass
@@ -592,3 +593,8 @@ class Record:
     def deletion_overlapping_variant(self):
         # TODO
         pass
+
+    
+
+
+
