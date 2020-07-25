@@ -5,9 +5,9 @@
 Tutorial on record parser
 =========================
 
-Advanced tutorial on vcf parser module showing most of the functions.
+Advanced tutorial on vcf parser module showing available functions.
 
-Let's first import ``VcfParser`` module and instantiate an vcf object by 
+First import ``VcfParser`` module and instantiate an vcf object by 
 passing vcf file as an argument.
 
 Initial setup:
@@ -16,7 +16,8 @@ Initial setup:
 >>> from vcfparser import VcfParser
 >>> vcf_obj = VcfParser('input_test.vcf')
 
-We can also pass gzipped vcf file as an argument.
+We can also pass gzipped vcf file as an argument. 
+#TODO (Bhuwan, Gopal; priority - high) - check the gzipped file read/write works on both Linux and Windows
 
 >>> vcf_obj = VcfParser('input_test.vcf.gz')
 
@@ -24,7 +25,7 @@ We can also pass gzipped vcf file as an argument.
 
 ``VcfParser`` module  has two main methods:
   - **parse_metadata:** to extract the information from VCF metadata header.
-  - **parse_records:** to retrieve the record values from the vcf file.
+  - **parse_records:** to retrieve the record values from the VCF file.
 
 
 Accessing VCF records:
@@ -32,14 +33,14 @@ Accessing VCF records:
 
 >>> records = vcf_obj.parse_records() 
 
-Here, records is an generator object and applying next(records) yields the first record and 
-we can access methods of ``Record`` class.
+Here, records is an generator object and applying ``next(records)`` yields the first record and 
+we can access methods of ``Record`` (#TODO: Hyperlink this word, so it takes us to the method of the Record) class.
 
 >>> first_record = next(records)
 >>> print(first_record)
 2       15881224        .       T       G       143.24  PASS    AC=0;AF=0.036;AN=12;BaseQRankSum=1.75;ClippingRankSum=0.00;DP=591;ExcessHet=3.0103;FS=3.522;InbreedingCoeff=-0.1072;MLEAC=1;MLEAF=0.036;MQ=41.48;MQRankSum=0.366;QD=15.92;ReadPosRankSum=0.345;SF=0,1,2,3,4,5,6;SOR=2.712;set=HignConfSNPs   GT:PM:PG:GQ:AD:PW:PI:PL:PC:PB:DP       ./.:.:./.:.:0:./.:.:.,.,.:.:.:0 0/0:.:0/0:3:1:0/0:.:.,.,.:.:.:1        0/0:.:0/0:12:4:0/0:.:.,.,.:.:.:4        0/0:.:0/0:3:4:0/0:.:.,.,.:.:.:4        0/0:.:0/0:30:17,0:0/0:.:0,30,450:.:.:17 0/0:.:0/0:15:7,0:0/0:.:0,15,225:.:.:7  0/0:.:0/0:39:25,0:0/0:.:0,39,585:.:.:25
 
-Record_keys are also available within record object.
+``record_keys`` are also available within record object.
 **Note: The record_keys provided by metainfo object and the record object are the same**
 
 >>> print(first_record.record_keys) 
@@ -60,7 +61,6 @@ Each subsequent record can also be accessed on a for-loop
 ... 
 2       15881018        .       G       A,C     5082.45 PASS    AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs     
         GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC        0/1:5:.:0|1:.:./.:0,0:0,0,0,.,.,.:0:.:.        ./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:. ./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.        1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.        0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.        0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.        0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.
-
 '15881018'
 
 **Note: Following attributes from the "record" object can be called directly.**
