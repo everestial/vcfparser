@@ -1,11 +1,14 @@
 
 .. _record-parser-tutorial:
 
+.. TODO (Bhuwan, Gopal, priority - high): introduce line break between documentation paragraphs.
+.. Line breaks are introduced by using "|  " or using a new line or setting up a main.rst file with settings
+
 =========================
 Tutorial on record parser
 =========================
 
-Advanced tutorial on vcf parser module showing available functions.
+Advanced tutorial on vcf parser module showing available methods for parsing records.
 
 First import ``VcfParser`` module and instantiate an vcf object by 
 passing vcf file as an argument.
@@ -17,42 +20,40 @@ Initial setup:
 >>> vcf_obj = VcfParser('input_test.vcf')
 
 We can also pass gzipped vcf file as an argument. 
-#TODO (Bhuwan, Gopal; priority - high) - check the gzipped file read/write works on both Linux and Windows
+
+.. TODO (Bhuwan, Gopal; priority - high) - check the gzipped file read/write works on both Linux and Windows
 
 >>> vcf_obj = VcfParser('input_test.vcf.gz')
 
 | 
 
 ``VcfParser`` module  has two main methods:
-  - **parse_metadata:** to extract the information from VCF metadata header.
-  - **parse_records:** to retrieve the record values from the VCF file.
+  - **parse_metadata:** to extract the metadata information from VCF metadata header.
+  - **parse_records:** to retrieve the record values from the VCF record lines.
 
 
 Accessing VCF records:
 ^^^^^^^^^^^^^^^^^^^^^^
-
+  
+>>> # pass the VCF object to the 'parse_records()' function
 >>> records = vcf_obj.parse_records() 
 
-Here, records is an generator object and applying ``next(records)`` yields the first record and 
-we can access methods of ``Record`` (#TODO: Hyperlink this word, so it takes us to the method of the Record) class.
+**Yield record values - Method A: using next()**
+
+  - records is an generator object. Therefore, applying ``next(records)`` yields the very first record as Record object. 
+  - Subsequent ``next(records)`` will yield subsequent records after that first record from the VCF.  
+  - ``parse_records()`` uses the ``Record`` class which can be used directly if ``record_keys`` are ``record_vals`` are handy. 
+
+.. TODO: Hyperlink the word ``Record`` (above), so it takes us to the 'Record' class documentation.
 
 >>> first_record = next(records)
 >>> print(first_record)
 2       15881224        .       T       G       143.24  PASS    AC=0;AF=0.036;AN=12;BaseQRankSum=1.75;ClippingRankSum=0.00;DP=591;ExcessHet=3.0103;FS=3.522;InbreedingCoeff=-0.1072;MLEAC=1;MLEAF=0.036;MQ=41.48;MQRankSum=0.366;QD=15.92;ReadPosRankSum=0.345;SF=0,1,2,3,4,5,6;SOR=2.712;set=HignConfSNPs   GT:PM:PG:GQ:AD:PW:PI:PL:PC:PB:DP       ./.:.:./.:.:0:./.:.:.,.,.:.:.:0 0/0:.:0/0:3:1:0/0:.:.,.,.:.:.:1        0/0:.:0/0:12:4:0/0:.:.,.,.:.:.:4        0/0:.:0/0:3:4:0/0:.:.,.,.:.:.:4        0/0:.:0/0:30:17,0:0/0:.:0,30,450:.:.:17 0/0:.:0/0:15:7,0:0/0:.:0,15,225:.:.:7  0/0:.:0/0:39:25,0:0/0:.:0,39,585:.:.:25
 
-``record_keys`` are also available within record object.
-**Note: The record_keys provided by metainfo object and the record object are the same**
 
->>> print(first_record.record_keys) 
-['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
+**Yield record values - Method B: using for-loop**
 
-Record also has several attributes available to extract the record values as list or dictionary.
-
->>> dir(first_record)
-['ALT', 'CHROM', 'FILTER', 'ID', 'POS', 'QUAL', 'REF', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_map_fmt_to_samples', '_to_iupac', 'deletion_overlapping_variant', 'format_', 'get_info_dict', 'get_mapped_samples', 'get_mapped_tag_list', 'hasAllele', 
-'hasINDEL', 'hasSNP', 'hasVAR', 'has_phased', 'has_unphased', 'hasnoVAR', 'info_str', 'isHETVAR', 'isHOMREF', 'isHOMVAR', 'isMissing', 'iupac_to_numeric', 'map_records_long', 'mapped_sample', 'rec_line', 'record_keys', 'record_vals', 'ref_alt', 'sample_names', 'sample_vals', 'split_tag_from_samples', 'unmap_fmt_samples_dict', 'vTest']
-
-Each subsequent record can also be accessed on a for-loop 
+Each record in the VCF can also be accessed on a for-loop 
 
 >>> for record in records:
 ...     print(record)
@@ -63,48 +64,70 @@ Each subsequent record can also be accessed on a for-loop
         GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC        0/1:5:.:0|1:.:./.:0,0:0,0,0,.,.,.:0:.:.        ./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:. ./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.        1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.        0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.        0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.        0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.
 '15881018'
 
-**Note: Following attributes from the "record" object can be called directly.**
+|  
+**Extract data using Record object attribute and methods**
 
-CHROM, POS, REF, ALT, ref_alt, QUAL, FILTER, info_str, format_, sample_names, sample_vals, mapped_sample
+Record object also has several attributes and methods which allows us to extract the record values as list or dictionary.
 
-It should return the vcf record header.
+>>> # list the available attribute and methods 
+>>> dir(first_record)  # or dir(record) on a for loop 
+['ALT', 'CHROM', 'FILTER', 'ID', 'POS', 'QUAL', 'REF', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_map_fmt_to_samples', '_to_iupac', 'deletion_overlapping_variant', 'format_', 'get_info_dict', 'get_mapped_samples', 'get_mapped_tag_list', 'hasAllele', 
+'hasINDEL', 'hasSNP', 'hasVAR', 'has_phased', 'has_unphased', 'hasnoVAR', 'info_str', 'isHETVAR', 'isHOMREF', 'isHOMVAR', 'isMissing', 'iupac_to_numeric', 'map_records_long', 'mapped_sample', 'rec_line', 'record_keys', 'record_vals', 'ref_alt', 'sample_names', 'sample_vals', 'split_tag_from_samples', 'unmap_fmt_samples_dict', 'vTest']
 
->>> first_record = next(records)                                 
->>> first_record.record_keys 
+Attributes
+----------
 
-It should return the value for the record keys.
+>>> # all possible attributes in the "record" object are: 
+>>> # CHROM, POS, REF, ALT, ref_alt, QUAL, FILTER, info_str, format_, sample_names, sample_vals, mapped_sample
 
->>> first_record.record_vals
+>>> first_record.CHROM
+'2'
+>>> first_record.POS 
+'15881018'
+>>> first_record.REF, first_record.ALT, first_record.QUAL, first_record.FILTER
+('G', ['A', 'C'], '5082.45', ['PASS'])
+>>> first_record.ref_alt  # REF and ALT allele together
+['C', 'CA']
 
-For convenience "record_keys" can be accessed in each loop.
-
->>> first_record.record_keys    
+>>> # available keys from the "CHROM" line of the VCF
+>>> first_record.record_keys
+['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
+>>> # Note: "record_keys" available within record object are same as in metainfo object.
+>>> metainfo.record_keys  # from "parse_metadata()"
 ['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
 
-To generate the record values of a particular record line as a list.
 
->>> first_record.record_vals
-['2', '15881106', '.', 'C', 'CA', '33.32', 'PASS', 'AC=0;AF=0.042;AN=6;BaseQRankSum=0.253;ClippingRankSum=0.00;DP=654;ExcessHet=3.0103;FS=0.000;InbreedingCoeff=-0.0469;MLEAC=1;MLEAF=0.042;MQ=60.00;MQRankSum=0.00;QD=6.66;ReadPosRankSum=0.253;SF=4,5,6;SOR=0.223;set=HignConfSNPs', 'GT:AD:PI:PW:PG:PM:GQ:DP:PB:PC:PL', '.', '.', '.', '.', '0/0:20,0:.:0/0:0/0:.:54:20:.:.:0,54,810', '0/0:6,0:.:0/0:0/0:.:18:6:.:.:0,18,206', '0/0:27,0:.:0/0:0/0:.:72:27:.:.:0,72,1080']
+>>> # INFO and FORMAT values are accessed using lowercase
+>>> first_record.info_str   # info values as string
+'AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs'
+>>> first_record.get_info_dict() # info values as dictionary 
+{'AC': '2,0', 'AF': '1.00', 'AN': '8', 'BaseQRankSum': '-7.710e-01', 'ClippingRankSum': '0.00', 'DP': '902', 'ExcessHet': '0.0050', 'FS': '0.000', 'InbreedingCoeff': '0.8004', 'MLEAC': '12,1', 'MLEAF': '0.462,0.038', 'MQ': '60.29', 'MQRankSum': '0.00', 'QD': '33.99', 'ReadPosRankSum': '0.260', 'SF': '0,1,2,3,4,5,6', 'SOR': '0.657', 'set': 'HignConfSNPs'}
+>>> first_record.format_ 
+['GT', 'PI', 'GQ', 'PG', 'PM', 'PW', 'AD', 'PL', 'DP', 'PB', 'PC']
 
-**Note: all the remaining example of data extraction is based on this record value**
+|  
 
-The record object containts several attributes and functions to further parse the record using several function.
-
->>> first_record.sample_names
+>>> first_record.sample_names  # get sample names
 ['ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
 
-Generate the mapped FORMAT tags to SAMPLE.
-
->>> first_record.mapped_sample
+>>> first_record.sample_vals # get sample values as list
+['./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', '1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.', '0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.', '0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.', '0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.']
+>>> first_record.mapped_sample # map the FORMAT tags to SAMPLE.
 OrderedDict([('ms01e', {'GT': '.', 'AD': '.', 'PI': '.', 'PW': '.', 'PG': '.', 
 'PM': '.', 'GQ': '.', 'DP': '.', 'PB': '.', 'PC': '.', 'PL': '.'}), ('ms02g', {'GT': '.', 'AD': '.', 'PI': '.', 'PW': '.', 'PG': '.', 'PM': '.', 'GQ': '.', 'DP': '.', 'PB': '.', 'PC': '.', 'PL': '.'}), ('ms03g', {'GT': '.', 'AD': '.', 'PI': '.', 'PW': '.', 'PG': '.', 'PM': '.', 'GQ': '.', 'DP': '.', 'PB': '.', 'PC': '.', 'PL': '.'}), ('ms04h', {'GT': '.', 'AD': '.', 'PI': '.', 'PW': '.', 'PG': '.', 'PM': '.', 'GQ': '.', 'DP': '.', 'PB': '.', 'PC': '.', 'PL': '.'}), ('MA611', {'GT': '0/0', 'AD': '20,0', 'PI': '.', 'PW': '0/0', 'PG': '0/0', 'PM': '.', 'GQ': '54', 'DP': '20', 'PB': '.', 'PC': '.', 'PL': '0,54,810'}), ('MA605', 
 {'GT': '0/0', 'AD': '6,0', 'PI': '.', 'PW': '0/0', 'PG': '0/0', 'PM': '.', 'GQ': '18', 'DP': '6', 'PB': '.', 'PC': '.', 'PL': '0,18,206'}), ('MA622', {'GT': '0/0', 'AD': '27,0', 'PI': '.', 'PW': '0/0', 'PG': '0/0', 'PM': '.', 'GQ': '72', 'DP': '27', 'PB': '.', 'PC': '.', 'PL': '0,72,1080'})])
 
 
-Generate REF and ALT allele together.
+>>> # map the FORMAT tag to SAMPLE values 
+>>> first_record.get_mapped_samples()
+{'ms01e': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms02g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms03g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms04h': {'GT': '1/1', 'PI': '.', 'GQ': '6', 'PG': '1/1', 'PM': '.', 'PW': '1/1', 'AD': '0,2', 'PL': '49,6,0,.,.,.', 'DP': '2', 'PB': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'GQ': '78', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '29,0,0', 'PL': '0,78,1170,78,1170,1170', 'DP': '29', 'PB': '.', 'PC': '.'}, 'MA605': {'GT': '0/0', 'PI': '.', 'GQ': '9', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '3,0,0', 'PL': '0,9,112,9,112,112', 'DP': '3', 'PB': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'GQ': '99', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '40,0,0', 'PL': '0,105,1575,105,1575,1575', 'DP': '40', 'PB': '.', 'PC': '.'}}
 
->>> first_record.ref_alt
-['C', 'CA']
+>>> # # get a full mapping for all the record_keys and FORMAT within SAMPLE
+>>> first_record.map_records_long()  
+{'CHROM': '2', 'POS': '15881018', 'ID': '.', 'REF': 'G', 'ALT': 'A,C', 'QUAL': '5082.45', 'FILTER': 'PASS', 'INFO': {'AC': '2,0', 'AF': '1.00', 'AN': '8', 'BaseQRankSum': '-7.710e-01', 'ClippingRankSum': '0.00', 'DP': '902', 'ExcessHet': '0.0050', 'FS': '0.000', 'InbreedingCoeff': '0.8004', 'MLEAC': '12,1', 'MLEAF': '0.462,0.038', 'MQ': '60.29', 'MQRankSum': '0.00', 'QD': '33.99', 'ReadPosRankSum': '0.260', 'SF': '0,1,2,3,4,5,6', 'SOR': '0.657', 'set': 'HignConfSNPs'}, 'FORMAT': 'GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC', 'ms01e': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms02g': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms03g': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms04h': '1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.', 'MA611': '0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.', 'MA605': '0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.', 'MA622': '0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.', 'samples': {'ms01e': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms02g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms03g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms04h': {'GT': '1/1', 'PI': '.', 'GQ': '6', 'PG': '1/1', 'PM': '.', 'PW': '1/1', 'AD': '0,2', 'PL': '49,6,0,.,.,.', 'DP': '2', 'PB': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'GQ': '78', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '29,0,0', 'PL': '0,78,1170,78,1170,1170', 'DP': '29', 'PB': '.', 'PC': '.'}, 'MA605': {'GT': '0/0', 'PI': '.', 'GQ': '9', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '3,0,0', 'PL': '0,9,112,9,112,112', 'DP': '3', 'PB': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'GQ': '99', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '40,0,0', 'PL': '0,105,1575,105,1575,1575', 'DP': '40', 'PB': '.', 'PC': '.'}}}
+
+
+"continue ..... " 
 
 Methods on record object
 ^^^^^^^^^^^^^^^^^^^^^^^^

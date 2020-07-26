@@ -17,8 +17,7 @@ class VcfParser:
     parse_metadata()
     parse_records()
     """
-    #TODO (Bhuwan, Gopal): Insert a line break here
-    # Is the above docstring useful somewhere?
+    #TODO (Bhuwan, Gopal): Insert a line break here and several other places as need be.
     # Introduce linebreak after each module description 
     # Use this example and cheatsheet:
     # https://stackoverflow.com/questions/7033239/how-to-preserve-line-breaks-when-generating-python-docs-using-sphinx 
