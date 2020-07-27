@@ -4,6 +4,11 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+# for RST documentation enhancement see the following: 
+# https://sublime-and-sphinx-guide.readthedocs.io/en/latest/code_blocks.html
+# https://www.zverovich.net/2016/06/16/rst-vs-markdown.html
+
+
 # -- Path setup --------------------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -58,3 +63,5 @@ html_static_path = []
 
 # to solve issue: https://github.com/readthedocs/readthedocs.org/issues/2569
 master_doc = 'index'
+
+pygments_style = 'sphinx'
