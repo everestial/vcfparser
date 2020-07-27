@@ -3,6 +3,7 @@
 
 import gzip
 import itertools
+import sys
 
 from vcfparser.meta_header_parser import MetaDataParser
 from vcfparser.record_parser import Record
