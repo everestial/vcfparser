@@ -47,7 +47,7 @@ Accessing VCF records:
 
   - records is an generator object. Therefore, applying ``next(records)`` yields the very first record as Record object. 
   - Subsequent ``next(records)`` will yield subsequent records after that first record from the VCF.  
-  - ``parse_records()`` uses the ``Record`` class which can be used directly if ``record_keys`` are ``record_vals`` are handy. 
+  - ``parse_records()`` uses the ``Record`` class which can be used directly if ``record_keys`` and ``record_vals`` are handy. 
 
 .. TODO: Hyperlink the word ``Record`` (above), so it takes us to the 'Record' class documentation.
 
@@ -180,33 +180,14 @@ These methods take several args and kwargs to narrow down the information availa
 {'CHROM': '2', 'POS': '15881018', 'ID': '.', 'REF': 'G', 'ALT': 'A,C', 'QUAL': '5082.45', 'FILTER': 'PASS', 'INFO': {'AC': '2,0', 'AF': '1.00', 'AN': '8', 'BaseQRankSum': '-7.710e-01', 'ClippingRankSum': '0.00', 'DP': '902', 'ExcessHet': '0.0050', 'FS': '0.000', 'InbreedingCoeff': '0.8004', 'MLEAC': '12,1', 'MLEAF': '0.462,0.038', 'MQ': '60.29', 'MQRankSum': '0.00', 'QD': '33.99', 'ReadPosRankSum': '0.260', 'SF': '0,1,2,3,4,5,6', 'SOR': '0.657', 'set': 'HignConfSNPs'}, 'FORMAT': 'GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC', 'ms01e': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms02g': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms03g': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms04h': '1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.', 'MA611': '0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.', 'MA605': '0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.', 'MA622': '0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.', 'samples': {'ms01e': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.', 'GT_iupac': './.'}, 'ms02g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.', 'GT_iupac': './.'}, 'ms03g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.', 'GT_iupac': './.'}, 'ms04h': {'GT': '1/1', 'PI': '.', 'GQ': '6', 'PG': '1/1', 'PM': '.', 'PW': '1/1', 'AD': '0,2', 'PL': '49,6,0,.,.,.', 'DP': '2', 'PB': '.', 'PC': '.', 'GT_iupac': 'A/A'}, 'MA611': {'GT': '0/0', 'PI': '.', 'GQ': '78', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '29,0,0', 'PL': '0,78,1170,78,1170,1170', 'DP': '29', 'PB': '.', 'PC': '.', 'GT_iupac': 'G/G'}, 'MA605': {'GT': '0/0', 'PI': '.', 'GQ': '9', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '3,0,0', 'PL': '0,9,112,9,112,112', 'DP': '3', 'PB': '.', 'PC': '.', 'GT_iupac': 'G/G'}, 'MA622': {'GT': '0/0', 'PI': '.', 'GQ': '99', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '40,0,0', 'PL': '0,105,1575,105,1575,1575', 'DP': '40', 'PB': '.', 'PC': '.', 'GT_iupac': 'G/G'}}}
 >>> # Note: "convert_to_iupac" will add the genotype tag with suffix "_iupac" to show the genotype in IUPAC bases. 
 
-.. "continue ..... " 
+|  
 
-**Below this may be possibly deleted**
+**Genotype parsing**
 
-Similarly, you can also filter formats and samples of interest from records. This allows you to 
-retrieve the fields that you need.
+Genotype checks and parsing are one of most important use case of VCF data. 
+``VcfParser`` provides several methods to do those checks and extract data. 
 
->>> first_record.get_format_to_sample_map(sample_names= ['ms01e', 'MA611'], formats= ['GT','PG', 'PC', 'PI'])
-{'ms01e': {'GT': './.', 'PG': './.', 'PC': '.', 'PI': '.'}, 'MA611': {'GT': '0/0', 'PG': '0/0', 'PC': '.', 'PI': '.'}}
->>> first_record.get_format_to_sample_map( formats= ['GT','PG'])
-{'ms01e': {'GT': './.', 'PG': './.'}, 'ms02g': {'GT': './.', 'PG': './.'}, 'ms03g': {'GT': './.', 'PG': './.'}, 'ms04h': {'GT': '1/1', 'PG': '1/1'}, 'MA611': {'GT': '0/0', 'PG': '0/0'}, 'MA605': {'GT': '0/0', 'PG': '0/0'}, 'MA622': {'GT': '0/0', 'PG': '0/0'}}
->>> first_record.get_format_to_sample_map(sample_names =['ms02g'])
-{'ms02g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}}
-
-
-You can parse the FORMAT-SAMPLE fields like:
-
->>> first_record.get_tag_values_from_samples(mapped_data, tag = 'GT', sample_names = ['ms01e', 'ms02g']) 
-[['.'], ['.']]
-
->>> first_record.get_tag_values_from_samples(mapped_data, tag = 'GQ', sample_names = ['ms01e', 'ms02g', 'MA622'])  
-[['.'], ['.'], ['72']]
-
-
-.. TODO (Bishwa) Use the document below this line 
-
-You can also check if any sample have alleles of your interest.
+  - Check samples that have alleles of your interest.
 
 >>> first_record.hasAllele(allele='1', tag= 'GT', bases = 'iupac')
 {'ms04h': 'A/A'}
@@ -219,7 +200,15 @@ You can also check if any sample have alleles of your interest.
 >>> first_record.hasAllele(allele='0', tag= 'PG', bases = 'iupac')
 {'MA611': 'G/G', 'MA605': 'G/G', 'MA622': 'G/G'}
 
-To check if samples mapped with format tags contains genotype specified :
+.. TODO (Bhuwan, priority - high): Fix this issue 
+  The output should come if hasAllele is requesting and IUPAC allele. 
+  >>> first_record.hasAllele(allele='A', tag= 'GT', bases = 'iupac') 
+  {}  # output should be {'ms04h': 'A/A'}
+  >>> first_record.hasAllele(allele='A', tag= 'GT', bases = 'numeric') 
+  {}  # output should be {'ms04h': '1/1'}
+
+
+  - Check samples with specific genotype. Both numeric and iupac checks are available. 
 
 >>> first_record.hasVAR(genotype='0/0', tag= 'PG', bases = 'numeric')
 {'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0'}
@@ -230,14 +219,13 @@ To check if samples mapped with format tags contains genotype specified :
 >>> first_record.hasVAR(genotype='A/A', tag= 'PG', bases = 'iupac')
 {'ms04h': 'A/A'}
 
-We can also query genotype in phased state.
-
+>>> # genotypes can be checked in phased state 
 >>> first_record.hasVAR(genotype='0|0', tag='GT', bases='numeric')  
 {}
->>> first_record.hasVAR(genotype='0/0', tag='GT', bases='iupac')
-{}
 
-To check if samples have phased genotype or unphased genotype:
+|  
+
+  - Check phased vs unphased genotype. Specific genotype tag can be checked; default is 'GT'.
 
 >>> first_record.has_phased()
 {}
@@ -250,7 +238,9 @@ To check if samples have phased genotype or unphased genotype:
 >>> first_record.has_unphased(tag= 'PG', bases = 'iupac')
 {'ms01e': './.', 'ms02g': './.', 'ms03g': './.', 'ms04h': 'A/A', 'MA611': 'G/G', 'MA605': 'G/G', 'MA622': 'G/G'}
 
-This returns samples with no variants (i.e. contains './.', '.|.', '.') 
+|  
+
+  - Return samples with no variants (i.e. contains './.', '.|.', '.') 
 
 >>> first_record.hasnoVAR()
 {'ms01e': './.', 'ms02g': './.', 'ms03g': './.'}
@@ -259,46 +249,48 @@ This returns samples with no variants (i.e. contains './.', '.|.', '.')
 >>> first_record.hasnoVAR(tag= 'PG')
 {'ms01e': './.', 'ms02g': './.', 'ms03g': './.'}
 
-Samples with homozygous reference genotypes can be retrieved by:
+|  
+
+  - Samples with homozygous reference genotypes can be retrieved as.
 
 >>> first_record.isHOMREF(tag='GT', bases='numeric')                                                       
 {'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0'}
 >>> first_record.isHOMREF(tag='GT', bases='iupac')   
 {'MA611': 'C/C', 'MA605': 'C/C', 'MA622': 'C/C'}
 
-If another FORMAT tag also represents a genotype:
-
+>>> #if another FORMAT tag also represents a genotype, specific the FORMAT tag
 >>> first_record.isHOMREF(tag='PG', bases='numeric')
 {'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0'}
 >>> first_record.isHOMREF(tag='PG', bases='iupac')                                                         
 {'MA611': 'C/C', 'MA605': 'C/C', 'MA622': 'C/C'}
 
-Similarly, samples with homozygous variant genotypes can be retrieved by:
+|  
+
+  - Similarly, samples with homozygous variant genotypes can also be retrieved.
 
 >>> first_record.isHOMVAR()
 {'ms04h': '1/1'}
 >>> first_record.isHOMVAR(tag= 'PG', bases= 'iupac')
 {'ms04h': 'A/A'}
 
-Samples with heterozygous variant genotypes in given record"
+|  
+
+  - Samples with heterozygous variant genotypes in given record"
 
 >>> first_record.isHETVAR()
 {}
 
-This returns samples with missing variants for certain FORMAT tags(i.e. contains './.', '.|.', '.'). Currently we used 'GT' tag as default.  
+|  
+
+  - This returns samples with missing variants for certain FORMAT tags(i.e. contains './.', '.|.', '.'). Currently we used 'GT' tag as default.  
 
 >>> first_record.isMissing()
 {'ms01e': './.', 'ms02g': './.', 'ms03g': './.'}
 
-Other tags can be specified as well like following:
-
+>>> # missing checks can be applied to other FORMAT tags too.
 >>> first_record.isMissing(tag = 'PI')
 {'ms01e': '.', 'ms02g': '.', 'ms03g': '.', 'ms04h': '.', 'MA611': '.', 'MA605': '.', 'MA622': '.'}
 
 >>> first_record.isMissing(tag='GQ') 
 {'ms01e': '.', 'ms02g': '.', 'ms03g': '.', 'ms04h': '.'}
-map_records_long method maps all the record with the header lines. This also maps format with samples and
-info fields into dictionary.
 
->>> first_record.get_full_record_map()
-{'CHROM': '2', 'POS': '15881018', 'ID': '.', 'REF': 'G', 'ALT': 'A,C', 'QUAL': '5082.45', 'FILTER': 'PASS', 'INFO': {'AC': '2,0', 'AF': '1.00', 'AN': '8', 'BaseQRankSum': '-7.710e-01', 'ClippingRankSum': '0.00', 'DP': '902', 'ExcessHet': '0.0050', 'FS': '0.000', 'InbreedingCoeff': '0.8004', 'MLEAC': '12,1', 'MLEAF': '0.462,0.038', 'MQ': '60.29', 'MQRankSum': '0.00', 'QD': '33.99', 'ReadPosRankSum': '0.260', 'SF': '0,1,2,3,4,5,6', 'SOR': '0.657', 'set': 'HignConfSNPs'}, 'FORMAT': 'GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC', 'ms01e': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms02g': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms03g': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms04h': '1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.', 'MA611': '0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.', 'MA605': '0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.', 'MA622': '0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.', 'samples': {'ms01e': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms02g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms03g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms04h': {'GT': '1/1', 'PI': '.', 'GQ': '6', 'PG': '1/1', 'PM': '.', 'PW': '1/1', 'AD': '0,2', 'PL': '49,6,0,.,.,.', 'DP': '2', 'PB': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'GQ': '78', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '29,0,0', 'PL': '0,78,1170,78,1170,1170', 'DP': '29', 'PB': '.', 'PC': '.'}, 'MA605': {'GT': '0/0', 'PI': '.', 'GQ': '9', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '3,0,0', 'PL': '0,9,112,9,112,112', 'DP': '3', 'PB': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'GQ': '99', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '40,0,0', 'PL': '0,105,1575,105,1575,1575', 'DP': '40', 'PB': '.', 'PC': '.'}}}
