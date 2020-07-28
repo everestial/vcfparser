@@ -323,9 +323,8 @@ class Record:
             sample: self.mapped_format_to_sample[sample][tag] for sample in missing_tag_sample
         }
 
-    def hasSNP(
-        self
-    ):  # TODO (Bhuwa, Bishwa, high priority) - may need to add a tag="GT" option
+    def hasSNP(self, tag="GT", bases="numeric"):
+        # TODO (Bhuwa, Bishwa, high priority) - may need to add a tag="GT" option
         # **Note: this needs to be implemented properly
         # The length of the REF and ALT both needs to be just 1.
         if len(self.REF) == 1:
@@ -362,8 +361,7 @@ class Record:
             if allele in self.mapped_format_to_sample[sample][tag]
         }
 
-    # TODO::DONE Bhuwan, Bishwa, high priority
-    # bases='iupac' is not returing data.
+
     def hasVAR(self, genotype="0/0", tag="GT", bases="numeric"):
         """
 
