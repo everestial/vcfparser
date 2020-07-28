@@ -78,7 +78,7 @@ Record object also has several attributes and methods which allows us to extract
 >>> " list of available attribute and methods "
 >>> dir(first_record)  # or print(dir(record)) on a for loop 
 ['ALT', 'CHROM', 'FILTER', 'ID', 'POS', 'QUAL', 'REF', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_map_fmt_to_samples', '_to_iupac', 'deletion_overlapping_variant', 'format_', 'get_info_as_dict', 'get_mapped_samples', 'get_mapped_tag_list', 'hasAllele', 
-'hasINDEL', 'hasSNP', 'hasVAR', 'has_phased', 'has_unphased', 'hasnoVAR', 'info_str', 'isHETVAR', 'isHOMREF', 'isHOMVAR', 'isMissing', 'iupac_to_numeric', 'map_records_long', 'mapped_format_to_sample', 'rec_line', 'record_keys', 'record_vals', 'ref_alt', 'sample_names', 'sample_vals', 'split_tag_from_samples', 'unmap_fmt_samples_dict', 'vTest']
+'hasINDEL', 'hasSNP', 'hasVAR', 'has_phased', 'has_unphased', 'hasnoVAR', 'info_str', 'isHETVAR', 'isHOMREF', 'isHOMVAR', 'isMissing', 'iupac_to_numeric', 'map_records_long', 'mapped_format_to_sample', 'rec_line', 'record_keys', 'record_vals', 'ref_alt', 'sample_names', 'sample_vals', 'get_tag_values_from_samples', 'unmap_fmt_samples_dict', 'vTest']
 
 **Attributes**
 
@@ -113,11 +113,6 @@ CHROM, POS, REF, ALT, ref_alt, QUAL, FILTER, info_str, format_, sample_names, sa
 >>> # accessed using 'info_str'
 >>> first_record.info_str   # info values as string
 'AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs'
->>> first_record.get_info_as_dict() # info values as dictionary 
-{'AC': '2,0', 'AF': '1.00', 'AN': '8', 'BaseQRankSum': '-7.710e-01', 'ClippingRankSum': '0.00', 'DP': '902', 'ExcessHet': '0.0050', 'FS': '0.000', 'InbreedingCoeff': '0.8004', 'MLEAC': '12,1', 'MLEAF': '0.462,0.038', 'MQ': '60.29', 'MQRankSum': '0.00', 'QD': '33.99', 'ReadPosRankSum': '0.260', 'SF': '0,1,2,3,4,5,6', 'SOR': '0.657', 'set': 'HignConfSNPs'}
->>> # the INFO level dictionary can be parsed using "info_keys" flag
->>> first_record.get_info_as_dict(info_keys=['AC']) 
-{'AC': '2,0'}
 
 |  
 >>> "Sample level infomation are extracted by matching the FORMAT tags with their corresponding values in the SAMPLE"
@@ -136,7 +131,25 @@ OrderedDict([('ms01e', {'GT': '.', 'AD': '.', 'PI': '.', 'PW': '.', 'PG': '.',
 'PM': '.', 'GQ': '.', 'DP': '.', 'PB': '.', 'PC': '.', 'PL': '.'}), ('ms02g', {'GT': '.', 'AD': '.', 'PI': '.', 'PW': '.', 'PG': '.', 'PM': '.', 'GQ': '.', 'DP': '.', 'PB': '.', 'PC': '.', 'PL': '.'}), ('ms03g', {'GT': '.', 'AD': '.', 'PI': '.', 'PW': '.', 'PG': '.', 'PM': '.', 'GQ': '.', 'DP': '.', 'PB': '.', 'PC': '.', 'PL': '.'}), ('ms04h', {'GT': '.', 'AD': '.', 'PI': '.', 'PW': '.', 'PG': '.', 'PM': '.', 'GQ': '.', 'DP': '.', 'PB': '.', 'PC': '.', 'PL': '.'}), ('MA611', {'GT': '0/0', 'AD': '20,0', 'PI': '.', 'PW': '0/0', 'PG': '0/0', 'PM': '.', 'GQ': '54', 'DP': '20', 'PB': '.', 'PC': '.', 'PL': '0,54,810'}), ('MA605', 
 {'GT': '0/0', 'AD': '6,0', 'PI': '.', 'PW': '0/0', 'PG': '0/0', 'PM': '.', 'GQ': '18', 'DP': '6', 'PB': '.', 'PC': '.', 'PL': '0,18,206'}), ('MA622', {'GT': '0/0', 'AD': '27,0', 'PI': '.', 'PW': '0/0', 'PG': '0/0', 'PM': '.', 'GQ': '72', 'DP': '27', 'PB': '.', 'PC': '.', 'PL': '0,72,1080'})])
 
->>> # more controlled format tag to sample value mapping can be done using "get_format_to_sample_map()" method 
+|  
+**Methods on record object**
+
+Very specific parsing of the record object can be done using the provided methods.
+These methods take several args and kwargs to narrow down the information available in the `Record` object.
+
+>>> "Parse the INFO string data using get_info_as_dict()"
+>>> first_record.info_str   # the original info values as string
+'AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs'
+>>> first_record.get_info_as_dict() # info values as dictionary 
+{'AC': '2,0', 'AF': '1.00', 'AN': '8', 'BaseQRankSum': '-7.710e-01', 'ClippingRankSum': '0.00', 'DP': '902', 'ExcessHet': '0.0050', 'FS': '0.000', 'InbreedingCoeff': '0.8004', 'MLEAC': '12,1', 'MLEAF': '0.462,0.038', 'MQ': '60.29', 'MQRankSum': '0.00', 'QD': '33.99', 'ReadPosRankSum': '0.260', 'SF': '0,1,2,3,4,5,6', 'SOR': '0.657', 'set': 'HignConfSNPs'}
+
+>>> # info_keys can be provided extract specific keys:value
+>>> first_record.get_info_as_dict(info_keys= ['AC', 'AF'])
+{'AC': '2,0', 'AF': '1.00'}
+
+|
+
+>>> "More controlled FORMAT tag to SAMPLE value mapping can be done using get_format_to_sample_map()"
 >>> # it helps to extract specific FORMAT tag values from specific SAMPLE
 >>> first_record.get_format_to_sample_map(sample_names= ['ms01e', 'MA611'], formats= ['GT', 'PC'])       
 {'ms01e': {'GT': './.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PC': '.'}}
@@ -167,17 +180,9 @@ OrderedDict([('ms01e', {'GT': '.', 'AD': '.', 'PI': '.', 'PW': '.', 'PG': '.',
 {'CHROM': '2', 'POS': '15881018', 'ID': '.', 'REF': 'G', 'ALT': 'A,C', 'QUAL': '5082.45', 'FILTER': 'PASS', 'INFO': {'AC': '2,0', 'AF': '1.00', 'AN': '8', 'BaseQRankSum': '-7.710e-01', 'ClippingRankSum': '0.00', 'DP': '902', 'ExcessHet': '0.0050', 'FS': '0.000', 'InbreedingCoeff': '0.8004', 'MLEAC': '12,1', 'MLEAF': '0.462,0.038', 'MQ': '60.29', 'MQRankSum': '0.00', 'QD': '33.99', 'ReadPosRankSum': '0.260', 'SF': '0,1,2,3,4,5,6', 'SOR': '0.657', 'set': 'HignConfSNPs'}, 'FORMAT': 'GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC', 'ms01e': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms02g': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms03g': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms04h': '1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.', 'MA611': '0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.', 'MA605': '0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.', 'MA622': '0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.', 'samples': {'ms01e': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.', 'GT_iupac': './.'}, 'ms02g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.', 'GT_iupac': './.'}, 'ms03g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.', 'GT_iupac': './.'}, 'ms04h': {'GT': '1/1', 'PI': '.', 'GQ': '6', 'PG': '1/1', 'PM': '.', 'PW': '1/1', 'AD': '0,2', 'PL': '49,6,0,.,.,.', 'DP': '2', 'PB': '.', 'PC': '.', 'GT_iupac': 'A/A'}, 'MA611': {'GT': '0/0', 'PI': '.', 'GQ': '78', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '29,0,0', 'PL': '0,78,1170,78,1170,1170', 'DP': '29', 'PB': '.', 'PC': '.', 'GT_iupac': 'G/G'}, 'MA605': {'GT': '0/0', 'PI': '.', 'GQ': '9', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '3,0,0', 'PL': '0,9,112,9,112,112', 'DP': '3', 'PB': '.', 'PC': '.', 'GT_iupac': 'G/G'}, 'MA622': {'GT': '0/0', 'PI': '.', 'GQ': '99', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '40,0,0', 'PL': '0,105,1575,105,1575,1575', 'DP': '40', 'PB': '.', 'PC': '.', 'GT_iupac': 'G/G'}}}
 >>> # Note: "convert_to_iupac" will add the genotype tag with suffix "_iupac" to show the genotype in IUPAC bases. 
 
-"continue ..... " 
+.. "continue ..... " 
 
-Methods on record object
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-You can filter infos you want from vcf. By default, all info will be returned as dictionary.
-
->>> first_record.get_info_as_dict()
-{'AC': '2,0', 'AF': '1.00', 'AN': '8', 'BaseQRankSum': '-7.710e-01', 'ClippingRankSum': '0.00', 'DP': '902', 'ExcessHet': '0.0050', 'FS': '0.000', 'InbreedingCoeff': '0.8004', 'MLEAC': '12,1', 'MLEAF': '0.462,0.038', 'MQ': '60.29', 'MQRankSum': '0.00', 'QD': '33.99', 'ReadPosRankSum': '0.260', 'SF': '0,1,2,3,4,5,6', 'SOR': '0.657', 'set': 'HignConfSNPs'}
->>> first_record.get_info_as_dict(info_keys= ['AC', 'AF'])
-{'AC': '2,0', 'AF': '1.00'}
+**Below this may be possibly deleted**
 
 Similarly, you can also filter formats and samples of interest from records. This allows you to 
 retrieve the fields that you need.
@@ -192,11 +197,14 @@ retrieve the fields that you need.
 
 You can parse the FORMAT-SAMPLE fields like:
 
->>> first_record.split_tag_from_samples(mapped_data, tag = 'GT', sample_names = ['ms01e', 'ms02g']) 
+>>> first_record.get_tag_values_from_samples(mapped_data, tag = 'GT', sample_names = ['ms01e', 'ms02g']) 
 [['.'], ['.']]
 
->>> first_record.split_tag_from_samples(mapped_data, tag = 'GQ', sample_names = ['ms01e', 'ms02g', 'MA622'])  
+>>> first_record.get_tag_values_from_samples(mapped_data, tag = 'GQ', sample_names = ['ms01e', 'ms02g', 'MA622'])  
 [['.'], ['.'], ['72']]
+
+
+.. TODO (Bishwa) Use the document below this line 
 
 You can also check if any sample have alleles of your interest.
 
