@@ -25,7 +25,7 @@ class Record:
             - genrated from the lines below # CHROM in VCF file
             - values are dynamically updated in each for-loop        
         """
-        self.rec_line = "\t".join(record_values)
+        self.rec_line = "\t".join(record_values)  # TODO (Bishwa) - should this lazy instance variable?
         self.record_values = record_values
         self.record_keys = record_keys
         self.CHROM = self.record_values[0]
@@ -61,6 +61,7 @@ class Record:
             )
         return mapped_data
 
+    # TODO (Bhuwan) - if required this should be a lazy method too. 
     def get_format_to_sample_map(self, sample_names=None, formats=None, convert_to_iupac=None):
         """
 
@@ -72,7 +73,7 @@ class Record:
         formats : list
             list of format tags that needs to be processed (default = all format tags are processed)
 
-        convert_to_iupac: list
+        convert_to_iupac : list
             list of tags (from FORMAT) that needs to be converted into iupac bases (default tag = 'GT', default output = numeric bases)
 
 
@@ -152,37 +153,49 @@ class Record:
 
             return filtered_sample_format
 
-
-
-    #TODO (Bishwa): Rename this function to something appropriate. 
+ 
     @staticmethod
-    def split_tag_from_samples(order_mapped_samples, tag, sample_names):
+    # def split_tag_from_samples(order_mapped_samples, tag, sample_names):
+    def get_tag_values_from_samples(order_mapped_samples, tag, sample_names, split_at=None):
+
         """ Splits the tags of given samples from order_dict of mapped_samples
 
         Parameters
         ----------
         order_mapped_samples : OrderedDict
-        tag: str
-        sample_names: list
+            Ordered dictionary of FORMAT tags mapped to SAMPLE values.
+        tag : str
+            One of the FORMAT tag.
+        sample_names : list
+            Name of the samples to extract the values from.
+        split_at : str
+            Character to split the value string at. e.g "|", "/", "," etc.
 
         Returns
         -------
         list of list
-            list of list containing splitted tags
+            List of list containing SAMPLE value for the FORMAT tag
 
         Examples
         --------
-        >>> order_mapped_samples = OrderedDict([('ms01e',{'GT': './.', 'PI': '.'), ('MA622', 'GT': '0/0','PI': '.'})])
+        >>> order_mapped_samples = OrderedDict([('ms01e',{'GT': './.', 'PI': '.'}), ('MA622', {'GT': '0/0','PI': '.'})])
         >>> tag = 'GT'
         >>> sample_names = ['ms01e', 'MA622']
-        >>> split_tag_from_samples(order_mapped_samples, tag, sample_names)
+        >>> get_tag_values_from_samples(order_mapped_samples, tag, sample_names)
+        [['./.'], ['0/0']]
+        >>> # using "/|"  # to split at GT values at both | and / 
+        >>> get_tag_values_from_samples(order_mapped_samples, tag, sample_names, split_at= "/|")
         [['.', '.'], ['0', '0']]
 
         """
 
-        gt_vals = [order_mapped_samples[sample][tag] for sample in sample_names]
-        tag_vals = [re.split(r"[/|]", gt_val) for gt_val in gt_vals]
-        return tag_vals
+        format_tag_values = [order_mapped_samples[sample][tag] for sample in sample_names]
+        
+        if split_at is not None:
+            # tag_vals = [re.split(r"[/|]", gt_val) for gt_val in format_tag_values]
+            splitted_tag_vals = [re.split(r"[{split_at}]", value) for value in format_tag_values]
+            return splitted_tag_vals
+        return format_tag_values
 
 
     # TODO (Bishwa) all this genotype parsing should be kept as a separate class ?
@@ -212,8 +225,8 @@ class Record:
         
         """
         homref_samples = []
-        tag_vals = self.split_tag_from_samples(
-            self.mapped_format_to_sample, tag, self.sample_names
+        tag_vals = self.get_tag_values_from_samples(
+            self.mapped_format_to_sample, tag, self.sample_names, split_at="|/"
         )
         for i, tag_val in enumerate(tag_vals):
             if set(tag_val) == {"0"}:
@@ -240,8 +253,8 @@ class Record:
 
         """
         homvar_samples = []
-        tag_vals = self.split_tag_from_samples(
-            self.mapped_format_to_sample, tag, self.sample_names
+        tag_vals = self.get_tag_values_from_samples(
+            self.mapped_format_to_sample, tag, self.sample_names, split_at="|/"
         )
         for i, tag_val in enumerate(tag_vals):
             if (
@@ -273,8 +286,8 @@ class Record:
         """
 
         hetvar_samples = []
-        tag_vals = self.split_tag_from_samples(
-            self.mapped_format_to_sample, tag, self.sample_names
+        tag_vals = self.get_tag_values_from_samples(
+            self.mapped_format_to_sample, tag, self.sample_names, split_at= "|/"
         )
         for i, tag_val in enumerate(tag_vals):
             if len(set(tag_val)) > 1:
@@ -300,8 +313,8 @@ class Record:
         """
 
         missing_tag_sample = []
-        tag_vals = self.split_tag_from_samples(
-            self.mapped_format_to_sample, tag, self.sample_names
+        tag_vals = self.get_tag_values_from_samples(
+            self.mapped_format_to_sample, tag, self.sample_names, split_at= "|/"
         )
         for i, tag_val in enumerate(tag_vals):
             if set(tag_val) == {"."}:
