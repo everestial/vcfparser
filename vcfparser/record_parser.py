@@ -217,9 +217,10 @@ class Record:
         Examples
         --------
         >>> rec_keys = 'CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	ms01e	ms02g	ms03g	ms04h	MA611	MA605	MA622'
-        >>> rec_val = '2	15881018	.	G	A,C	5082.45	PASS	AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs	GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.	0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.	0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.	0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.'
+        >>> rec_values = '2	15881018	.	G	A,C	5082.45	PASS	AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs	GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.	0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.	0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.	0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.'
         >>> from record_parser import Record
-        >>> rec_obj = Record(rec_val, rec_keys)
+        #TODO: Solve this error: ModuleNotFoundError: No module named 'record_parser'
+        >>> rec_obj = Record(rec_values, rec_keys)
         >>> rec_obj.isHOMREF(tag="GT", bases="iupac")
         {'MA611': 'G/G', 'MA605': 'G/G', 'MA622': 'G/G'}  
         
@@ -251,6 +252,11 @@ class Record:
         dict
             dict of sample with values having homoref
 
+        Examples
+        --------
+        >>> record.isHOMVAR(tag="GT", bases="iupac")
+        {'ms01e': './.', 'ms02g': './.', 'ms03g': './.', 'ms04h': 'A/A', 'MA611': 'G/G', 'MA605': 'G/G', 'MA622': 'G/G'}
+        
         """
         homvar_samples = []
         tag_vals = self.get_tag_values_from_samples(
@@ -283,7 +289,13 @@ class Record:
         dict
             dict of sample with values having homoref
 
+        Examples
+        --------
+        >>> record.isHETVAR(tag="GT", bases="numeric")
+        {}
+        
         """
+        
 
         hetvar_samples = []
         tag_vals = self.get_tag_values_from_samples(
@@ -310,6 +322,11 @@ class Record:
          dict
             dict of sample with values having homoref
 
+        Examples
+        --------
+        >>> record.isMissing(tag='PI') 
+        {'ms01e': '.', 'ms02g': '.', 'ms03g': '.', 'ms04h': '.', 'MA611': '.', 'MA605': '.', 'MA622': '.'}
+        
         """
 
         missing_tag_sample = []
@@ -353,6 +370,11 @@ class Record:
         dict
             dict of sample with values having given allele
 
+        Example
+        -------
+        >>> record.hasAllele(allele='0', tag='GT', bases='numeric')
+        {'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0'}
+        
         """
 
         return {
@@ -379,6 +401,11 @@ class Record:
         dict
             dict of sample with values having given genotype
 
+        Example
+        -------
+        >>> record.hasVAR(genotype='0/0') 
+        
+        {'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0'}
         """
 
         return {
@@ -569,10 +596,13 @@ class Record:
         dict
             dict with key value pair with sample and infos modified
 
-        TODO: (Gopal) Add example input and output 
+        TODO: Done (Gopal) Add example input and output 
 
         Examples
         --------
+        >>> record.get_full_record_map()
+        {'CHROM': '2', 'POS': '15881018', 'ID': '.', 'REF': 'G', 'ALT': 'A,C', 'QUAL': '5082.45', 'FILTER': 'PASS', 'INFO': {'AC': '2,0', 'AF': '1.00', 'AN': '8', 'BaseQRankSum': '-7.710e-01', 'ClippingRankSum': '0.00', 'DP': '902', 'ExcessHet': '0.0050', 'FS': '0.000', 'InbreedingCoeff': '0.8004', 'MLEAC': '12,1', 'MLEAF': '0.462,0.038', 'MQ': '60.29', 'MQRankSum': '0.00', 'QD': '33.99', 'ReadPosRankSum': '0.260', 'SF': '0,1,2,3,4,5,6', 'SOR': '0.657', 'set': 'HignConfSNPs'}, 'FORMAT': 'GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC', 'ms01e': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms02g': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms03g': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms04h': '1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.', 'MA611': '0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.', 'MA605': '0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.', 'MA622': '0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.', 'samples': {'ms01e': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms02g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms03g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms04h': {'GT': '1/1', 'PI': '.', 'GQ': '6', 'PG': '1/1', 'PM': '.', 'PW': '1/1', 'AD': '0,2', 'PL': '49,6,0,.,.,.', 'DP': '2', 'PB': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'GQ': '78', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '29,0,0', 'PL': '0,78,1170,78,1170,1170', 'DP': '29', 'PB': '.', 'PC': '.'}, 'MA605': {'GT': '0/0', 'PI': '.', 'GQ': '9', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '3,0,0', 'PL': '0,9,112,9,112,112', 'DP': '3', 'PB': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'GQ': '99', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '40,0,0', 'PL': '0,105,1575,105,1575,1575', 'DP': '40', 'PB': '.', 'PC': '.'}}}
+        
         """
         mapped_records = dict(zip(self.record_keys, self.record_values))
         mapped_records["INFO"] = self.get_info_as_dict()

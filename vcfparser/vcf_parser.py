@@ -36,7 +36,9 @@ class VcfParser:
             VCF object for iterating and querying.
         Return type: 
             Object
+
         """
+
         self.filename = filename
         # assign to support gz compressed files
         self._open = gzip.open if self.filename.endswith(".gz") else open
@@ -64,6 +66,7 @@ class VcfParser:
         Return type: 
             Object
         """
+        
         # this produces a iterator of meta data lines (lines starting with '#')
         _raw_lines = itertools.takewhile(lambda x: x.startswith("#"), self._file)
         return MetaDataParser(_raw_lines).parse_lines()

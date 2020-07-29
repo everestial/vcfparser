@@ -1,3 +1,4 @@
+
 .. _metadata-tutorial:
 
 .. TODO (Bhuwan, Gopal, priority - high): introduce line break between documentation paragraphs.
@@ -23,7 +24,9 @@ We can also pass gzipped vcf file as an argument.
 >>> vcf_obj = VcfParser('input_test.vcf.gz')
 
 |
+
 ``VcfParser`` **module  has two main methods:** 
+
     - **parse_metadata:** It contains methods for extracting information related to the metadata header. 
     - **parse_records:** It contains methods for retrieving the record values from the vcf file.
 
@@ -39,7 +42,8 @@ To parse the metadata information:
   - Metainfo provides several attributes and objects that helps in extracting specific metadata information. 
   - These informations are reported as a list or dictionary.
 
-|    
+|  
+
 To list all the available attributes within metainfo do:
 
 >>> metainfo.__dir__()
@@ -49,6 +53,7 @@ To list all the available attributes within metainfo do:
 ['VCFspec', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_format_pattern', '_meta_pattern', '_parse_gatk_commands', '_parse_gvcf_block', 'alt_', 'contig', 'fileformat', 'filters_', 'format_', 'gatk_commands', 'gvcf_blocks', 'header_file', 'infos_', 'is_gvcf', 'other_lines', 'parse_lines', 'raw_meta_data', 'record_keys', 'reference', 'sample_names', 'sample_with_pos', 'testA']
 
 |  
+
 To call the specific objects and attributes do:
 
 >>> metainfo.VCFspec
