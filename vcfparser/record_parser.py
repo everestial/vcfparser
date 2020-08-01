@@ -84,12 +84,15 @@ class Record:
 
         Examples
         --------
-
-        >>> mapped_format_to_sample = {'ms01e': {'GT': './.','PI': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'PC': '.'}}
-        >>> get_format_to_sample_map(self, sample_names= ['ms01e', 'MA611'], formats= ['GT', 'PC'])
+        >>> import vcfparser.vcf_parser as vcfparse
+        >>> myvcf = vcfparse.VcfParser("input_test.vcf") 
+        >>> records = myvcf.parse_records()
+        >>> record = first(record)
+        >>> record.mapped_format_to_sample = {'ms01e': {'GT': './.','PI': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'PC': '.'}}
+        >>> record.get_format_to_sample_map(self, sample_names= ['ms01e', 'MA611'], formats= ['GT', 'PC'])
         {'ms01e': {'GT': './.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PC': '.'}} 
 
-        >>> get_format_to_sample_map(self, sample_names= ['ms01e', 'MA611'], formats= ['GT', 'PC', 'PG'], convert_to_iupac= ['GT', 'PG'])
+        >>> record.get_format_to_sample_map(self, sample_names= ['ms01e', 'MA611'], formats= ['GT', 'PC', 'PG'], convert_to_iupac= ['GT', 'PG'])
         {'ms01e': {'GT': './.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PC': '.'}} 
 
         """
@@ -181,7 +184,7 @@ class Record:
         >>> order_mapped_samples = OrderedDict([('ms01e',{'GT': './.', 'PI': '.'}), ('MA622', {'GT': '0/0','PI': '.'})])
         >>> tag = 'GT'
         >>> sample_names = ['ms01e', 'MA622']
-        >>> get_tag_values_from_samples(order_mapped_samples, tag, sample_names)
+        >>> record.get_tag_values_from_samples(order_mapped_samples, tag, sample_names)
         [['./.'], ['0/0']]
         >>> # using "/|"  # to split at GT values at both | and / 
         >>> get_tag_values_from_samples(order_mapped_samples, tag, sample_names, split_at= "/|")
@@ -218,10 +221,10 @@ class Record:
         --------
         >>> rec_keys = 'CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	ms01e	ms02g	ms03g	ms04h	MA611	MA605	MA622'
         >>> rec_values = '2	15881018	.	G	A,C	5082.45	PASS	AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs	GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.	0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.	0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.	0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.'
-        >>> from record_parser import Record
-        #TODO: Solve this error: ModuleNotFoundError: No module named 'record_parser'
+        >>> from vcfparser.record_parser import Record
         >>> rec_obj = Record(rec_values, rec_keys)
         >>> rec_obj.isHOMREF(tag="GT", bases="iupac")
+        # TODO: Above command throwing error. KeyError: 'GT'.
         {'MA611': 'G/G', 'MA605': 'G/G', 'MA622': 'G/G'}  
         
         """
@@ -455,9 +458,10 @@ class Record:
         >>> rec_keys_eg = 'CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	ms01e	ms02g	ms03g	ms04h	MA611	MA605	MA622'
 
         >>> rec_valeg = '2	15881018	.	G	A,C	5082.45	PASS	AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs	GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.	0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.	0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.	0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.'
-        >>> from record_parser import Record
+        >>> from vcfparser.record_parser import Record
         >>> rec_obj = Record(rec_valeg, rec_keys_eg)
         >>> rec_obj.has_unphased(tag="GT", bases="iupac")
+        # TODO: Above command throwing error. KeyError: 'GT'
         {'ms01e': './.', 'ms02g': './.', 'ms03g': './.', 'ms04h': '1/1', 'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0'}
 
 
@@ -492,6 +496,7 @@ class Record:
         >>> from record_parser import Record
         >>> rec_obj = Record(rec_valeg, rec_keys_eg)
         >>> rec_obj.has_phased(tag="GT", bases="iupac")
+        # TODO: Above command throwing error. KeyError: 'GT'
         {}
 
         """
@@ -563,8 +568,8 @@ class Record:
         --------
         >>> info_str = 'AC=2,0;AF=1.00;AN=8;BaseQRankSum'
         >>> info_keys= ['AC', 'BaseQRankSum']
-        >>> get_info_as_dict(self, info_keys)
-        {'AC':2, 'BaseQRankSum' : '.'}
+        >>> record.get_info_as_dict(info_keys)
+        {'AC': '2,0', 'BaseQRankSum': '-7.710e-01'}
 
         
         """
