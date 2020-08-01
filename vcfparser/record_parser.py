@@ -202,7 +202,7 @@ class Record:
 
 
     # TODO (Bishwa) all this genotype parsing should be kept as a separate class ?
-
+    @property
     def isHOMREF(self, tag="GT", bases="numeric"):
         """
         Parameters
@@ -628,6 +628,72 @@ class Record:
 
     # TODO: Bishwa (Priority high)
     # Make sure all the genotype parsing methods are compatible with non diploid genomes 
+allele_delimiter = re.compile(r'''[|/]''')
+## ASK: If this needs to be named allele or genotype
+class Alleles:
+    def __init__(self,mapped_samples, tag= 'GT'):
+        self.hom_ref_samples = []
+        self.hom_alt_samples = []
+        self.het_var_samples = []
+        self.missing_samples = []
+        self.phased_samples = []
+
+
+        for sample in mapped_samples.keys():
+            tag_val = mapped_samples.get(sample, {}).get(tag, None)
+            if tag_val is not None:
+                genotype_val = GenotypeVal(tag_val)
+                if genotype_val.phased:
+                    self.phased_samples.append(sample)
+                if genotype_val.gt_type == 'hom_ref':
+                    self.hom_ref_samples.append(sample)
+                elif genotype_val.gt_type == 'hom_alt':
+                    self.hom_alt_samples.append(sample)
+                elif genotype_val.gt_type == 'het_var':
+                    self.het_var_samples.append(sample)
+                else:
+                    pass
+            else:
+                warnings.warn(f'{Sample} has no mapped value for {tag} tag')
+
+
+
+        
+
+        def homref_samples(self):
+            pass
+
+## ASK: What to do if following scenario arises?
+## Are they homref, hetvar './.' , '.', './0', '0/.'
+
+class GenotypeVal:
+    def __init__(self,allele):
+        """"
+        For a given genotype data like ('0/0', '1|1', '0/1'); this class computes and store values
+        like whether it is homref, hom_alt or hetvar
+        """
+        # here gt_type store either homvar, hetvar, or homref
+
+        self.gt_type= None
+        self.phased= False
+        self._alleles = [(al if al != '.' else None) for al in allele_delimiter.split(alleles)]
+        self._ismissing = any(al is not None for al in self.gt_alleles)
+        if '|' in allele:
+            self.phased = True
+
+        # hetvar 
+        if len(set(alleles_list)) == 1:
+            if alleles_list[0] == '0':
+                self.gt_type = 'hom_ref'
+            else:
+                self.gt_type = 'hom_alt'
+        else:
+            self.gt_type = 'het_var'
+
+
+
+
+
 
 
 
