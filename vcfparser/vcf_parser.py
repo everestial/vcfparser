@@ -32,10 +32,11 @@ class VcfParser:
 
         filename: file
             input vcf file that needs to be parsed. bgzipped files are also supported.
-        Returns:
+        
+        Returns
+        -------
+        Object
             VCF object for iterating and querying.
-        Return type: 
-            Object
 
         """
 
@@ -61,10 +62,15 @@ class VcfParser:
         Parameters
         ----------
 
-        Returns:
+        Returns
+        -------
+        Object
             MetaDataParser object for iterating and querying the metadata information.
-        Return type: 
-            Object
+        
+        Uses
+        ----
+            MetaDataParser class to create MetaData object
+        
         """
         
         # this produces a iterator of meta data lines (lines starting with '#')
