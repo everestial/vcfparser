@@ -54,7 +54,7 @@ class Record:
 
     def _map_format_tags_to_sample_values(self):
         """Private method to map format tags to sample values"""
-        mapped_data = OrderedDict()
+        mapped_data = {}
         for i, name in enumerate(self.sample_names):
             mapped_data[name] = dict(
                 zip_longest(self.format_, self.sample_vals[i].split(":"), fillvalue=".")
@@ -147,6 +147,7 @@ class Record:
                         'The format tag "%s" is not available in one or multiple VCF record. '
                         % genotype_tag
                     )
+                    sys.exit(0)
                     # TODO (Bhuwan) - Why is object being returned even after warning is raised. 
                     # after warning the parsing on a forloop should stop? is this happening? 
 
@@ -191,18 +192,21 @@ class Record:
         [['.', '.'], ['0', '0']]
 
         """
+        # gt_vals = [order_mapped_samples[sample][tag] for sample in sample_names]
+        # tag_vals = [re.split(r"[/|]", gt_val) for gt_val in gt_vals]
+        # return tag_vals
 
         format_tag_values = [order_mapped_samples[sample][tag] for sample in sample_names]
         
         if split_at is not None:
             # tag_vals = [re.split(r"[/|]", gt_val) for gt_val in format_tag_values]
-            splitted_tag_vals = [re.split(r"[{split_at}]", value) for value in format_tag_values]
+            splitted_tag_vals = [re.split(r"[/|]", value) for value in format_tag_values]
             return splitted_tag_vals
         return format_tag_values
 
 
     # TODO (Bishwa) all this genotype parsing should be kept as a separate class ?
-    @property
+    # @property
     def isHOMREF(self, tag="GT", bases="numeric"):
         """
         Parameters
@@ -224,7 +228,7 @@ class Record:
         >>> from vcfparser.record_parser import Record
         >>> rec_obj = Record(rec_values, rec_keys)
         >>> rec_obj.isHOMREF(tag="GT", bases="iupac")
-        # TODO: Above command throwing error. KeyError: 'GT'.
+        # TODO:REVIEW Bhuwan Above command throwing error. KeyError: 'GT'.
         {'MA611': 'G/G', 'MA605': 'G/G', 'MA622': 'G/G'}  
         
         """
@@ -543,7 +547,7 @@ class Record:
 
     @staticmethod
     def split_genotype_tags():
-        # TODO: make a function to split the genotype tags 
+        # TODO: BISHWA make a function to split the genotype tags 
         pass
 
     def get_info_as_dict(self, info_keys=None):
