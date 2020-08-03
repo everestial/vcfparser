@@ -61,8 +61,8 @@ def test_get_records():
         qual = record.QUAL
         filter = record.FILTER
         format_ = record.format_
-        infos = record.get_info_dict()
-        mapped_sample = record.get_mapped_samples()
+        infos = record.get_info_as_dict()
+        mapped_sample = record.mapped_format_to_sample
 
         temp_dict = {}
         temp_dict["Chrom"] = chrom

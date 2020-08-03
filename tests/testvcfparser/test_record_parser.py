@@ -9,7 +9,7 @@ from vcfparser import Record
 output_file01 = "tests/testfiles/vcf_parser_output/record_parser_test_result01"
 rec_keys_eg = "CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	ms01e	ms02g	ms03g	ms04h	MA611	MA605	MA622"
 rec_valeg = "2	15881018	.	G	A,C	5082.45	PASS	AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs	GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.	0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.	0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.	0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:."
-rec_obj = Record(rec_valeg, rec_keys_eg.split('\t'))
+rec_obj = Record(rec_valeg.split('\t'), rec_keys_eg.split('\t'))
 # 01 Record.split_tag_from_samples
 def test_split_tag_from_samples():
     pass
@@ -102,7 +102,7 @@ def test_has_phased():
 
 # 13 Record._map_fmt_to_samples
 def test_map_fmt_to_samples():
-    data = rec_obj._map_fmt_to_samples()
+    data = rec_obj._map_format_tags_to_sample_values()
     write_data_and_check(13, data)
 
 
@@ -151,13 +151,13 @@ def test_to_iupac():
 def test_get_info_dict():
     # info_str = 'AC=2,0;AF=1.00;AN=8;BaseQRankSum'
     required_keys = ["AC", "BaseQRankSum"]
-    data = rec_obj.get_info_dict(required_keys)
+    data = rec_obj.get_info_as_dict(required_keys)
     write_data_and_check(18, data)
 
 
 # 19 Record.map_records_long
 def test_map_records_long():
-    data = rec_obj.map_records_long()
+    data = rec_obj.get_full_record_map()
     write_data_and_check(19, data)
 
 

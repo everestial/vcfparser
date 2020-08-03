@@ -38,7 +38,7 @@ first_record = next(records)
 def test_record():
     assert first_record.CHROM == '2'
     # assert first_record.POS == '15881018'
-    assert str(first_record.get_info_dict()) == expected.first_rec_info
+    assert str(first_record.get_info_as_dict()) == expected.first_rec_info
 
     # assert first_record.ms01e == expected.first_sample_val
 
