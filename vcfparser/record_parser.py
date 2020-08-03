@@ -232,13 +232,15 @@ class Record:
         {'MA611': 'G/G', 'MA605': 'G/G', 'MA622': 'G/G'}  
         
         """
-        homref_samples = []
-        tag_vals = self.get_tag_values_from_samples(
-            self.mapped_format_to_sample, tag, self.sample_names, split_at="|/"
-        )
-        for i, tag_val in enumerate(tag_vals):
-            if set(tag_val) == {"0"}:
-                homref_samples.append(self.sample_names[i])
+        # homref_samples = []
+        # tag_vals = self.get_tag_values_from_samples(
+        #     self.mapped_format_to_sample, tag, self.sample_names, split_at="|/"
+        # )
+        # for i, tag_val in enumerate(tag_vals):
+        #     if set(tag_val) == {"0"}:
+        #         homref_samples.append(self.sample_names[i])
+        allele_obj = Alleles(self.mapped_format_to_sample,tag)
+        homref_samples = allele_obj.hom_ref_samples
         return {
             sample: self._to_iupac(self.ref_alt, self.mapped_format_to_sample[sample][tag], bases)
             for sample in homref_samples
@@ -265,17 +267,20 @@ class Record:
         {'ms01e': './.', 'ms02g': './.', 'ms03g': './.', 'ms04h': 'A/A', 'MA611': 'G/G', 'MA605': 'G/G', 'MA622': 'G/G'}
         
         """
-        homvar_samples = []
-        tag_vals = self.get_tag_values_from_samples(
-            self.mapped_format_to_sample, tag, self.sample_names, split_at="|/"
-        )
-        for i, tag_val in enumerate(tag_vals):
-            if (
-                len(set(tag_val)) == 1
-                and set(tag_val) != {"0"}
-                and set(tag_val) != {"."}
-            ):
-                homvar_samples.append(self.sample_names[i])
+        # homvar_samples = []
+        # tag_vals = self.get_tag_values_from_samples(
+        #     self.mapped_format_to_sample, tag, self.sample_names, split_at="|/"
+        # )
+        # for i, tag_val in enumerate(tag_vals):
+        #     if (
+        #         len(set(tag_val)) == 1
+        #         and set(tag_val) != {"0"}
+        #         and set(tag_val) != {"."}
+        #     ):
+        #         homvar_samples.append(self.sample_names[i])
+        allele_obj = Alleles(self.mapped_format_to_sample,tag)
+        homvar_samples = allele_obj.hom_var_samples
+
         return {
             sample: self._to_iupac(self.ref_alt, self.mapped_format_to_sample[sample][tag], bases)
             for sample in homvar_samples
@@ -304,13 +309,15 @@ class Record:
         """
         
 
-        hetvar_samples = []
-        tag_vals = self.get_tag_values_from_samples(
-            self.mapped_format_to_sample, tag, self.sample_names, split_at= "|/"
-        )
-        for i, tag_val in enumerate(tag_vals):
-            if len(set(tag_val)) > 1:
-                hetvar_samples.append(self.sample_names[i])
+        # hetvar_samples = []
+        # tag_vals = self.get_tag_values_from_samples(
+        #     self.mapped_format_to_sample, tag, self.sample_names, split_at= "|/"
+        # )
+        # for i, tag_val in enumerate(tag_vals):
+        #     if len(set(tag_val)) > 1:
+        #         hetvar_samples.append(self.sample_names[i])
+        allele_obj = Alleles(self.mapped_format_to_sample,tag)
+        hetvar_samples = allele_obj.het_var_samples
         return {
             sample: self._to_iupac(self.ref_alt, self.mapped_format_to_sample[sample][tag], bases)
             for sample in hetvar_samples
@@ -336,13 +343,15 @@ class Record:
         
         """
 
-        missing_tag_sample = []
-        tag_vals = self.get_tag_values_from_samples(
-            self.mapped_format_to_sample, tag, self.sample_names, split_at= "|/"
-        )
-        for i, tag_val in enumerate(tag_vals):
-            if set(tag_val) == {"."}:
-                missing_tag_sample.append(self.sample_names[i])
+        # missing_tag_sample = []
+        # tag_vals = self.get_tag_values_from_samples(
+        #     self.mapped_format_to_sample, tag, self.sample_names, split_at= "|/"
+        # )
+        # for i, tag_val in enumerate(tag_vals):
+        #     if set(tag_val) == {"."}:
+        #         missing_tag_sample.append(self.sample_names[i])
+        allele_obj = Alleles(self.mapped_format_to_sample,tag)
+        missing_tag_sample = allele_obj.missing_samples
         return {
             sample: self.mapped_format_to_sample[sample][tag] for sample in missing_tag_sample
         }
@@ -619,12 +628,17 @@ class Record:
         return mapped_records
 
     # functions to add later
-    def iupac_to_numeric(self):
+    def iupac_to_numeric(self, ref_alt, genotype_in_iupac):
         # input parameters should be ref_alt, iupac_bases = []
         # returns: list of numeric bases 
         # required for buildVCF ??
-        # TODO
-        pass
+        # For ref_alt = ['G', 'A', 'C']
+        # genotype_in_iupac = 'G/A' it should return '0/1'
+
+        iupac_g_list = re.split(r"[/|]", genotype_in_iupac)
+        sep = "/" if "/" in genotype_in_iupac else "|"
+        numeric_vals = [ref_alt.index(i) if i != "." else "." for i in iupac_g_list]
+        return sep.join(numeric_vals)
 
     def deletion_overlapping_variant(self):
         # TODO
@@ -636,8 +650,11 @@ allele_delimiter = re.compile(r'''[|/]''')
 ## ASK: If this needs to be named allele or genotype
 class Alleles:
     def __init__(self,mapped_samples, tag= 'GT'):
+        """
+        This class is used to store sample names with their types.
+        """
         self.hom_ref_samples = []
-        self.hom_alt_samples = []
+        self.hom_var_samples = []
         self.het_var_samples = []
         self.missing_samples = []
         self.phased_samples = []
@@ -649,19 +666,18 @@ class Alleles:
                 genotype_val = GenotypeVal(tag_val)
                 if genotype_val.phased:
                     self.phased_samples.append(sample)
+                if genotype_val._ismissing:
+                    self.missing_samples.append(sample)
                 if genotype_val.gt_type == 'hom_ref':
                     self.hom_ref_samples.append(sample)
-                elif genotype_val.gt_type == 'hom_alt':
-                    self.hom_alt_samples.append(sample)
+                elif genotype_val.gt_type == 'hom_var':
+                    self.hom_var_samples.append(sample)
                 elif genotype_val.gt_type == 'het_var':
                     self.het_var_samples.append(sample)
                 else:
                     pass
             else:
-                warnings.warn(f'{Sample} has no mapped value for {tag} tag')
-
-
-
+                warnings.warn(f'{sample} has no mapped value for {tag} tag')
         
 
         def homref_samples(self):
@@ -680,19 +696,23 @@ class GenotypeVal:
 
         self.gt_type= None
         self.phased= False
-        self._alleles = [(al if al != '.' else None) for al in allele_delimiter.split(alleles)]
-        self._ismissing = any(al is not None for al in self.gt_alleles)
+        self._alleles = [(al if al != '.' else None) for al in allele_delimiter.split(allele)]
+        self._ismissing = not any(al is not None for al in self._alleles)
         if '|' in allele:
             self.phased = True
 
         # hetvar 
-        if len(set(alleles_list)) == 1:
-            if alleles_list[0] == '0':
-                self.gt_type = 'hom_ref'
+        alleles_list = self._alleles
+        if not self._ismissing:
+            if len(set(alleles_list)) == 1:
+                if alleles_list[0] == '0':
+                    self.gt_type = 'hom_ref'
+                else:
+                    self.gt_type = 'hom_var'
             else:
-                self.gt_type = 'hom_alt'
+                self.gt_type = 'het_var'
         else:
-            self.gt_type = 'het_var'
+            self.gt_type = 'missing'
 
 
 
