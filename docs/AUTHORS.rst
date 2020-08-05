@@ -9,7 +9,7 @@ Development Lead
 
 Contributors
 ------------
-TODO: Add email address?
+TODO: Done Add email address?
 
 * Bhuwan Aryal <Bhuwanaryal19@gmail.com>
 

@@ -1,7 +1,7 @@
 
 .. _record-parser-tutorial:
 
-.. TODO (Bhuwan, Gopal, priority - high): introduce line break between documentation paragraphs.
+.. TODO (Bhuwan, Gopal-Done, priority - high): introduce line break between documentation paragraphs.
 .. Line breaks are introduced by using "|  " or using a new line or setting up a main.rst file with settings
 
 =========================
@@ -52,7 +52,7 @@ Accessing VCF records:
 
 For more info about Record visit :py:class:`~vcfparser.record_parser.Record`.
 
-.. TODO: Hyperlink the word ``Record`` (above), so it takes us to the 'Record' class documentation.
+.. TODO: Done Hyperlink the word ``Record`` (above), so it takes us to the 'Record' class documentation.
 
 >>> first_record = next(records)
 >>> print(first_record)

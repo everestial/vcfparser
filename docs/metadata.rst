@@ -1,7 +1,7 @@
 
 .. _metadata-tutorial:
 
-.. TODO (Bhuwan, Gopal, priority - high): introduce line break between documentation paragraphs.
+.. TODO (Bhuwan, Gopal-Done, priority - high): introduce line break between documentation paragraphs.
 
 =========================
 Tutorial on MetaData

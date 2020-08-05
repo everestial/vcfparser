@@ -18,7 +18,7 @@ class VcfParser:
     parse_metadata()
     parse_records()
     """
-    #TODO (Bhuwan, Gopal): Done Insert a line break here and several other places as need be.
+    #TODO (Bhuwan, Gopal-Done): Done Insert a line break here and several other places as need be.
     # Introduce linebreak after each module description 
     # Use this example and cheatsheet:
     # https://stackoverflow.com/questions/7033239/how-to-preserve-line-breaks-when-generating-python-docs-using-sphinx 
@@ -79,7 +79,7 @@ class VcfParser:
 
     # TODO (Bhuwan, low priority) - Could multiprocessing be invoked here?? with -n flag
     # multiprocessing should however follow the order (genomic position)
-    # TODO (Bhuwan, Gopal) Done properly render the "Uses" flag in this function too. 
+    # TODO (Bhuwan-Done, Gopal) Done properly render the "Uses" flag in this function too. 
     def parse_records(self, chrom=None, pos_range=None, no_processors=1):
         # TODO (Bhuwan, mid priority, research item)(Research Done ; Not implemented)
         # may be replce "no_of_recs" with "nt" i.e number of threads
