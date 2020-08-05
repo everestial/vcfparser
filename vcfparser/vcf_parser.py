@@ -18,7 +18,7 @@ class VcfParser:
     parse_metadata()
     parse_records()
     """
-    #TODO (Bhuwan, Gopal): Insert a line break here and several other places as need be.
+    #TODO (Bhuwan, Gopal): Done Insert a line break here and several other places as need be.
     # Introduce linebreak after each module description 
     # Use this example and cheatsheet:
     # https://stackoverflow.com/questions/7033239/how-to-preserve-line-breaks-when-generating-python-docs-using-sphinx 
@@ -52,7 +52,7 @@ class VcfParser:
         self._file_copy.close()
 
     def parse_metadata(self):
-        #TODO: 
+        #TODO: Done
         # Add the new keyword called "Uses" to show what functions, classes, modules the current class/module uses
         # Uses
         # ----
@@ -79,9 +79,9 @@ class VcfParser:
 
     # TODO (Bhuwan, low priority) - Could multiprocessing be invoked here?? with -n flag
     # multiprocessing should however follow the order (genomic position)
-    # TODO (Bhuwan, Gopal) properly render the "Uses" flag in this function too. 
-    def parse_records(self, chrom=None, pos_range=None, no_of_recs=1):
-        # TODO (Bhuwan, mid priority, research item)
+    # TODO (Bhuwan, Gopal) Done properly render the "Uses" flag in this function too. 
+    def parse_records(self, chrom=None, pos_range=None, no_processors=1):
+        # TODO (Bhuwan, mid priority, research item)(Research Done ; Not implemented)
         # may be replce "no_of_recs" with "nt" i.e number of threads
 
         """ Parse records and yield it.
@@ -106,10 +106,10 @@ class VcfParser:
         Record object for interating and quering the record information.
 
         """
-        #TODO: 
+        #TODO: Done 
         # the Uses is not being rendered properly.
 
-        #TODO (Bhuwan, Bishwa; priority = high)
+        #TODO Done (Bhuwan, Bishwa; priority = high)
         #the no_of_recs is not being used. 
         # Keep or delete or use it? 
 

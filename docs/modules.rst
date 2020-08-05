@@ -1,5 +1,5 @@
-Modules
-=======
+vcfparser
+=========
 
 .. toctree::
    :maxdepth: 4
