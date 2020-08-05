@@ -10,7 +10,7 @@ Tutorial on record parser
 
 Advanced tutorial on vcf parser module showing available methods for parsing records.
 
-First import ``VcfParser`` module and instantiate an vcf object by 
+First import :py:class:`~vcfparser.vcf_parser.VcfParser` module and instantiate an vcf object by 
 passing vcf file as an argument.
 
 Initial setup:
@@ -27,7 +27,7 @@ Initial setup:
 
 |
 
-``VcfParser`` module  has two main methods:
+:py:class:`~vcfparser.vcf_parser.VcfParser` module  has two main methods:
   - **parse_metadata:** to extract the metadata information from VCF metadata header.
   - **parse_records:** to retrieve the record values from the VCF record lines.
 
@@ -48,7 +48,7 @@ Accessing VCF records:
 
   - records is an generator object. Therefore, applying ``next(records)`` yields the very first record as Record object. 
   - Subsequent ``next(records)`` will yield subsequent records after that first record from the VCF.  
-  - ``parse_records()`` uses the ``Record`` class which can be used directly if ``record_keys`` and ``record_vals`` are handy. 
+  - :py:meth:`~vcfparser.vcf_parser.VcfParser.parse_records()` uses the :py:class:`~vcfparser.record_parser.Record` class which can be used directly if ``record_keys`` and ``record_vals`` are handy. 
 
 .. TODO: Hyperlink the word ``Record`` (above), so it takes us to the 'Record' class documentation.
 
@@ -150,7 +150,7 @@ OrderedDict([('ms01e', {'GT': '.', 'AD': '.', 'PI': '.', 'PW': '.', 'PG': '.',
 **Methods on record object**
 
 Very specific parsing of the record object can be done using the provided methods.
-These methods take several args and kwargs to narrow down the information available in the `Record` object.
+These methods take several args and kwargs to narrow down the information available in the :py:class:`~vcfparser.record_parser.Record` object.
 
 |
 
@@ -209,7 +209,7 @@ These methods take several args and kwargs to narrow down the information availa
 **Genotype parsing**
 
 Genotype checks and parsing are one of most important use case of VCF data. 
-``VcfParser`` provides several methods to do those checks and extract data. 
+:py:class:`~vcfparser.vcf_parser.VcfParser` provides several methods to do those checks and extract data. 
 
   - Check samples that have alleles of your interest.
 

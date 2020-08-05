@@ -11,6 +11,6 @@ Contributors
 ------------
 TODO: Add email address?
 
-* Bhuwan Aryal
+* Bhuwan Aryal <Bhuwanaryal19@gmail.com>
 
-* Gopal Kisi
+* Gopal Kisi <Gkisi2772@gmail.com>

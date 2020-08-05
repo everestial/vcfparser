@@ -9,7 +9,7 @@ Tutorial on MetaData
 
 Advanced tutorial on vcf parser module showing available methods for parsing metadata.
 
-First import ``VcfParser`` module and instantiate an vcf object by 
+First import :py:class:`~vcfparser.vcf_parser.VcfParser` module and instantiate an vcf object by 
 passing vcf file as an argument.
 
 
@@ -25,7 +25,7 @@ We can also pass gzipped vcf file as an argument.
 
 |
 
-``VcfParser`` **module  has two main methods:** 
+:py:class:`~vcfparser.vcf_parser.VcfParser` **module  has two main methods:** 
 
     - **parse_metadata:** It contains methods for extracting information related to the metadata header. 
     - **parse_records:** It contains methods for retrieving the record values from the vcf file.
@@ -34,7 +34,7 @@ We can also pass gzipped vcf file as an argument.
 Parsing VCF metadata:
 ^^^^^^^^^^^^^^^^^^^^^
 
-To parse the metadata information:
+To parse the metadata information we can call :py:meth:`~vcfparser.vcf_parser.VcfParser.parse_metadata()`:
 
 >>> # pass the VCF object to the 'parse_metadata()' function
 >>> metainfo = vcf_obj.parse_metadata()
