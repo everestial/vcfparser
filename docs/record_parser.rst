@@ -50,6 +50,8 @@ Accessing VCF records:
   - Subsequent ``next(records)`` will yield subsequent records after that first record from the VCF.  
   - ``parse_records()`` uses the ``Record`` class which can be used directly if ``record_keys`` and ``record_vals`` are handy. 
 
+For more info about Record visit :class:`Record`.
+
 .. TODO: Hyperlink the word ``Record`` (above), so it takes us to the 'Record' class documentation.
 
 >>> first_record = next(records)

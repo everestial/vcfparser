@@ -48,7 +48,7 @@ class Record:
             )
         self.mapped_format_to_sample = self._map_format_tags_to_sample_values()
 
-    # TODO - ask question : What is this function used for? 
+    # TODO Done- ask question : What is this function used for? 
     def __str__(self):
         return str(self.rec_line)
 
@@ -61,7 +61,7 @@ class Record:
             )
         return mapped_data
 
-    # TODO (Bhuwan) - if required this should be a lazy method too. 
+    # TODO (Bhuwan) Done - if required this should be a lazy method too. 
     def get_format_to_sample_map(self, sample_names=None, formats=None, convert_to_iupac=None):
         """
 
@@ -148,7 +148,7 @@ class Record:
                         % genotype_tag
                     )
                     sys.exit(0)
-                    # TODO (Bhuwan) - Why is object being returned even after warning is raised. 
+                    # TODO (Bhuwan) Done - Why is object being returned even after warning is raised. 
                     # after warning the parsing on a forloop should stop? is this happening? 
 
             # update the mapped sample dictionary
@@ -621,7 +621,9 @@ class Record:
         mapped_records["samples"] = self.get_format_to_sample_map(convert_to_iupac= convert_to_iupac)
         return mapped_records
 
-    # functions to add later
+    ## TODO: Revert mapped record into record string
+
+    # functions to add later Done
     def iupac_to_numeric(self, ref_alt, genotype_in_iupac):
         # input parameters should be ref_alt, iupac_bases = []
         # returns: list of numeric bases 
