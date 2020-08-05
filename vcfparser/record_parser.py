@@ -523,18 +523,6 @@ class Record:
         ]
         return mapped_list
 
-    def unmap_fmt_samples_dict(self, mapped_dict):
-        """ Converts mapped dict again into string to write into the file.
-        """
-
-        sample_str_all = ""
-        for sample in self.sample_names:
-            # TODO make format compute only once
-            format_str = ":".join(key for key in mapped_dict[sample])
-            sample_str = ":".join(val for val in mapped_dict[sample].values())
-            sample_str_all.join(sample_str + "\t")
-
-        return format_str, sample_str_all
 
     @staticmethod
     def _to_iupac(ref_alt, numeric_genotype, bases="numeric"):
@@ -621,7 +609,29 @@ class Record:
         mapped_records["samples"] = self.get_format_to_sample_map(convert_to_iupac= convert_to_iupac)
         return mapped_records
 
-    ## TODO: Revert mapped record into record string
+    def unmap_fmt_samples_dict(self, mapped_dict):
+        """ Converts mapped dict again into string to write into the file.
+        """
+
+        sample_str_all = ""
+        for sample in self.sample_names:
+            # TODO make format compute only once
+            format_str = ":".join(key for key in mapped_dict[sample])
+            sample_str = ":".join(val for val in mapped_dict[sample].values())
+            sample_str_all.join(sample_str + "\t")
+
+        return format_str, sample_str_all
+
+    ## TODO: Done Revert mapped record into record string
+    def mapped_rec_to_str(self, mapped_sample_dict):
+        record_val_upto_info = self.record_values[:8]
+        record_str = ''
+        str_up_to_info = '\t'.join(record_val_upto_info)
+        format_str, sample_str_all = self.unmap_fmt_samples_dict(mapped_sample_dict)
+        record_str = str_up_to_info+ '\t' +format_str + '\t'+ sample_str_all
+        return record_str
+
+
 
     # functions to add later Done
     def iupac_to_numeric(self, ref_alt, genotype_in_iupac):
