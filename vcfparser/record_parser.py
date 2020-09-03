@@ -4,6 +4,9 @@ from collections import OrderedDict
 from itertools import zip_longest
 import sys
 
+# Note: A very good example for handling inheritance among classes
+# https://pythonspot.com/inner-classes/
+
 
 class Record:
     """
@@ -25,7 +28,7 @@ class Record:
             - genrated from the lines below # CHROM in VCF file
             - values are dynamically updated in each for-loop        
         """
-        self.rec_line = "\t".join(record_values)  # TODO (Bishwa) - should this lazy instance variable?
+        self.rec_line = "\t".join(record_values)
         self.record_values = record_values
         self.record_keys = record_keys
         self.CHROM = self.record_values[0]
@@ -48,7 +51,11 @@ class Record:
             )
         self.mapped_format_to_sample = self._map_format_tags_to_sample_values()
 
-    # TODO Done- ask question : What is this function used for? 
+        # instance attributes to get genotype and allele level information
+        self.genotype_property = GenotypeProperty(self)
+        # self.allele_property = AlleleProperty(self)
+
+
     def __str__(self):
         return str(self.rec_line)
 
@@ -87,13 +94,14 @@ class Record:
         >>> import vcfparser.vcf_parser as vcfparse
         >>> myvcf = vcfparse.VcfParser("input_test.vcf") 
         >>> records = myvcf.parse_records()
-        >>> record = first(record)
+        >>> record = first(record) # TODO: Why first?
         >>> record.mapped_format_to_sample = {'ms01e': {'GT': './.','PI': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'PC': '.'}}
         >>> record.get_format_to_sample_map(self, sample_names= ['ms01e', 'MA611'], formats= ['GT', 'PC'])
         {'ms01e': {'GT': './.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PC': '.'}} 
 
         >>> record.get_format_to_sample_map(self, sample_names= ['ms01e', 'MA611'], formats= ['GT', 'PC', 'PG'], convert_to_iupac= ['GT', 'PG'])
-        {'ms01e': {'GT': './.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PC': '.'}} 
+        {'ms01e': {'GT': './.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PC': '.'}}
+        #TODO: the GT output should have been in IUPAC.
 
         """
         sample_names = sample_names if sample_names else self.sample_names
@@ -203,318 +211,6 @@ class Record:
             splitted_tag_vals = [re.split(r"[/|]", value) for value in format_tag_values]
             return splitted_tag_vals
         return format_tag_values
-
-
-    # TODO (Bishwa) all this genotype parsing should be kept as a separate class ?
-    # @property
-    def isHOMREF(self, tag="GT", bases="numeric"):
-        """
-        Parameters
-        ----------
-        tag: str
-            format tags of interest (default = 'GT')
-        bases: str
-            iupac or numeric (default = 'numeric')
-
-        Returns
-        -------
-        dict
-            dict of sample with values having homoref
-
-        Examples
-        --------
-        >>> rec_keys = ['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
-        >>> rec_values = ['2', '15881018', '.', 'G', 'A,C', '5082.45', 'PASS', 'AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs', 'GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', '1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.', '0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.', '0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.', '0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.']
-        >>> from vcfparser.record_parser import Record
-        >>> rec_obj = Record(rec_values, rec_keys)
-        >>> rec_obj.isHOMREF(tag="GT", bases="iupac")
-        {'MA611': 'G/G', 'MA605': 'G/G', 'MA622': 'G/G'}  
-
-        """
-        # homref_samples = []
-        # tag_vals = self.get_tag_values_from_samples(
-        #     self.mapped_format_to_sample, tag, self.sample_names, split_at="|/"
-        # )
-        # for i, tag_val in enumerate(tag_vals):
-        #     if set(tag_val) == {"0"}:
-        #         homref_samples.append(self.sample_names[i])
-        allele_obj = Alleles(self.mapped_format_to_sample,tag)
-        homref_samples = allele_obj.hom_ref_samples
-        return {
-            sample: self._to_iupac(self.ref_alt, self.mapped_format_to_sample[sample][tag], bases)
-            for sample in homref_samples
-        }
-
-    def isHOMVAR(self, tag="GT", bases="numeric"):
-        """
-
-        Parameters
-        ----------
-        tag: str
-            format tags of interest (default = 'GT')
-        bases: str
-            iupac or numeric (default = 'numeric')
-
-        Returns
-        -------
-        dict
-            dict of sample with values having homoref
-
-        Examples
-        --------
-        >>> record.isHOMVAR(tag="GT", bases="iupac")
-        {'ms01e': './.', 'ms02g': './.', 'ms03g': './.', 'ms04h': 'A/A', 'MA611': 'G/G', 'MA605': 'G/G', 'MA622': 'G/G'}
-        
-        """
-        # homvar_samples = []
-        # tag_vals = self.get_tag_values_from_samples(
-        #     self.mapped_format_to_sample, tag, self.sample_names, split_at="|/"
-        # )
-        # for i, tag_val in enumerate(tag_vals):
-        #     if (
-        #         len(set(tag_val)) == 1
-        #         and set(tag_val) != {"0"}
-        #         and set(tag_val) != {"."}
-        #     ):
-        #         homvar_samples.append(self.sample_names[i])
-        allele_obj = Alleles(self.mapped_format_to_sample,tag)
-        homvar_samples = allele_obj.hom_var_samples
-
-        return {
-            sample: self._to_iupac(self.ref_alt, self.mapped_format_to_sample[sample][tag], bases)
-            for sample in homvar_samples
-        }
-
-    def isHETVAR(self, tag="GT", bases="numeric"):
-        """
-
-        Parameters
-        ----------
-        tag: str
-            format tags of interest (default = 'GT')
-        bases: str
-            iupac or numeric (default = 'numeric')
-
-        Returns
-        -------
-        dict
-            dict of sample with values having homoref
-
-        Examples
-        --------
-        >>> record.isHETVAR(tag="GT", bases="numeric")
-        {}
-        
-        """
-        
-
-        # hetvar_samples = []
-        # tag_vals = self.get_tag_values_from_samples(
-        #     self.mapped_format_to_sample, tag, self.sample_names, split_at= "|/"
-        # )
-        # for i, tag_val in enumerate(tag_vals):
-        #     if len(set(tag_val)) > 1:
-        #         hetvar_samples.append(self.sample_names[i])
-        allele_obj = Alleles(self.mapped_format_to_sample,tag)
-        hetvar_samples = allele_obj.het_var_samples
-        return {
-            sample: self._to_iupac(self.ref_alt, self.mapped_format_to_sample[sample][tag], bases)
-            for sample in hetvar_samples
-        }
-
-    def isMissing(self, tag="GT"):
-        """
-
-        Parameters
-        ----------
-        tag: str
-            format tags of interest (default = 'GT')
-
-        Returns
-        -------
-         dict
-            dict of sample with values having homoref
-
-        Examples
-        --------
-        >>> record.isMissing(tag='PI') 
-        {'ms01e': '.', 'ms02g': '.', 'ms03g': '.', 'ms04h': '.', 'MA611': '.', 'MA605': '.', 'MA622': '.'}
-        
-        """
-
-        # missing_tag_sample = []
-        # tag_vals = self.get_tag_values_from_samples(
-        #     self.mapped_format_to_sample, tag, self.sample_names, split_at= "|/"
-        # )
-        # for i, tag_val in enumerate(tag_vals):
-        #     if set(tag_val) == {"."}:
-        #         missing_tag_sample.append(self.sample_names[i])
-        allele_obj = Alleles(self.mapped_format_to_sample,tag)
-        missing_tag_sample = allele_obj.missing_samples
-        return {
-            sample: self.mapped_format_to_sample[sample][tag] for sample in missing_tag_sample
-        }
-
-    def hasSNP(self, tag="GT", bases="numeric"):
-        # TODO (Bhuwa, Bishwa, high priority) - may need to add a tag="GT" option
-        # **Note: this needs to be implemented properly
-        # The length of the REF and ALT both needs to be just 1.
-        if len(self.REF) == 1:
-            return True
-
-    def hasINDEL(self):
-        # TODO Bishwa : need to implement properly
-
-        if len(self.REF) > 1:
-            return True
-
-    def hasAllele(self, allele="0", tag="GT", bases="numeric"):
-        """
-
-        Parameters
-        ----------
-        allele : str
-            allele to check if it is present in given samples(default = '0')
-        tag: str
-            format tags of interest (default = 'GT')
-        bases: str
-            iupac or numeric (default = 'numeric')
-
-        Returns
-        -------
-        dict
-            dict of sample with values having given allele
-
-        Example
-        -------
-        >>> record.hasAllele(allele='0', tag='GT', bases='numeric')
-        {'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0'}
-        
-        """
-
-        return {
-            sample: self._to_iupac(self.ref_alt, self.mapped_format_to_sample[sample][tag], bases)
-            for sample in self.sample_names
-            if allele in self.mapped_format_to_sample[sample][tag]
-        }
-
-
-    def hasVAR(self, genotype="0/0", tag="GT", bases="numeric"):
-        """
-
-        Parameters
-        ----------
-        genotype : str
-            genotype to check if it is present in given samples(default = '0/0')
-        tag: str
-            format tags of interest (default = 'GT')
-        bases: str
-            iupac or numeric (default = 'numeric')
-
-        Returns
-        -------
-        dict
-            dict of sample with values having given genotype
-
-        Example
-        -------
-        >>> record.hasVAR(genotype='0/0') 
-        
-        {'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0'}
-        """
-
-        return {
-            sample: self._to_iupac(self.ref_alt, self.mapped_format_to_sample[sample][tag], bases)
-            for sample in self.sample_names
-            if (
-                genotype
-                in self._to_iupac(
-                    self.ref_alt, self.mapped_format_to_sample[sample][tag], bases="numeric"
-                )
-            )
-            or (
-                genotype
-                in self._to_iupac(
-                    self.ref_alt, self.mapped_format_to_sample[sample][tag], bases="iupac"
-                )
-            )
-        }
-
-    def hasnoVAR(self, tag="GT"):
-        """ Returns samples with empty genotype """
-
-        return {
-            sample: self.mapped_format_to_sample[sample][tag]
-            for sample in self.sample_names
-            if self.mapped_format_to_sample[sample][tag] in (".", "./.", ".|.")
-        }
-
-    def has_unphased(self, tag="GT", bases="numeric"):
-        """
-
-        Parameters
-        ----------
-        tag: str
-            format tags of interest (default = 'GT')
-        bases: str
-            iupac or numeric (default = 'numeric')
-
-        Returns
-        -------
-         dict
-            dict of sample with values having '/' in samples formats
-
-        Examples
-        --------
-        >>> rec_keys = ['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
-        >>> rec_values = ['2', '15881018', '.', 'G', 'A,C', '5082.45', 'PASS', 'AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs', 'GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', '1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.', '0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.', '0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.', '0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.']
-        >>> from vcfparser.record_parser import Record
-        >>> rec_obj = Record(rec_values, rec_keys)
-        >>> rec_obj.has_unphased(tag="GT", bases="iupac")
-        {'ms01e': './.', 'ms02g': './.', 'ms03g': './.', 'ms04h': 'A/A', 'MA611': 'G/G', 'MA605': 'G/G', 'MA622': 'G/G'}
-
-
-        """
-        return {
-            sample: self._to_iupac(self.ref_alt, self.mapped_format_to_sample[sample][tag], bases)
-            for sample in self.sample_names
-            if "/" in self.mapped_format_to_sample[sample][tag]
-        }
-
-    def has_phased(self, tag="GT", bases="numeric"):
-        """
-
-        Parameters
-        ----------
-        tag: str
-            format tags of interest (default = 'GT')
-        bases: str
-            iupac or numeric (default = 'numeric')
-
-        Returns
-        -------
-        dict
-            dict of sample with values having '/' in samples formats
-
-        Examples
-        --------
-
-        >>> rec_keys = ['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
-        >>> rec_values = ['2', '15881018', '.', 'G', 'A,C', '5082.45', 'PASS', 'AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs', 'GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', '1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.', '0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.', '0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.', '0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.']
-        >>> from vcfpaser.record_parser import Record
-        >>> rec_obj = Record(rec_values, rec_keys)
-        >>> rec_obj.has_phased(tag="GT", bases="iupac")
-        {}
-
-        """
-
-        return {
-            sample: self._to_iupac(self.ref_alt, self.mapped_format_to_sample[sample][tag], bases)
-            for sample in self.sample_names
-            if "|" in self.mapped_format_to_sample[sample][tag]
-        }
-
-
         
     def get_mapped_tag_list(self, sample_names=None, tag=None, bases="numeric"):
         mapped_list = [
@@ -632,8 +328,7 @@ class Record:
         return record_str
 
 
-
-    # functions to add later Done
+    # TODO: functions to add later Done
     def iupac_to_numeric(self, ref_alt, genotype_in_iupac):
         # input parameters should be ref_alt, iupac_bases = []
         # returns: list of numeric bases 
@@ -650,12 +345,362 @@ class Record:
         # TODO
         pass
 
+class GenotypeProperty:
+    '''
+    Class for parsing the property of the genotype.
+    e.g: if the genotype is a SNP, InDel, Homozygous Variant (HomVAR) etc.
+    Following would be considered a property of a particular genotype:
+    SNP, InDel (Insertion, Deletion), HomRef, HomVar, HetVar, Missing, etc.
+
+    '''
+    ########################################################################
+    #### parsing of genotype property begins ####
+    # allele_obj = self.Alleles(self.mapped_format_to_sample, tag)
+
+    # def _allele_obj(self):
+    #     allele_obj = Alleles(self.mapped_format_to_sample, tag='GT')
+    #     return allele_obj
+
+    # allele_obj = _allele_obj
+
+
+    def __init__(self, record_obj):
+        self.record_obj = record_obj
+        # pass
+
+    # TODO (Bishwa) all this genotype parsing should be kept as a separate class ?
+    # @property
+    def isHOMREF(self, tag="GT", bases="numeric"):
+        """
+        Parameters
+        ----------
+        tag: str
+            format tags of interest (default = 'GT')
+        bases: str
+            iupac or numeric (default = 'numeric')
+
+        Returns
+        -------
+        dict
+            dict of sample with values having homoref
+
+        Examples
+        --------
+        >>> rec_keys = ['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
+        >>> rec_values = ['2', '15881018', '.', 'G', 'A,C', '5082.45', 'PASS', 'AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs', 'GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', '1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.', '0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.', '0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.', '0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.']
+        >>> from vcfparser.record_parser import Record
+        >>> rec_obj = Record(rec_values, rec_keys)
+        >>> rec_obj.isHOMREF(tag="GT", bases="iupac")
+        {'MA611': 'G/G', 'MA605': 'G/G', 'MA622': 'G/G'}  
+
+        """
+        # homref_samples = []
+        # tag_vals = self.get_tag_values_from_samples(
+        #     self.mapped_format_to_sample, tag, self.sample_names, split_at="|/"
+        # )
+        # for i, tag_val in enumerate(tag_vals):
+        #     if set(tag_val) == {"0"}:
+        #         homref_samples.append(self.sample_names[i])
+        # allele_obj = Alleles(self.mapped_format_to_sample,tag)
+        allele_obj = Alleles(self.record_obj.mapped_format_to_sample,tag)
+
+        # allele_obj = 
+        homref_samples = allele_obj.hom_ref_samples
+        return {
+            sample: self.record_obj._to_iupac(self.record_obj.ref_alt, self.record_obj.mapped_format_to_sample[sample][tag], bases)
+            for sample in homref_samples
+        }
+
+
+    def isHOMVAR(self, tag="GT", bases="numeric"):
+        """
+
+        Parameters
+        ----------
+        tag: str
+            format tags of interest (default = 'GT')
+        bases: str
+            iupac or numeric (default = 'numeric')
+
+        Returns
+        -------
+        dict
+            dict of sample with values having homoref
+
+        Examples
+        --------
+        >>> record.isHOMVAR(tag="GT", bases="iupac")
+        {'ms01e': './.', 'ms02g': './.', 'ms03g': './.', 'ms04h': 'A/A', 'MA611': 'G/G', 'MA605': 'G/G', 'MA622': 'G/G'}
+        
+        """
+        # homvar_samples = []
+        # tag_vals = self.get_tag_values_from_samples(
+        #     self.mapped_format_to_sample, tag, self.sample_names, split_at="|/"
+        # )
+        # for i, tag_val in enumerate(tag_vals):
+        #     if (
+        #         len(set(tag_val)) == 1
+        #         and set(tag_val) != {"0"}
+        #         and set(tag_val) != {"."}
+        #     ):
+        #         homvar_samples.append(self.sample_names[i])
+        allele_obj = Alleles(self.record_obj.mapped_format_to_sample,tag)
+        homvar_samples = allele_obj.hom_var_samples
+
+        return {
+            sample: self.record_obj._to_iupac(self.record_obj.ref_alt, self.record_obj.mapped_format_to_sample[sample][tag], bases)
+            for sample in homvar_samples
+        }
+
+    def isHETVAR(self, tag="GT", bases="numeric"):
+        """
+
+        Parameters
+        ----------
+        tag: str
+            format tags of interest (default = 'GT')
+        bases: str
+            iupac or numeric (default = 'numeric')
+
+        Returns
+        -------
+        dict
+            dict of sample with values having homoref
+
+        Examples
+        --------
+        >>> record.isHETVAR(tag="GT", bases="numeric")
+        {}
+        
+        """
+        
+
+        # hetvar_samples = []
+        # tag_vals = self.get_tag_values_from_samples(
+        #     self.mapped_format_to_sample, tag, self.sample_names, split_at= "|/"
+        # )
+        # for i, tag_val in enumerate(tag_vals):
+        #     if len(set(tag_val)) > 1:
+        #         hetvar_samples.append(self.sample_names[i])
+        allele_obj = Alleles(self.record_obj.mapped_format_to_sample,tag)
+        hetvar_samples = allele_obj.het_var_samples
+
+        #TODO: only do this dict comprehension if bases = 'iupac'
+        # apply this method on other similar functions
+        return {
+            sample: self.record_obj._to_iupac(self.record_obj.ref_alt, self.record_obj.mapped_format_to_sample[sample][tag], bases)
+            for sample in hetvar_samples
+        }
+
+    # TODO: illustrate that it can be use for any FORMAT tags, not just "GT"
+    def isMissing(self, tag="GT"):
+        """
+
+        Parameters
+        ----------
+        tag: str
+            format tags of interest (default = 'GT')
+
+        Returns
+        -------
+         dict
+            dict of sample with values having homoref
+
+        Examples
+        --------
+        >>> record.isMissing(tag='PI') 
+        {'ms01e': '.', 'ms02g': '.', 'ms03g': '.', 'ms04h': '.', 'MA611': '.', 'MA605': '.', 'MA622': '.'}
+        
+        """
+
+        # missing_tag_sample = []
+        # tag_vals = self.get_tag_values_from_samples(
+        #     self.mapped_format_to_sample, tag, self.sample_names, split_at= "|/"
+        # )
+        # for i, tag_val in enumerate(tag_vals):
+        #     if set(tag_val) == {"."}:
+        #         missing_tag_sample.append(self.sample_names[i])
+        allele_obj = Alleles(self.record_obj.mapped_format_to_sample,tag)
+        missing_tag_sample = allele_obj.missing_samples
+        return {
+            sample: self.record_obj.mapped_format_to_sample[sample][tag] for sample in missing_tag_sample
+        }
+
+    # TODO: may be 'tag' and 'bases' flag is not required
+    def hasSNP(self, tag="GT", bases="numeric"):
+        # TODO (Bhuwa, Bishwa, high priority) - may need to add a tag="GT" option
+        # **Note: this needs to be implemented properly
+        # The length of the REF and ALT both needs to be just 1.
+        if len(self.record_obj.REF) == 1:
+            return True
+
+    def hasINDEL(self):
+        # TODO Bishwa : need to implement properly
+
+        if len(self.record_obj.REF) > 1:
+            return True
+
+    def hasAllele(self, allele="0", tag="GT", bases="numeric"):
+        """
+
+        Parameters
+        ----------
+        allele : str
+            allele to check if it is present in given samples(default = '0')
+        tag: str
+            format tags of interest (default = 'GT')
+        bases: str
+            iupac or numeric (default = 'numeric')
+
+        Returns
+        -------
+        dict
+            dict of sample with values having given allele
+
+        Example
+        -------
+        >>> record.hasAllele(allele='0', tag='GT', bases='numeric')
+        {'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0'}
+        
+        """
+
+        return {
+            sample: self.record_obj._to_iupac(self.record_obj.ref_alt, self.record_obj.mapped_format_to_sample[sample][tag], bases)
+            for sample in self.record_obj.sample_names
+            if allele in self.record_obj.mapped_format_to_sample[sample][tag]
+        }
+
+    # TODO: make it compatible with polyploid genotype 
+    def hasVAR(self, genotype="0/0", tag="GT", bases="numeric"):
+        """
+
+        Parameters
+        ----------
+        genotype : str
+            genotype to check if it is present in given samples(default = '0/0')
+        tag: str
+            format tags of interest (default = 'GT')
+        bases: str
+            iupac or numeric (default = 'numeric')
+
+        Returns
+        -------
+        dict
+            dict of sample with values having given genotype
+
+        Example
+        -------
+        >>> record.hasVAR(genotype='0/0') 
+        
+        {'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0'}
+        """
+        # TODO: The return could be shortened
+        # only do comprehension if bases = 'iupac'
+        return {
+            sample: self.record_obj._to_iupac(self.record_obj.ref_alt, self.record_obj.mapped_format_to_sample[sample][tag], bases)
+            for sample in self.record_obj.sample_names
+            if (
+                genotype
+                in self.record_obj._to_iupac(
+                    self.record_obj.ref_alt, self.record_obj.mapped_format_to_sample[sample][tag], bases="numeric"
+                )
+            )
+            or (
+                genotype
+                in self.record_obj._to_iupac(
+                    self.record_obj.ref_alt, self.record_obj.mapped_format_to_sample[sample][tag], bases="iupac"
+                )
+            )
+        }
+
+    # TODO (future): make it compatible with polyploid genotype
+    def hasnoVAR(self, tag="GT"):
+        """ Returns samples with empty genotype """
+
+        return {
+            sample: self.record_obj.mapped_format_to_sample[sample][tag]
+            for sample in self.record_obj.sample_names
+            if self.record_obj.mapped_format_to_sample[sample][tag] in (".", "./.", ".|.")
+        }
+
+    def has_unphased(self, tag="GT", bases="numeric"):
+        """
+
+        Parameters
+        ----------
+        tag: str
+            format tags of interest (default = 'GT')
+        bases: str
+            iupac or numeric (default = 'numeric')
+
+        Returns
+        -------
+         dict
+            dict of sample with values having '/' in samples formats
+
+        Examples
+        --------
+        >>> rec_keys = ['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
+        >>> rec_values = ['2', '15881018', '.', 'G', 'A,C', '5082.45', 'PASS', 'AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs', 'GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', '1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.', '0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.', '0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.', '0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.']
+        >>> from vcfparser.record_parser import Record
+        >>> rec_obj = Record(rec_values, rec_keys)
+        >>> rec_obj.has_unphased(tag="GT", bases="iupac")
+        {'ms01e': './.', 'ms02g': './.', 'ms03g': './.', 'ms04h': 'A/A', 'MA611': 'G/G', 'MA605': 'G/G', 'MA622': 'G/G'}
+
+
+        """
+        return {
+            sample: self.record_obj._to_iupac(self.record_obj.ref_alt, self.record_obj.mapped_format_to_sample[sample][tag], bases)
+            for sample in self.record_obj.sample_names
+            if "/" in self.record_obj.mapped_format_to_sample[sample][tag]
+        }
+
+    def has_phased(self, tag="GT", bases="numeric"):
+        """
+
+        Parameters
+        ----------
+        tag: str
+            format tags of interest (default = 'GT')
+        bases: str
+            iupac or numeric (default = 'numeric')
+
+        Returns
+        -------
+        dict
+            dict of sample with values having '/' in samples formats
+
+        Examples
+        --------
+
+        >>> rec_keys = ['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
+        >>> rec_values = ['2', '15881018', '.', 'G', 'A,C', '5082.45', 'PASS', 'AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs', 'GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', '1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.', '0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.', '0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.', '0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.']
+        >>> from vcfpaser.record_parser import Record
+        >>> rec_obj = Record(rec_values, rec_keys)
+        >>> rec_obj.has_phased(tag="GT", bases="iupac")
+        {}
+
+        """
+
+        return {
+            sample: self.record_obj._to_iupac(self.record_obj.ref_alt, self.record_obj.mapped_format_to_sample[sample][tag], bases)
+            for sample in self.record_obj.sample_names
+            if "|" in self.record_obj.mapped_format_to_sample[sample][tag]
+        }
+
+
     # TODO: Bishwa (Priority high)
     # Make sure all the genotype parsing methods are compatible with non diploid genomes 
+
+
+
+
+
 allele_delimiter = re.compile(r'''[|/]''')
+# allele_obj = Alleles(mapped_format_to_sample,tag)
 ## ASK: If this needs to be named allele or genotype
-class Alleles:
-    def __init__(self,mapped_samples, tag= 'GT'):
+class Alleles: # TODO : Rename to something like GenotypeProperty?
+    def __init__(self,mapped_samples, tag= 'GT'): # TODO - may be add another flag
         """
         This class is used to store sample names with their types.
         """
@@ -663,7 +708,13 @@ class Alleles:
         self.hom_var_samples = []
         self.het_var_samples = []
         self.missing_samples = []
-        self.phased_samples = []
+        self.phased_samples = [] # TODO - this probably is a duplicate method? fix it?
+
+        # TODO: add new genotype property checks?
+        # is_SNP, is_INDEL, is_SV, etc. 
+
+        # REF = self.REF
+
 
 
         for sample in mapped_samples.keys():
@@ -698,6 +749,9 @@ class GenotypeVal:
         For a given genotype data like ('0/0', '1|1', '0/1'); this class computes and store values
         like whether it is homref, hom_alt or hetvar
         """
+        # TODO: add new genotype property checks?
+        # is_SNP, is_INDEL, is_SV, etc. 
+
         # here gt_type store either homvar, hetvar, or homref
 
         self.gt_type= None
