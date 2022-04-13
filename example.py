@@ -1,7 +1,7 @@
-from vcf_parser import VcfParser
+from vcfparser import VcfParser
 
 # ** new class to add; 
-from vcf_writer import VcfWriter
+from vcfparser import VCFWriter
 import itertools
 
 
