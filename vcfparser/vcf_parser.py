@@ -52,6 +52,11 @@ class VcfParser:
         Object
             VCF object for iterating and querying.
 
+        Examples
+        --------
+        >>> from vcfparser import VcfParser
+        >>> vcfparser_obj = VcfParser("input_file.vcf")
+
         """
 
         self.filename : str = filename 
@@ -87,6 +92,12 @@ class VcfParser:
         ----
             MetaDataParser class to create MetaData object
         
+        Examples
+        --------
+        >>> from vcfparser import VcfParser
+        >>> vcfparser_obj = VcfParser("input_file.vcf")
+        >>> metadataparser_obj = vcfparser_obj.parse_metadata()
+        
         """
         
         # this produces a iterator of meta data lines (lines starting with '#')
@@ -115,12 +126,17 @@ class VcfParser:
 
         Uses
         ----
-        Record module to create a Record object
+        Record module to create a :Record: `vcfparser.Record` object
 
         Yields
         ------
         Record object for interating and quering the record information.
 
+        Examples
+        --------
+        >>> from vcfparser import VcfParser
+        >>> vcfparser_obj = VcfParser('input_file.vcf')
+        >>> records = vcfparser_obj.parse_records()
         """
         #TODO: Done 
         # the Uses is not being rendered properly.

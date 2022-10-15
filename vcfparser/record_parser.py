@@ -35,9 +35,9 @@ class Record:
         self.CHROM : str = self.record_values[0]
         self.POS : str = self.record_values[1]
         self.ID : str = self.record_values[2]
-        self.REF : str = self.record_values[3]
-        self.ALT : List[str] = self.record_values[4].split(",")
-        self.ref_alt : List[str] = self.REF.split(",") + self.ALT
+        self.REF : str = self.record_values[3] # 'G'
+        self.ALT : List[str] = self.record_values[4].split(",") # ['A', 'C']
+        self.ref_alt : List[str] = self.REF.split(",") + self.ALT # ['G', 'A', 'C']
         self.QUAL : str = self.record_values[5]
         self.FILTER : List[str] = self.record_values[6].split(",")
         self.info_str : str = self.record_values[7]
@@ -61,15 +61,15 @@ class Record:
             
             
             
-        """
-            After analyzing the complexity stat of vcfparser and cyvcf2, I saw that vcfparser is calling "_map_format_tags_to_sample_values()" 
-            each time while constructing the Record class instance. The value returned by this method is not used in the constructor 
-            so I decided to strip this computational heavy code from the constructor and now users need to explicitly call this method when they need the samples' values. 
-            By doing this we remove the overhead of calling this method while creating each record instance and gain an improvement in the performance of over 50%.
-        """
+        # """
+        #     After analyzing the complexity stat of vcfparser and cyvcf2, I saw that vcfparser is calling "_map_format_tags_to_sample_values()" 
+        #     each time while constructing the Record class instance. The value returned by this method is not used in the constructor 
+        #     so I decided to strip this computational heavy code from the constructor and now users need to explicitly call this method when they need the samples' values. 
+        #     By doing this we remove the overhead of calling this method while creating each record instance and gain an improvement in the performance of over 50%.
+        # """
         self.mapped_format_to_sample : Union[Dict[str, Dict[str, str]], None] = None
         # if self.samples_state : self.mapped_format_to_sample = dict(zip(self.sample_names, [dict(zip_longest(self.format_, self.sample_vals[i].split(":"), fillvalue=".")) for i, name in enumerate(self.sample_names)]))
-        if self.samples_state : self.mapped_format_to_sample = self._map_format_tags_to_sample_values()
+        # if self.samples_state : self.mapped_format_to_sample = self._map_format_tags_to_sample_values()
         
         
 
@@ -84,17 +84,35 @@ class Record:
 
 
 # This function should be looked after as it is much slower than other and bottleneck lies here
-    def _map_format_tags_to_sample_values(self) -> Union[Dict[str, Dict[str, str]], None]:
-        """Private method to map format tags to sample values"""
+    def map_format_tags_to_sample_values(self) -> Union[Dict[str, Dict[str, str]], None]:
+        """
+        Method to map format tags to sample values of Record Objects
+
+        Returns
+        -------
+        dict 
+            dict of samples with their associate format mapped with their value
+        
+        Examples
+        --------
+        >>> import vcfparser.vcf_parser as vcfparse
+        >>> myvcf = vcfparse.VcfParser("input_test.vcf") 
+        >>> records = myvcf.parse_records()
+        >>> record = next(records)
+        >>> mapped = record.map_format_tags_to_sample_values()
+        >>> print(mapped)
+        {'ms01e': {'GT': './.','PI': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'PC': '.'}}
+        >>> print(mapped.mapped_format_to_sample)
+        {'ms01e': {'GT': './.','PI': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'PC': '.'}}
+
+
+        """
         # mapped_data = {}
         # for i, name in enumerate(self.sample_names):
         #     mapped_data[name] = dict(
         #         zip_longest(self.format_, self.sample_vals[i].split(":"), fillvalue=".")
         #     )
         # return mapped_data
-        """
-        Instead of using range for-loop i have written the same code in list comprehension so that python can run it's optimized for loop in backend.
-        # """
         if self.samples_state :
             self.mapped_format_to_sample = dict(zip(self.sample_names, [dict(zip_longest(self.format_, self.sample_vals[i].split(":"), fillvalue=".")) for i, name in enumerate(self.sample_names)]))
             return self.mapped_format_to_sample
@@ -136,6 +154,22 @@ class Record:
         {'ms01e': {'GT': './.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PC': '.'}}
         #TODO: the GT output should have been in IUPAC.
 
+        Examples
+        --------
+        >>> import vcfparser.vcf_parser as vcfparse
+        >>> myvcf = vcfparse.VcfParser("input_test.vcf")
+        >>> records = myvcf.parser_records()
+        >>> record = next(records)
+        >>> record.map_format_tags_to_sample_values()
+        {'ms01e': {'GT': './.','PI': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'PC': '.'}}
+        >>> record.get_format_to_smaple_map(samples_names = ['ms01e', 'MA611'], formats = ['GT', 'PC']) # you 'll only get GT and PI values
+        {'ms01e': {'GT': './.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PC': '.'}} 
+        >>> record.ref_alt
+        ['G', 'A', 'C']
+        >>> record.get_format_to_smaple_map(samples_names = ['ms01e', 'MA611'], formats = ['GT', 'PC', 'PI'], convert_to_iupac = ['GT', 'PI'])
+        {'ms01e': {'GT': './.','PI': '.', 'PC': '.', 'GT_iupac': './.', 'PI_iupac': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'PC': '.', 'GT_iupac': 'G/G', 'PI_iupac': '.'}}
+        >>> 
+
         """
         sample_names : List[str] = sample_names if sample_names else self.sample_names
         required_format : List[str] = formats if formats else self.format_
@@ -167,7 +201,7 @@ class Record:
                     # This block of code will run for each sample for particular vlaue of genotype_tag. For instance say 'GT'
                     sample_genotype_as_iupac : Dict[str, Dict[str, str]] = {
                         sample: {
-                            genotype_tag + "_iupac" : 
+                            genotype_tag + "_iupac" : # 'ms010': { 'GT_iupac' : } 
                                 self._to_iupac(  # -> it takes .ref value for that chrom, mse102 sample ko 'GT' ko vlaue and will loop for every sample and genotype format, 
                                 self.ref_alt,    # output format i.e. "iupac"
                                 self.mapped_format_to_sample[sample][genotype_tag],
@@ -234,6 +268,7 @@ class Record:
         >>> sample_names = ['ms01e', 'MA622']
         >>> record.get_tag_values_from_samples(order_mapped_samples, tag, sample_names)
         [['./.'], ['0/0']]
+        ['./.', '0/0']
         >>> # using "/|"  # to split at GT values at both | and / 
         >>> get_tag_values_from_samples(order_mapped_samples, tag, sample_names, split_at= "/|")
         [['.', '.'], ['0', '0']]
@@ -251,20 +286,71 @@ class Record:
             return splitted_tag_vals
         return format_tag_values
         
-    def get_mapped_tag_list(self, sample_names=None, tag=None, bases="numeric") -> List[str]:
+    def get_mapped_tag_list(self, sample_names : List[str]=None, tag : str=None, bases="numeric") -> List[str]:
+        """
+        To get list of sample's particular tag value with an option of iupac conversion
+
+        Parameters
+        ----------
+        samples_names : List
+            List of sample names whose tag value is needed
+        tag : str
+            One of the FORMAT tag whose correspoding value needs to be converted to iupac
+        bases : str
+            Conversion scheme for iupac
+        
+        Returns
+        -------
+        list
+            List containing iupac converted FORMAT tag value for each sample in samples_name
+        
+        Examples
+        --------
+        >>> record.map_format_tags_to_sample_values()
+        {'ms01e': {'GT': './.','PI': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'PC': '.'}}
+        >>> record.ref_alt
+        ['G', 'A', 'C']
+        >>> record.get_mapped_tag_list(['MA622', 'MA611'], 'GT', "other")
+        ['G/G', 'G/G']
+        >>> record.get_mapped_tag_list(['MA622', 'MA611'], 'GT', "numeric")
+        ['0/0', '0/0']
+        """
         mapped_list : List[str] = [
             self._to_iupac(self.ref_alt, self.mapped_format_to_sample[sample][tag], bases)
             for sample in sample_names 
         ] 
-        return mapped_list # = ['G/T', 'T/T', 'T/G']
+        return mapped_list
 
 
 
 
     @staticmethod
     # if input is ref_alt = ['G', 'T'] and numeric_genotype = "0/1" or "1/1" any other
+    # for fist chrom of input_test.vcf ref_alt = ['G', 'A', 'C']
     # output will be 
     def _to_iupac(ref_alt : List[str], numeric_genotype : str, bases : str ="numeric") -> str:
+        """
+        Convert tag value to iupac bases
+
+        Parameters
+        ----------
+        ref_alt : list
+            List containing REF and ALT values
+        numeric_genotype : str
+            numeric vlaue of genotype e.g. "0/1"
+        bases : str
+            conversion base for iupac
+
+        Returns
+        -------
+        str
+            Converted version of iupac e.g. "0/1" --> "G/T" or "0/1"
+
+        Examples
+        --------
+        >>> _to_iupac(['G', 'A', 'C'], "0/1", "other")
+        "G/A"
+        """
         if bases == "numeric":
             return numeric_genotype
         # if numeric_genotype == ".":
@@ -306,6 +392,8 @@ class Record:
         >>> info_keys= ['AC', 'BaseQRankSum']
         >>> record.get_info_as_dict(info_keys)
         {'AC': '2,0', 'BaseQRankSum': '-7.710e-01'} ===> why does -7.7 vaule here for BaseQRankSum
+        {'AC': '2,0', 'BaseQRankSum': '.'}
+
 
         
         """
@@ -351,12 +439,32 @@ class Record:
         mapped_records["samples"] = self.get_format_to_sample_map(convert_to_iupac= convert_to_iupac) # it is added as new key, value in dict
         return mapped_records
 
-    def unmap_fmt_samples_dict(self, mapped_dict) -> Tuple[str, str]:
-        """ Converts mapped dict again into string to write into the file.
+    def unmap_fmt_samples_dict(self, mapped_dict : Dict) -> Tuple[str, str]:
+        """ 
+        Converts mapped dict again into string to write into the file.
+
+        Parameters
+        ----------
+        mapped_dict : dict
+            Dict of Dict with sample mapped with their format and format's value
+        
+        Returns
+        -------
+        str
+            format string of genotype tag value
+        str
+            each sample's values concatenated
+
+        Examples
+        --------
+
+        >>> mapped_dict = mapped_dict = {'ms01e': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'MA611': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '0/0'}}
+        >>> record.unmap_fmt_samples_dict(mapped_dict)
+        >>> ('GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC', './.:.:.:./.:.:./.:...      ./.:.:.:./.:.:./.:..0/0')
         """
 
         sample_str_all : str = ""
-        for sample in self.sample_names:    # mapped_dict = {'samples': {'ms01e': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, ...}}
+        for sample in self.sample_names:    # mapped_dict = {'ms01e': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, ...}}
             # TODO make format compute only once
             format_str : str = ":".join(key for key in mapped_dict[sample]) # = 'GT:PI:GQ:PG:PM:PW:...'
             sample_str : str = ":".join(val for val in mapped_dict[sample].values()) # = './.:.:.:./.:.:./.:...'
@@ -366,12 +474,33 @@ class Record:
 
     ## TODO: Done Revert mapped record into record string
     def mapped_rec_to_str(self, mapped_sample_dict : Dict[str, Dict[str, str]]) -> str:
-        record_val_upto_info : List[str] = self.record_values[:8] # = ['CHROM', "POS", upto "INFO"] values not header.. I have type header cause of convineient
+        """
+        Convert information in Object field of Record into string to make VCF file
+
+        Parameters
+        ----------
+        mapped_sample_dict : dict
+            Dict of Dict with sample mapped with their format and format's value
+        
+        Returns
+        -------
+        str
+            Complete line of VCF file for particular CHROM's position
+
+        Examples
+        --------
+        >>> mapped_dict = mapped_dict = {'ms01e': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'MA611': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '0/0'}}
+        >>> record.mapped_rec_to_str(mapped_dict)
+        2	15881018	.	G	A,C	5082.45	PASS	AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs	GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC	./.:.:.:./.:.:./.:...      ./.:.:.:./.:.:./.:..0/0
+        
+        --------
+        """
+        record_val_upto_info : List[str] = self.record_values[:8] 
         record_str : str = ''
         str_up_to_info : str = '\t'.join(record_val_upto_info)
         format_str, sample_str_all = self.unmap_fmt_samples_dict(mapped_sample_dict)
         record_str = str_up_to_info+ '\t' +format_str + '\t'+ sample_str_all
-        return record_str # full line of smaple from chrom value to last sample value of particular line of vcf file
+        return record_str 
 
 
     # TODO: functions to add later Done
