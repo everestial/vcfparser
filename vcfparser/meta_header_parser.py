@@ -17,14 +17,14 @@ class MetaDataParser:
         self.fileformat : str = None
         self.reference : List[str] = []
         self.sample_names : Union[List[str], None] = []
-        self.is_gvcf = False
-        self.gvcf_blocks = []
-        self.record_keys = []
+        self.is_gvcf : bool = False
+        self.gvcf_blocks : List[Dict[str, str]] = [] 
+        self.record_keys : List[str] = [] 
         self.VCFspec : List[Dict[str, str]] = []
-        self.gatk_commands = []
+        self.gatk_commands : List[Dict[str, str]] = [] # add
 
         # to write header lines only
-        self.raw_meta_data = ""
+        self.raw_meta_data : str = ""
 
         self._format_pattern : Pattern[str] = re.compile(
             r"""\#\#FORMAT=<
@@ -39,7 +39,27 @@ class MetaDataParser:
 
     @staticmethod
     def _parse_gvcf_block(lines) -> Dict[str, str]:
-        """extract the GVCF blocks"""
+        """
+        extract the GVCF blocks
+
+        Parameters
+        ----------
+        lines : str
+            str of GVCFBlock
+        
+        Returns
+        -------
+        dict :  
+            key value pair of extracted GVCFBlock
+
+        Examples
+        --------
+        >>> meta = MetaDataParser(header_files)
+        >>> lines = "##GVCFBlock55-56=minGQ=55(inclusive),maxGQ=56(exclusive)"
+        >>> meta._parse_gvcf_block(lines)
+        {'minGQ': '55(inclusive)', 'maxGQ': '56(exclusive)', 'Block': '55-56'}
+
+        """
         # e.g input: ##GVCFBlock55-56=minGQ=55(inclusive),maxGQ=56(exclusive)
         # output: {'minGQ': '55(inclusive)', 'maxGQ': '56(exclusive)', 'Block': '55-56'}
         gvcf_block : str = re.search("##GVCFBlock(.*?)=", lines, 0).group(1) # => answer will be "55-56"
@@ -54,7 +74,22 @@ class MetaDataParser:
 
     @staticmethod
     def _parse_gatk_commands(lines):
-        """find the GATK commands used to generate the input VCF"""
+        """
+        find the GATK commands used to generate the input 
+
+        Parameters
+        ----------
+        lines : str
+            str of GVCFBlock
+        
+        Returns
+        -------
+        dict :  
+            key value pair of extracted GVCFBlock
+
+        Examples
+        --------
+        """
         ## e.g: ##GATKCommandLine.HaplotypeCaller=<ID=HaplotypeCaller....
         gatk_cmd_middle_string : str = re.search("##GATKCommandLine(.*)=<ID=", lines).group(1)
         to_replace : str = "##GATKCommandLine" + gatk_cmd_middle_string + "=<"
@@ -63,7 +98,17 @@ class MetaDataParser:
         return tags_dict
 
     def parse_lines(self):
-        """Parse a vcf metadataline"""
+        """
+        Parse a vcf metadataline
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
         for line in self.header_file:
             self.raw_meta_data += line
             if line.startswith("##"):
@@ -145,6 +190,22 @@ class MetaDataParser:
 # function to split the string at "," and create key-value pair at "="
 # mainly aimed for parsing VCF metadata lines and create dictionary
 def split_to_dict(string):
+    """
+    Split the string by ,
+
+    Parameters
+    ----------
+    string : str
+        string that requires split
+
+    Returns
+    -------
+    dict :
+        dict of tags
+
+    Examples
+    --------
+    """
     string = string.lstrip("<").rstrip(">")
     splitter = shlex.shlex(string, posix=True)
     splitter.whitespace_split = True

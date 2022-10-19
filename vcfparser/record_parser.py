@@ -527,6 +527,7 @@ class GenotypeProperty:
     Following would be considered a property of a particular genotype:
     SNP, InDel (Insertion, Deletion), HomRef, HomVar, HetVar, Missing, etc.
 
+
     '''
     ########################################################################
     #### parsing of genotype property begins ####
