@@ -1,31 +1,32 @@
 import re
 import shlex
+from typing import Dict, Iterator, List, Pattern, Tuple, Union
 
 
 class MetaDataParser:
     """Parses a meta lines of the vcf files."""
 
     def __init__(self, header_file):
-        self.header_file = header_file
-        self.infos_ = []
-        self.filters_ = []
-        self.contig = []
-        self.format_ = []
-        self.alt_ = []
-        self.other_lines = []
-        self.fileformat = None
-        self.reference = []
-        self.sample_names = []
+        self.header_file : Iterator[str] = header_file
+        self.infos_ : List[Dict[str, str]] = []
+        self.filters_ : List[Dict[str, str]] = []
+        self.contig : List[Dict[str, str]] = []
+        self.format_ : List[Dict[List[Tuple[str, str]]]] = []
+        self.alt_ : List[Dict[str, str]] = []
+        self.other_lines : List[Dict[str, str]]  = []
+        self.fileformat : str = None
+        self.reference : List[str] = []
+        self.sample_names : Union[List[str], None] = []
         self.is_gvcf = False
         self.gvcf_blocks = []
         self.record_keys = []
-        self.VCFspec = []
+        self.VCFspec : List[Dict[str, str]] = []
         self.gatk_commands = []
 
         # to write header lines only
         self.raw_meta_data = ""
 
-        self._format_pattern = re.compile(
+        self._format_pattern : Pattern[str] = re.compile(
             r"""\#\#FORMAT=<
             ID=(?P<id>.+),\s*
             Number=(?P<number>-?\d+|\.|[AGR]),\s*
@@ -37,17 +38,17 @@ class MetaDataParser:
         self._meta_pattern = re.compile(r"""##(?P<key>.+?)=(?P<val>.+)""")
 
     @staticmethod
-    def _parse_gvcf_block(lines):
+    def _parse_gvcf_block(lines) -> Dict[str, str]:
         """extract the GVCF blocks"""
         # e.g input: ##GVCFBlock55-56=minGQ=55(inclusive),maxGQ=56(exclusive)
         # output: {'minGQ': '55(inclusive)', 'maxGQ': '56(exclusive)', 'Block': '55-56'}
-        gvcf_block = re.search("##GVCFBlock(.*?)=", lines, 0).group(1)
+        gvcf_block : str = re.search("##GVCFBlock(.*?)=", lines, 0).group(1) # => answer will be "55-56"
 
         # update tags_dict
-        to_replace = "##GVCFBlock" + gvcf_block + "="
+        to_replace : str = "##GVCFBlock" + gvcf_block + "="
 
-        string = lines.rstrip(">").replace(to_replace, "")
-        tags_dict = split_to_dict(string)
+        string : str = lines.rstrip(">").replace(to_replace, "")
+        tags_dict : Dict[str, str] = split_to_dict(string)
         tags_dict["Block"] = gvcf_block
         return tags_dict
 
@@ -55,10 +56,10 @@ class MetaDataParser:
     def _parse_gatk_commands(lines):
         """find the GATK commands used to generate the input VCF"""
         ## e.g: ##GATKCommandLine.HaplotypeCaller=<ID=HaplotypeCaller....
-        gatk_cmd_middle_string = re.search("##GATKCommandLine(.*)=<ID=", lines).group(1)
-        to_replace = "##GATKCommandLine" + gatk_cmd_middle_string + "=<"
-        string = lines.rstrip("\n").rstrip(">").replace(to_replace, "")
-        tags_dict = split_to_dict(string)
+        gatk_cmd_middle_string : str = re.search("##GATKCommandLine(.*)=<ID=", lines).group(1)
+        to_replace : str = "##GATKCommandLine" + gatk_cmd_middle_string + "=<"
+        string : str = lines.rstrip("\n").rstrip(">").replace(to_replace, "")
+        tags_dict : Dict[str, str] = split_to_dict(string)
         return tags_dict
 
     def parse_lines(self):
@@ -68,7 +69,7 @@ class MetaDataParser:
             if line.startswith("##"):
 
                 line = line.rstrip()
-                line_info = line[2:].split("=", 1)
+                line_info : List[str] = line[2:].split("=", 1)
 
                 if line_info[0] == "fileformat":
                     try:
@@ -106,7 +107,7 @@ class MetaDataParser:
                         match.group("desc"),
                     ]
                     form_keys = ["ID", "Number", "Type", "Description"]
-                    self.format_.append(dict(list(zip(form_keys, matches))))
+                    self.format_.append(dict(list(zip(form_keys, matches)))) # List[Dict[List[Tuple[str, str]]]]
 
                 elif line_info[0] == "ALT":
                     self.alt_.append(split_to_dict(line_info[1]))
