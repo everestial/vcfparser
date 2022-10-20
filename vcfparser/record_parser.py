@@ -140,19 +140,9 @@ class Record:
         dict
             dict of filtered sample names along with filtered format "tags:values"
 
-        Examples
-        --------
-        >>> import vcfparser.vcf_parser as vcfparse
-        >>> myvcf = vcfparse.VcfParser("input_test.vcf") 
-        >>> records = myvcf.parse_records()
-        >>> record = first(records) # TODO: Why first?
-        >>> record.mapped_format_to_sample = {'ms01e': {'GT': './.','PI': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'PC': '.'}}
-        >>> record.get_format_to_sample_map(self, sample_names= ['ms01e', 'MA611'], formats= ['GT', 'PC'])
-        {'ms01e': {'GT': './.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PC': '.'}} 
-
-        >>> record.get_format_to_sample_map(self, sample_names= ['ms01e', 'MA611'], formats= ['GT', 'PC', 'PG'], convert_to_iupac= ['GT', 'PG'])
-        {'ms01e': {'GT': './.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PC': '.'}}
-        #TODO: the GT output should have been in IUPAC.
+        Uses
+        ----
+            _to_iupac(ref_alt : List[str], numeric_genotype : str, bases : str ="numeric") -> str function for iupac conversion
 
         Examples
         --------
@@ -168,7 +158,6 @@ class Record:
         ['G', 'A', 'C']
         >>> record.get_format_to_smaple_map(samples_names = ['ms01e', 'MA611'], formats = ['GT', 'PC', 'PI'], convert_to_iupac = ['GT', 'PI'])
         {'ms01e': {'GT': './.','PI': '.', 'PC': '.', 'GT_iupac': './.', 'PI_iupac': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'PC': '.', 'GT_iupac': 'G/G', 'PI_iupac': '.'}}
-        >>> 
 
         """
         sample_names : List[str] = sample_names if sample_names else self.sample_names
@@ -261,6 +250,10 @@ class Record:
         list of list
             List of list containing SAMPLE value for the FORMAT tag
 
+        Uses
+        ----
+            _to_iupac(ref_alt : List[str], numeric_genotype : str, bases : str ="numeric") -> str function for iupac conversion
+
         Examples
         --------
         >>> order_mapped_samples = OrderedDict([('ms01e',{'GT': './.', 'PI': '.'}), ('MA622', {'GT': '0/0','PI': '.'})])
@@ -303,6 +296,10 @@ class Record:
         -------
         list
             List containing iupac converted FORMAT tag value for each sample in samples_name
+
+        Uses
+        ----
+            _to_iupac(ref_alt : List[str], numeric_genotype : str, bases : str ="numeric") -> str function for iupac conversion
         
         Examples
         --------
@@ -350,6 +347,7 @@ class Record:
         --------
         >>> _to_iupac(['G', 'A', 'C'], "0/1", "other")
         "G/A"
+
         """
         if bases == "numeric":
             return numeric_genotype
@@ -391,11 +389,8 @@ class Record:
         >>> info_str = 'AC=2,0;AF=1.00;AN=8;BaseQRankSum'
         >>> info_keys= ['AC', 'BaseQRankSum']
         >>> record.get_info_as_dict(info_keys)
-        {'AC': '2,0', 'BaseQRankSum': '-7.710e-01'} ===> why does -7.7 vaule here for BaseQRankSum
-        {'AC': '2,0', 'BaseQRankSum': '.'}
+        {'AC': '2,0', 'BaseQRankSum': '-7.710e-01'} 
 
-
-        
         """
         mapped_info : Dict[str, str] = dict(
             s.split("=", 1) if "=" in s else (s, ".") for s in self.info_str.split(";")
@@ -425,6 +420,10 @@ class Record:
         -------
         dict
             dict with key value pair with sample and infos modified
+
+        Uses
+        ----
+            get_info_as_dict() and get_format_to_sample_map(convert_to_iupac : List[str]) function in the process
 
         TODO: Done (Gopal) Add example input and output 
 
@@ -487,6 +486,10 @@ class Record:
         str
             Complete line of VCF file for particular CHROM's position
 
+        Uses
+        ----
+            unmap_fmt_samples_dict(mapped_sample_dict: Dict[str, Dict[str, str]]) to get format and sample values
+
         Examples
         --------
         >>> mapped_dict = mapped_dict = {'ms01e': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'MA611': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '0/0'}}
@@ -510,6 +513,26 @@ class Record:
         # required for buildVCF ??
         # For ref_alt = ['G', 'A', 'C']
         # genotype_in_iupac = 'G/A' it should return '0/1'
+        """
+        Convert tag value to iupac bases
+
+        Parameters
+        ----------
+        ref_alt : list
+            List containing REF and ALT values
+        genotype_in_iupac : str
+            iupac vlaue of genotype e.g. "G/A"
+
+        Returns
+        -------
+        str
+            Converted version of iupac to numeric e.g. "G/A" --> "0/1"
+
+        Examples
+        --------
+        >>> iupac_to_numeric(['G', 'A', 'C'], "G/A",)
+        "0/1"
+        """
 
         iupac_g_list : List[str] = re.split(r"[/|]", genotype_in_iupac) # = ['G', 'A']
         sep = "/" if "/" in genotype_in_iupac else "|"
@@ -560,6 +583,11 @@ class GenotypeProperty:
         dict
             dict of sample with values having homoref
 
+        Uses
+        ----
+            Alleles class to create it's object
+            _to_iupac(...) function to convert ----- to iupac format
+
         Examples
         --------
         >>> rec_keys = ['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
@@ -603,6 +631,11 @@ class GenotypeProperty:
         dict
             dict of sample with values having homoref
 
+        Uses
+        ----
+            Alleles class to create it's object
+            _to_iupac(...) function to convert ----- to iupac format
+
         Examples
         --------
         >>> record.isHOMVAR(tag="GT", bases="iupac")
@@ -643,6 +676,11 @@ class GenotypeProperty:
         dict
             dict of sample with values having homoref
 
+        Uses
+        ----
+            Alleles class to create it's object
+            _to_iupac(...) function to convert ----- to iupac format
+
         Examples
         --------
         >>> record.isHETVAR(tag="GT", bases="numeric")
@@ -681,6 +719,10 @@ class GenotypeProperty:
         -------
          dict
             dict of sample with values having homoref
+
+        Uses
+        ----
+            Alleles class to create it's object
 
         Examples
         --------
@@ -733,6 +775,10 @@ class GenotypeProperty:
         dict
             dict of sample with values having given allele
 
+        Uses
+        ----
+            _to_iupac(...) function to convert ----- to iupac format
+
         Example
         -------
         >>> record.hasAllele(allele='0', tag='GT', bases='numeric')
@@ -763,6 +809,10 @@ class GenotypeProperty:
         -------
         dict
             dict of sample with values having given genotype
+
+        Uses
+        ----
+            _to_iupac(...) function to convert ----- to iupac format
 
         Example
         -------
@@ -814,6 +864,11 @@ class GenotypeProperty:
          dict
             dict of sample with values having '/' in samples formats
 
+        Uses
+        ----
+            Alleles class to create it's object
+            _to_iupac(...) function to convert ----- to iupac format
+
         Examples
         --------
         >>> rec_keys = ['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'ms01e', 'ms02g', 'ms03g', 'ms04h', 'MA611', 'MA605', 'MA622']
@@ -845,6 +900,11 @@ class GenotypeProperty:
         -------
         dict
             dict of sample with values having '/' in samples formats
+
+        Uses
+        ----
+            Alleles class to create it's object
+            _to_iupac(...) function to convert ----- to iupac format
 
         Examples
         --------
