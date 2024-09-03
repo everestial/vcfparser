@@ -1,6 +1,10 @@
 from setuptools import setup, find_packages
+import sys
 
-with open('README.rst') as readme_file:
+if len(sys.argv) == 1:
+    sys.argv.append('install')
+
+with open('README.md', encoding='utf-8') as readme_file:
     readme = readme_file.read()
 
 requirements = []
@@ -13,7 +17,7 @@ setup(
     author="Kiran Bishwa",
     author_email='kirannbishwa01@gmail.com',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Pre-Alpha',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
@@ -22,6 +26,11 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
     ],
     description="Minimaistic VCf parser in python",
     install_requires=requirements,
@@ -35,7 +44,7 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/everestial/vcfparser',
-    version='0.1.16',
+    version='0.2.0',
     zip_safe=False,
 )
 
