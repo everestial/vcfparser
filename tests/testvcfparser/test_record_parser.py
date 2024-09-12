@@ -5,12 +5,19 @@ import csv
 from collections import OrderedDict
 
 from vcfparser import Record
+from vcfparser.record_parser import GenotypeProperty
 
 output_file01 = "tests/testfiles/vcf_parser_output/record_parser_test_result01"
 rec_keys_eg = "CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	ms01e	ms02g	ms03g	ms04h	MA611	MA605	MA622"
 rec_valeg = "2	15881018	.	G	A,C	5082.45	PASS	AC=2,0;AF=1.00;AN=8;BaseQRankSum=-7.710e-01;ClippingRankSum=0.00;DP=902;ExcessHet=0.0050;FS=0.000;InbreedingCoeff=0.8004;MLEAC=12,1;MLEAF=0.462,0.038;MQ=60.29;MQRankSum=0.00;QD=33.99;ReadPosRankSum=0.260;SF=0,1,2,3,4,5,6;SOR=0.657;set=HignConfSNPs	GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	./.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.	1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.	0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.	0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.	0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:."
 rec_obj = Record(rec_valeg.split('\t'), rec_keys_eg.split('\t'))
-# 01 Record.split_tag_from_samples
+
+def get_genotype_property(record):
+    return record.genotype_property
+
+genotype_property = get_genotype_property(rec_obj)
+
+# 01 Record.splgenotype_propertyit_tag_from_samples
 def test_split_tag_from_samples():
     pass
     # FIXME: invalid syntax error shown in order_mapped_samples
@@ -34,27 +41,27 @@ def test_split_tag_from_samples():
 
 # 02 Record.isHOMREF
 def test_isHOMREF():
-    data = rec_obj.isHOMREF(tag="GT", bases="iupac")
+    data = genotype_property.isHOMREF(tag="GT", bases="iupac")
     write_data_and_check(2, data)
 
 
 # 03 Record.isHOMVAR
 def test_isHOMVAR():
-    data = rec_obj.isHOMVAR(tag="GT", bases="numeric")
+    data = genotype_property.isHOMVAR(tag="GT", bases="numeric")
     write_data_and_check(3, data)
 
 
 # 04 Record.isHETVAR
 ##TODO:Bishwa - Still showing there is remaining lines of code to test by pytest-cov 
 def test_isHETVAR():
-    data = rec_obj.isHETVAR(tag="GT", bases="numeric")
+    data = genotype_property.isHETVAR(tag="GT", bases="numeric")
     write_data_and_check(4, data)
 
 
 
 # 05 Record.isMissing
 def test_isMissing():
-    data = rec_obj.isMissing(tag="GT")
+    data = genotype_property.isMissing(tag="GT")
     write_data_and_check(5, data)
 
 
@@ -72,31 +79,31 @@ def test_hasINDEL():
 
 # 08 Record.hasAllele
 def test_hasAllele():
-    data = rec_obj.hasAllele(allele="0", tag="GT", bases="numeric")
+    data = genotype_property.hasAllele(allele="0", tag="GT", bases="numeric")
     write_data_and_check(8, data)
 
 
 # 09 Record.hasVAR
 def test_hasVAR():
-    data = rec_obj.hasVAR(genotype="0/0", tag="GT", bases="numeric")
+    data = genotype_property.hasVAR(genotype="0/0", tag="GT", bases="numeric")
     write_data_and_check(9, data)
 
 
 # 10 Record.hasnoVAR
 def test_hasnoVAR():
-    data = rec_obj.hasnoVAR(tag="GT")
+    data = genotype_property.hasnoVAR(tag="GT")
     write_data_and_check(10, data)
 
 
 # 11 Record.has_unphased
 def test_has_unphased():
-    data = rec_obj.has_unphased(tag="GT", bases="iupac")
+    data = genotype_property.has_unphased(tag="GT", bases="iupac")
     write_data_and_check(11, data)
 
 
 # 12 Record.has_phased
 def test_has_phased():
-    data = rec_obj.has_phased(tag="GT", bases="iupac")
+    data = genotype_property.has_phased(tag="GT", bases="iupac")
     write_data_and_check(12, data)
 
 

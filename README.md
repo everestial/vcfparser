@@ -154,7 +154,7 @@ Alternately, we can loop over each record by using a for-loop:
         qual = record.QUAL
         filter = record.FILTER
         format_ = record.format_
-        infos = record.get_info_dict()
+        infos = record.get_info_as_dict()
         mapped_sample = record.get_mapped_samples()
 ```
 
