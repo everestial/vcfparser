@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vcfparser"
-version = "0.2.0"
+version = "0.2.2"
 description = "Python (version <=3.12) package for parsing the genomics and transcriptomics VCF data."
 readme = "README.md"
 keywords = ["vcfparser"]
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 3 - Pre-Alpha",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Bio-Informatics",
