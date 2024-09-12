@@ -1,4 +1,5 @@
 import re
+from typing import Dict, Iterator, List, Set, Tuple, Union
 import warnings
 from collections import OrderedDict
 from itertools import zip_longest
@@ -13,7 +14,7 @@ class Record:
     A class that converts the record lines from input VCF into accessible record object.
     """
 
-    def __init__(self, record_values, record_keys):
+    def __init__(self, record_values : List[str], record_keys : List[str]):
         """
         Initializes the class with header keys and record values.
 
@@ -28,48 +29,80 @@ class Record:
             - genrated from the lines below # CHROM in VCF file
             - values are dynamically updated in each for-loop        
         """
-        self.rec_line = "\t".join(record_values)
-        self.record_values = record_values
-        self.record_keys = record_keys
-        self.CHROM = self.record_values[0]
-        self.POS = self.record_values[1]
-        self.ID = self.record_values[2]
-        self.REF = self.record_values[3]
-        self.ALT = self.record_values[4].split(",")
-        self.ref_alt = self.REF.split(",") + self.ALT
-        self.QUAL = self.record_values[5]
-        self.FILTER = self.record_values[6].split(",")
-        self.info_str = self.record_values[7]
-        self.format_ = self.record_values[8].split(":")
-        self.sample_names = self.record_keys[9:] if len(self.record_keys) > 9 else None
+        self.rec_line : str = "\t".join(record_values)
+        self.record_values : List[str] = record_values # values of chrom
+        self.record_keys : List[str] = record_keys # header 
+        self.CHROM : str = self.record_values[0]
+        self.POS : str = self.record_values[1]
+        self.ID : str = self.record_values[2]
+        self.REF : str = self.record_values[3]
+        self.ALT : List[str] = self.record_values[4].split(",")
+        self.ref_alt : List[str] = self.REF.split(",") + self.ALT
+        self.QUAL : str = self.record_values[5]
+        self.FILTER : List[str] = self.record_values[6].split(",")
+        self.info_str : str = self.record_values[7]
+        
+        
+        # PUT this code to another function and don't do heavy taks in the __init__() method
+        
+        self.samples_state : bool = True
+        try :
+            self.format_ : List[str] = self.record_values[8].split(":")
+            self.sample_names : Union[List[str], None] = self.record_keys[9:] if len(self.record_keys) > 9 else None
+        except IndexError:
+            self.samples_state = False
 
         try:
-            self.sample_vals = self.record_values[9:]
+            self.sample_vals : List[str] = self.record_values[9:]
         except IndexError:
             warnings.warn(
                 "Sample values are not presented correctly in given vcf file."
             )
-        self.mapped_format_to_sample = self._map_format_tags_to_sample_values()
+            
+            
+            
+        """
+            After analyzing the complexity stat of vcfparser and cyvcf2, I saw that vcfparser is calling "_map_format_tags_to_sample_values()" 
+            each time while constructing the Record class instance. The value returned by this method is not used in the constructor 
+            so I decided to strip this computational heavy code from the constructor and now users need to explicitly call this method when they need the samples' values. 
+            By doing this we remove the overhead of calling this method while creating each record instance and gain an improvement in the performance of over 50%.
+        """
+        self.mapped_format_to_sample : Union[Dict[str, Dict[str, str]], None] = None
+        # if self.samples_state : self.mapped_format_to_sample = dict(zip(self.sample_names, [dict(zip_longest(self.format_, self.sample_vals[i].split(":"), fillvalue=".")) for i, name in enumerate(self.sample_names)]))
+        if self.samples_state : self.mapped_format_to_sample = self._map_format_tags_to_sample_values()
+        
+        
 
         # instance attributes to get genotype and allele level information
-        self.genotype_property = GenotypeProperty(self)
+        self.genotype_property : GenotypeProperty = GenotypeProperty(self)
         # self.allele_property = AlleleProperty(self)
 
 
     def __str__(self):
         return str(self.rec_line)
 
-    def _map_format_tags_to_sample_values(self):
+
+
+# This function should be looked after as it is much slower than other and bottleneck lies here
+    def _map_format_tags_to_sample_values(self) -> Union[Dict[str, Dict[str, str]], None]:
         """Private method to map format tags to sample values"""
-        mapped_data = {}
-        for i, name in enumerate(self.sample_names):
-            mapped_data[name] = dict(
-                zip_longest(self.format_, self.sample_vals[i].split(":"), fillvalue=".")
-            )
-        return mapped_data
+        # mapped_data = {}
+        # for i, name in enumerate(self.sample_names):
+        #     mapped_data[name] = dict(
+        #         zip_longest(self.format_, self.sample_vals[i].split(":"), fillvalue=".")
+        #     )
+        # return mapped_data
+        """
+        Instead of using range for-loop i have written the same code in list comprehension so that python can run it's optimized for loop in backend.
+        # """
+        if self.samples_state :
+            self.mapped_format_to_sample = dict(zip(self.sample_names, [dict(zip_longest(self.format_, self.sample_vals[i].split(":"), fillvalue=".")) for i, name in enumerate(self.sample_names)]))
+            return self.mapped_format_to_sample
+        else :
+            return None
 
     # TODO (Bhuwan) Done - if required this should be a lazy method too. 
-    def get_format_to_sample_map(self, sample_names=None, formats=None, convert_to_iupac=None):
+    def get_format_to_sample_map(self, sample_names: List[str]=None, formats: List[str]=None, convert_to_iupac: List[str]=None) -> Dict[str, Dict[str, str]]:
         """
 
         Parameters
@@ -94,7 +127,7 @@ class Record:
         >>> import vcfparser.vcf_parser as vcfparse
         >>> myvcf = vcfparse.VcfParser("input_test.vcf") 
         >>> records = myvcf.parse_records()
-        >>> record = first(record) # TODO: Why first?
+        >>> record = first(records) # TODO: Why first?
         >>> record.mapped_format_to_sample = {'ms01e': {'GT': './.','PI': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'PC': '.'}}
         >>> record.get_format_to_sample_map(self, sample_names= ['ms01e', 'MA611'], formats= ['GT', 'PC'])
         {'ms01e': {'GT': './.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PC': '.'}} 
@@ -104,33 +137,39 @@ class Record:
         #TODO: the GT output should have been in IUPAC.
 
         """
-        sample_names = sample_names if sample_names else self.sample_names
-        required_format = formats if formats else self.format_
+        sample_names : List[str] = sample_names if sample_names else self.sample_names
+        required_format : List[str] = formats if formats else self.format_
 
-        filtered_sample_format = {
+
+        # filetered sample format contains the new value just like record.mapped_format_to_sample but filtered version of it.
+        filtered_sample_format : Dict[str, Dict[str, str]] = {
             sample: dict(
                 (fmt, self.mapped_format_to_sample[sample][fmt]) for fmt in required_format
             )
             for sample in sample_names
         }
 
+        # if no need to convert to iupac format then simply return those filtered sample format.
         if convert_to_iupac is None:
             return filtered_sample_format
 
         else:
             # update the genotype values for the tags requested in "iupac" format
-            multi_genotype_as_iupac_bases = {}
-            genotype_output_format = "iupac"
+            multi_genotype_as_iupac_bases : Dict[str, Dict[str, str]] = {}
+            genotype_output_format : str = "iupac"
 
+            # for genotype_tag in ['GT', 'PG']:
+            # let go for 'GT'
             for genotype_tag in convert_to_iupac:
                 # if genotype_output_format == "iupac":
                 try:
                     # convert the genotype from numeric to iupac format
-                    sample_genotype_as_iupac = {
+                    # This block of code will run for each sample for particular vlaue of genotype_tag. For instance say 'GT'
+                    sample_genotype_as_iupac : Dict[str, Dict[str, str]] = {
                         sample: {
-                            genotype_tag
-                            + "_iupac": self._to_iupac(
-                                self.ref_alt,
+                            genotype_tag + "_iupac" : 
+                                self._to_iupac(  # -> it takes .ref value for that chrom, mse102 sample ko 'GT' ko vlaue and will loop for every sample and genotype format, 
+                                self.ref_alt,    # output format i.e. "iupac"
                                 self.mapped_format_to_sample[sample][genotype_tag],
                                 genotype_output_format,
                             )
@@ -168,7 +207,7 @@ class Record:
  
     @staticmethod
     # def split_tag_from_samples(order_mapped_samples, tag, sample_names):
-    def get_tag_values_from_samples(order_mapped_samples, tag, sample_names, split_at=None):
+    def get_tag_values_from_samples(order_mapped_samples : OrderedDict, tag : str, sample_names : list, split_at : str =None) -> Union[List[str], List[List[str]]]:
 
         """ Splits the tags of given samples from order_dict of mapped_samples
 
@@ -204,40 +243,46 @@ class Record:
         # tag_vals = [re.split(r"[/|]", gt_val) for gt_val in gt_vals]
         # return tag_vals
 
-        format_tag_values = [order_mapped_samples[sample][tag] for sample in sample_names]
+        format_tag_values : List[str] = [order_mapped_samples[sample][tag] for sample in sample_names] # = ['./.', '0/0']
         
         if split_at is not None:
             # tag_vals = [re.split(r"[/|]", gt_val) for gt_val in format_tag_values]
-            splitted_tag_vals = [re.split(r"[/|]", value) for value in format_tag_values]
+            splitted_tag_vals : List[List[str]] = [re.split(r"[/|]", value) for value in format_tag_values] # = [['.', '.'], ['0', '0']]
             return splitted_tag_vals
         return format_tag_values
         
-    def get_mapped_tag_list(self, sample_names=None, tag=None, bases="numeric"):
-        mapped_list = [
+    def get_mapped_tag_list(self, sample_names=None, tag=None, bases="numeric") -> List[str]:
+        mapped_list : List[str] = [
             self._to_iupac(self.ref_alt, self.mapped_format_to_sample[sample][tag], bases)
-            for sample in sample_names
-        ]
-        return mapped_list
+            for sample in sample_names 
+        ] 
+        return mapped_list # = ['G/T', 'T/T', 'T/G']
+
+
 
 
     @staticmethod
-    def _to_iupac(ref_alt, numeric_genotype, bases="numeric"):
+    # if input is ref_alt = ['G', 'T'] and numeric_genotype = "0/1" or "1/1" any other
+    # output will be 
+    def _to_iupac(ref_alt : List[str], numeric_genotype : str, bases : str ="numeric") -> str:
         if bases == "numeric":
             return numeric_genotype
         # if numeric_genotype == ".":
         #     return numeric_genotype
 
-        numeric_g_list = re.split(r"[/|]", numeric_genotype)
-        sep = "/" if "/" in numeric_genotype else "|"
-        iupac_vals = [ref_alt[int(i)] if i != "." else "." for i in numeric_g_list]
-        return sep.join(iupac_vals)
+        numeric_g_list : List[str] = re.split(r"[/|]", numeric_genotype) # = ['0', '1']
+        sep : str = "/" if "/" in numeric_genotype else "|"
+        iupac_vals : List[str] = [ref_alt[int(i)] if i != "." else "." for i in numeric_g_list] # = ['G', 'T']
+        return sep.join(iupac_vals) # = "G/T"
+    
+    
 
     @staticmethod
     def split_genotype_tags():
         # TODO: BISHWA make a function to split the genotype tags 
         pass
 
-    def get_info_as_dict(self, info_keys=None):
+    def get_info_as_dict(self, info_keys : List[str]=None) -> Dict[str, str]:
         """
         Convert Info to dict for required keys
 
@@ -260,25 +305,26 @@ class Record:
         >>> info_str = 'AC=2,0;AF=1.00;AN=8;BaseQRankSum'
         >>> info_keys= ['AC', 'BaseQRankSum']
         >>> record.get_info_as_dict(info_keys)
-        {'AC': '2,0', 'BaseQRankSum': '-7.710e-01'}
+        {'AC': '2,0', 'BaseQRankSum': '-7.710e-01'} ===> why does -7.7 vaule here for BaseQRankSum
 
         
         """
-        mapped_info = dict(
+        mapped_info : Dict[str, str] = dict(
             s.split("=", 1) if "=" in s else (s, ".") for s in self.info_str.split(";")
-        )
+        )       # = {'AC': '2,0', 'AF': '1.00', 'AN': '8', 'BaseQRankSum': '.'}
+        
         if isinstance(info_keys, list):
             # convert list to set for faster lookup
-            info_keys_set = set(info_keys)
+            info_keys_set : Set[str] = set(info_keys)
             return {
                 key: value
                 for key, value in mapped_info.items()
                 if key in info_keys_set
-            }
+            } # = {'AC': '2,0', 'BaseQRankSum': '.'}
         else:
             return mapped_info
 
-    def get_full_record_map(self, convert_to_iupac=None):
+    def get_full_record_map(self, convert_to_iupac : List[str]=None) -> Dict[str, str]:
     
         """ Maps record values with record keys.
 
@@ -300,46 +346,46 @@ class Record:
         {'CHROM': '2', 'POS': '15881018', 'ID': '.', 'REF': 'G', 'ALT': 'A,C', 'QUAL': '5082.45', 'FILTER': 'PASS', 'INFO': {'AC': '2,0', 'AF': '1.00', 'AN': '8', 'BaseQRankSum': '-7.710e-01', 'ClippingRankSum': '0.00', 'DP': '902', 'ExcessHet': '0.0050', 'FS': '0.000', 'InbreedingCoeff': '0.8004', 'MLEAC': '12,1', 'MLEAF': '0.462,0.038', 'MQ': '60.29', 'MQRankSum': '0.00', 'QD': '33.99', 'ReadPosRankSum': '0.260', 'SF': '0,1,2,3,4,5,6', 'SOR': '0.657', 'set': 'HignConfSNPs'}, 'FORMAT': 'GT:PI:GQ:PG:PM:PW:AD:PL:DP:PB:PC', 'ms01e': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms02g': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms03g': './.:.:.:./.:.:./.:0,0:0,0,0,.,.,.:0:.:.', 'ms04h': '1/1:.:6:1/1:.:1/1:0,2:49,6,0,.,.,.:2:.:.', 'MA611': '0/0:.:78:0/0:.:0/0:29,0,0:0,78,1170,78,1170,1170:29:.:.', 'MA605': '0/0:.:9:0/0:.:0/0:3,0,0:0,9,112,9,112,112:3:.:.', 'MA622': '0/0:.:99:0/0:.:0/0:40,0,0:0,105,1575,105,1575,1575:40:.:.', 'samples': {'ms01e': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms02g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms03g': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, 'ms04h': {'GT': '1/1', 'PI': '.', 'GQ': '6', 'PG': '1/1', 'PM': '.', 'PW': '1/1', 'AD': '0,2', 'PL': '49,6,0,.,.,.', 'DP': '2', 'PB': '.', 'PC': '.'}, 'MA611': {'GT': '0/0', 'PI': '.', 'GQ': '78', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '29,0,0', 'PL': '0,78,1170,78,1170,1170', 'DP': '29', 'PB': '.', 'PC': '.'}, 'MA605': {'GT': '0/0', 'PI': '.', 'GQ': '9', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '3,0,0', 'PL': '0,9,112,9,112,112', 'DP': '3', 'PB': '.', 'PC': '.'}, 'MA622': {'GT': '0/0', 'PI': '.', 'GQ': '99', 'PG': '0/0', 'PM': '.', 'PW': '0/0', 'AD': '40,0,0', 'PL': '0,105,1575,105,1575,1575', 'DP': '40', 'PB': '.', 'PC': '.'}}}
         
         """
-        mapped_records = dict(zip(self.record_keys, self.record_values))
-        mapped_records["INFO"] = self.get_info_as_dict()
-        mapped_records["samples"] = self.get_format_to_sample_map(convert_to_iupac= convert_to_iupac)
+        mapped_records : Dict[str, str] = dict(zip(self.record_keys, self.record_values)) # = { "CHROM" : "2", "POS": "89834", "POS": '.', ...}
+        mapped_records["INFO"] = self.get_info_as_dict() # it is overridden 
+        mapped_records["samples"] = self.get_format_to_sample_map(convert_to_iupac= convert_to_iupac) # it is added as new key, value in dict
         return mapped_records
 
-    def unmap_fmt_samples_dict(self, mapped_dict):
+    def unmap_fmt_samples_dict(self, mapped_dict) -> Tuple[str, str]:
         """ Converts mapped dict again into string to write into the file.
         """
 
-        sample_str_all = ""
-        for sample in self.sample_names:
+        sample_str_all : str = ""
+        for sample in self.sample_names:    # mapped_dict = {'samples': {'ms01e': {'GT': './.', 'PI': '.', 'GQ': '.', 'PG': './.', 'PM': '.', 'PW': './.', 'AD': '0,0', 'PL': '0,0,0,.,.,.', 'DP': '0', 'PB': '.', 'PC': '.'}, ...}}
             # TODO make format compute only once
-            format_str = ":".join(key for key in mapped_dict[sample])
-            sample_str = ":".join(val for val in mapped_dict[sample].values())
-            sample_str_all.join(sample_str + "\t")
+            format_str : str = ":".join(key for key in mapped_dict[sample]) # = 'GT:PI:GQ:PG:PM:PW:...'
+            sample_str : str = ":".join(val for val in mapped_dict[sample].values()) # = './.:.:.:./.:.:./.:...'
+            sample_str_all.join(sample_str + "\t")  # = './.:.:.:./.:.:./.:...      ./.:.:.:./.:.:./.:...       ./.:.:.:./.:.:./.:... '
 
         return format_str, sample_str_all
 
     ## TODO: Done Revert mapped record into record string
-    def mapped_rec_to_str(self, mapped_sample_dict):
-        record_val_upto_info = self.record_values[:8]
-        record_str = ''
-        str_up_to_info = '\t'.join(record_val_upto_info)
+    def mapped_rec_to_str(self, mapped_sample_dict : Dict[str, Dict[str, str]]) -> str:
+        record_val_upto_info : List[str] = self.record_values[:8] # = ['CHROM', "POS", upto "INFO"] values not header.. I have type header cause of convineient
+        record_str : str = ''
+        str_up_to_info : str = '\t'.join(record_val_upto_info)
         format_str, sample_str_all = self.unmap_fmt_samples_dict(mapped_sample_dict)
         record_str = str_up_to_info+ '\t' +format_str + '\t'+ sample_str_all
-        return record_str
+        return record_str # full line of smaple from chrom value to last sample value of particular line of vcf file
 
 
     # TODO: functions to add later Done
-    def iupac_to_numeric(self, ref_alt, genotype_in_iupac):
+    def iupac_to_numeric(self, ref_alt : List[str], genotype_in_iupac) -> str:
         # input parameters should be ref_alt, iupac_bases = []
         # returns: list of numeric bases 
         # required for buildVCF ??
         # For ref_alt = ['G', 'A', 'C']
         # genotype_in_iupac = 'G/A' it should return '0/1'
 
-        iupac_g_list = re.split(r"[/|]", genotype_in_iupac)
+        iupac_g_list : List[str] = re.split(r"[/|]", genotype_in_iupac) # = ['G', 'A']
         sep = "/" if "/" in genotype_in_iupac else "|"
-        numeric_vals = [ref_alt.index(i) if i != "." else "." for i in iupac_g_list]
-        return sep.join(numeric_vals)
+        numeric_vals = [ref_alt.index(i) if i != "." else "." for i in iupac_g_list] # = ['0', '1']
+        return sep.join(numeric_vals) # = "0/1"
 
     def deletion_overlapping_variant(self):
         # TODO
@@ -364,13 +410,13 @@ class GenotypeProperty:
     # allele_obj = _allele_obj
 
 
-    def __init__(self, record_obj):
-        self.record_obj = record_obj
+    def __init__(self, record_obj : Record):
+        self.record_obj : Record = record_obj
         # pass
 
     # TODO (Bishwa) all this genotype parsing should be kept as a separate class ?
     # @property
-    def isHOMREF(self, tag="GT", bases="numeric"):
+    def isHOMREF(self, tag : str ="GT", bases : str ="numeric") -> Dict[str, str] :
         """
         Parameters
         ----------
@@ -402,17 +448,17 @@ class GenotypeProperty:
         #     if set(tag_val) == {"0"}:
         #         homref_samples.append(self.sample_names[i])
         # allele_obj = Alleles(self.mapped_format_to_sample,tag)
-        allele_obj = Alleles(self.record_obj.mapped_format_to_sample,tag)
+        allele_obj : Alleles = Alleles(self.record_obj.mapped_format_to_sample,tag)
 
         # allele_obj = 
-        homref_samples = allele_obj.hom_ref_samples
+        homref_samples : List[str] = allele_obj.hom_ref_samples
         return {
             sample: self.record_obj._to_iupac(self.record_obj.ref_alt, self.record_obj.mapped_format_to_sample[sample][tag], bases)
             for sample in homref_samples
         }
 
 
-    def isHOMVAR(self, tag="GT", bases="numeric"):
+    def isHOMVAR(self, tag : str ="GT", bases : str ="numeric") -> Dict[str, str]:
         """
 
         Parameters
@@ -444,15 +490,15 @@ class GenotypeProperty:
         #         and set(tag_val) != {"."}
         #     ):
         #         homvar_samples.append(self.sample_names[i])
-        allele_obj = Alleles(self.record_obj.mapped_format_to_sample,tag)
-        homvar_samples = allele_obj.hom_var_samples
+        allele_obj : Alleles = Alleles(self.record_obj.mapped_format_to_sample,tag)
+        homvar_samples : List[str] = allele_obj.hom_var_samples
 
         return {
             sample: self.record_obj._to_iupac(self.record_obj.ref_alt, self.record_obj.mapped_format_to_sample[sample][tag], bases)
             for sample in homvar_samples
         }
 
-    def isHETVAR(self, tag="GT", bases="numeric"):
+    def isHETVAR(self, tag : str ="GT", bases : str ="numeric") -> Dict[str, str]:
         """
 
         Parameters
@@ -482,8 +528,8 @@ class GenotypeProperty:
         # for i, tag_val in enumerate(tag_vals):
         #     if len(set(tag_val)) > 1:
         #         hetvar_samples.append(self.sample_names[i])
-        allele_obj = Alleles(self.record_obj.mapped_format_to_sample,tag)
-        hetvar_samples = allele_obj.het_var_samples
+        allele_obj : Alleles = Alleles(self.record_obj.mapped_format_to_sample,tag)
+        hetvar_samples : List[str] = allele_obj.het_var_samples
 
         #TODO: only do this dict comprehension if bases = 'iupac'
         # apply this method on other similar functions
@@ -493,7 +539,7 @@ class GenotypeProperty:
         }
 
     # TODO: illustrate that it can be use for any FORMAT tags, not just "GT"
-    def isMissing(self, tag="GT"):
+    def isMissing(self, tag : str ="GT") -> Dict[str, str]:
         """
 
         Parameters
@@ -520,27 +566,27 @@ class GenotypeProperty:
         # for i, tag_val in enumerate(tag_vals):
         #     if set(tag_val) == {"."}:
         #         missing_tag_sample.append(self.sample_names[i])
-        allele_obj = Alleles(self.record_obj.mapped_format_to_sample,tag)
-        missing_tag_sample = allele_obj.missing_samples
+        allele_obj : Alleles = Alleles(self.record_obj.mapped_format_to_sample,tag)
+        missing_tag_sample : List[str] = allele_obj.missing_samples
         return {
             sample: self.record_obj.mapped_format_to_sample[sample][tag] for sample in missing_tag_sample
         }
 
     # TODO: may be 'tag' and 'bases' flag is not required
-    def hasSNP(self, tag="GT", bases="numeric"):
+    def hasSNP(self, tag : str ="GT", bases : str ="numeric") -> bool:
         # TODO (Bhuwa, Bishwa, high priority) - may need to add a tag="GT" option
         # **Note: this needs to be implemented properly
         # The length of the REF and ALT both needs to be just 1.
         if len(self.record_obj.REF) == 1:
             return True
 
-    def hasINDEL(self):
+    def hasINDEL(self) -> bool:
         # TODO Bishwa : need to implement properly
 
         if len(self.record_obj.REF) > 1:
             return True
 
-    def hasAllele(self, allele="0", tag="GT", bases="numeric"):
+    def hasAllele(self, allele : str ="0", tag : str ="GT", bases : str ="numeric") -> Dict[str, str]:
         """
 
         Parameters
@@ -571,7 +617,7 @@ class GenotypeProperty:
         }
 
     # TODO: make it compatible with polyploid genotype 
-    def hasVAR(self, genotype="0/0", tag="GT", bases="numeric"):
+    def hasVAR(self, genotype : str ="0/0", tag : str ="GT", bases : str ="numeric") -> Dict[str, str]:
         """
 
         Parameters
@@ -614,7 +660,7 @@ class GenotypeProperty:
         }
 
     # TODO (future): make it compatible with polyploid genotype
-    def hasnoVAR(self, tag="GT"):
+    def hasnoVAR(self, tag : str ="GT") -> Union[Dict[str, str], None]:
         """ Returns samples with empty genotype """
 
         return {
@@ -623,7 +669,7 @@ class GenotypeProperty:
             if self.record_obj.mapped_format_to_sample[sample][tag] in (".", "./.", ".|.")
         }
 
-    def has_unphased(self, tag="GT", bases="numeric"):
+    def has_unphased(self, tag : str ="GT", bases : str ="numeric") -> Union[Dict[str, str], None]:
         """
 
         Parameters
@@ -655,7 +701,7 @@ class GenotypeProperty:
             if "/" in self.record_obj.mapped_format_to_sample[sample][tag]
         }
 
-    def has_phased(self, tag="GT", bases="numeric"):
+    def has_phased(self, tag : str="GT", bases : str="numeric") -> Dict[str, str]:
         """
 
         Parameters
@@ -700,15 +746,15 @@ allele_delimiter = re.compile(r'''[|/]''')
 # allele_obj = Alleles(mapped_format_to_sample,tag)
 ## ASK: If this needs to be named allele or genotype
 class Alleles: # TODO : Rename to something like GenotypeProperty?
-    def __init__(self,mapped_samples, tag= 'GT'): # TODO - may be add another flag
+    def __init__(self,mapped_samples, tag= 'GT'): # TODO - may be add another flag #### => mapped_samples = {{'ms01e',{'GT': './.', 'PI': '.'}}, {'MA622', {'GT': '0/0','PI': '.'}}, ... }
         """
         This class is used to store sample names with their types.
         """
-        self.hom_ref_samples = []
-        self.hom_var_samples = []
-        self.het_var_samples = []
-        self.missing_samples = []
-        self.phased_samples = [] # TODO - this probably is a duplicate method? fix it?
+        self.hom_ref_samples : List[str] = []
+        self.hom_var_samples : List[str] = []
+        self.het_var_samples : List[str] = []
+        self.missing_samples : List[str] = []
+        self.phased_samples  : List[str] = [] # TODO - this probably is a duplicate method? fix it?
 
         # TODO: add new genotype property checks?
         # is_SNP, is_INDEL, is_SV, etc. 
@@ -717,15 +763,15 @@ class Alleles: # TODO : Rename to something like GenotypeProperty?
 
 
 
-        for sample in mapped_samples.keys():
-            tag_val = mapped_samples.get(sample, {}).get(tag, None)
+        for sample in mapped_samples.keys():      #     => mapped_samples = {{'ms01e',{'GT': './.', 'PI': '.'}}, {'MA622', {'GT': '0/0','PI': '.'}}, ... }
+            tag_val : str = mapped_samples.get(sample, {}).get(tag, None) # => tag_val will get value of GT key's value for samples "samples" in mapped_samples. eg for samples = "ms01e" and tag = 'GT' you'll get './.'
             if tag_val is not None:
-                genotype_val = GenotypeVal(tag_val)
-                if genotype_val.phased:
+                genotype_val : GenotypeVal = GenotypeVal(tag_val)
+                if genotype_val.phased: # => means | is sep
                     self.phased_samples.append(sample)
-                if genotype_val._ismissing:
+                if genotype_val._ismissing:  # => means . is value "./." or "."
                     self.missing_samples.append(sample)
-                if genotype_val.gt_type == 'hom_ref':
+                if genotype_val.gt_type == 'hom_ref':  
                     self.hom_ref_samples.append(sample)
                 elif genotype_val.gt_type == 'hom_var':
                     self.hom_var_samples.append(sample)
@@ -744,7 +790,7 @@ class Alleles: # TODO : Rename to something like GenotypeProperty?
 ## Are they homref, hetvar './.' , '.', './0', '0/.'
 
 class GenotypeVal:
-    def __init__(self,allele):
+    def __init__(self,allele : str):
         """"
         For a given genotype data like ('0/0', '1|1', '0/1'); this class computes and store values
         like whether it is homref, hom_alt or hetvar
@@ -754,15 +800,15 @@ class GenotypeVal:
 
         # here gt_type store either homvar, hetvar, or homref
 
-        self.gt_type= None
-        self.phased= False
-        self._alleles = [(al if al != '.' else None) for al in allele_delimiter.split(allele)]
-        self._ismissing = not any(al is not None for al in self._alleles)
+        self.gt_type : str = None
+        self.phased : bool = False
+        self._alleles : List[str] = [(al if al != '.' else None) for al in allele_delimiter.split(allele)]
+        self._ismissing : bool = not any(al is not None for al in self._alleles)
         if '|' in allele:
             self.phased = True
 
         # hetvar 
-        alleles_list = self._alleles
+        alleles_list : List[str] = self._alleles
         if not self._ismissing:
             if len(set(alleles_list)) == 1:
                 if alleles_list[0] == '0':
@@ -773,13 +819,3 @@ class GenotypeVal:
                 self.gt_type = 'het_var'
         else:
             self.gt_type = 'missing'
-
-
-
-
-
-
-
-
-
-
