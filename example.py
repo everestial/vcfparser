@@ -31,7 +31,7 @@ samples = metainfo.sample_names
 ## add method so new metadata information can be written by the writer 
 
   # e.g 
-vcf_write_object = VcfWriter('write_test.vcf')
+vcf_write_object = VCFWriter('write_test.vcf')
 
 vcf_write_object.add_metadata('some metadata')
    # ** Note: metadata can be added as .write/add(metadata_name (e.g FORMAT, INFO, contig), several keys:values)

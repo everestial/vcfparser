@@ -47,6 +47,19 @@ def test_get_metainfo():
 
     os.remove(f"tests/testfiles/vcf_parser_output/vcfparser_metainfo_test_result.txt")
 
+def convert_to_string(value):
+    """Helper function to convert list or dict to a string."""
+    if isinstance(value, list):
+        return ','.join(str(v) for v in value)
+    elif isinstance(value, dict):
+        return ','.join(f"{k}:{v}" for k, v in value.items())
+    return str(value)
+
+def format_qual(value):
+    """Remove brackets from the qual field if it's a list or similar."""
+    if isinstance(value, list):
+        return ','.join(map(str, value))
+    return str(value).replace('[', '').replace(']', '')
 
 def test_get_records():
     records = vcf_obj.parse_records()
@@ -58,40 +71,45 @@ def test_get_records():
         id = record.ID
         ref = record.REF
         alt = record.ALT
-        qual = record.QUAL
+        qual = format_qual(record.QUAL)
         filter = record.FILTER
         format_ = record.format_
         infos = record.get_info_as_dict()
-        mapped_sample = record.mapped_format_to_sample
+        mapped_sample = convert_to_string(record.mapped_format_to_sample)
 
-        temp_dict = {}
-        temp_dict["Chrom"] = chrom
-        temp_dict["pos"] = pos
-        temp_dict["id"] = id
-        temp_dict["ref"] = ref
-        temp_dict["alt"] = alt
-        temp_dict["qual"] = qual
-        temp_dict["filter"] = filter
-        temp_dict["format"] = format_
-        temp_dict["infos"] = infos
-        temp_dict["mapped_sample"] = mapped_sample
+        temp_dict = {
+            "Chrom": chrom,
+            "pos": pos,
+            "id": id,
+            "ref": ref,
+            "alt": alt,
+            "qual": qual,
+            "filter": filter,
+            "format": format_,
+            "infos": infos,
+            "mapped_sample": mapped_sample
+        }
         records_list.append(temp_dict)
 
     columns = [key for key in records_list[0]]
-    with open(records_output_file + ".txt", "w") as w_file:
+    # with open(records_output_file + ".txt", "w") as w_file:
+    #     writer = csv.DictWriter(w_file, fieldnames=columns, delimiter="\t")
+    #     writer.writeheader()
+    #     writer.writerows(records_list)
+
+    output_file = "tests/testfiles/vcf_parser_output/vcfparser_records_test_result.txt"
+
+    with open(output_file, "w") as w_file:
         writer = csv.DictWriter(w_file, fieldnames=columns, delimiter="\t")
         writer.writeheader()
         writer.writerows(records_list)
 
-    assert (
-        is_same_file(
-            "tests/testfiles/vcf_parser_output/vcfparser_records_test_result.txt",
-            f"tests/testfiles/vcf_parser_reference/vcfparser_records_test_ref.txt",
-        )
-        is True
-    )
+    reference_file = "tests/testfiles/vcf_parser_reference/vcfparser_records_test_ref.txt"
 
-    os.remove(f"tests/testfiles/vcf_parser_output/vcfparser_records_test_result.txt")
+    assert is_same_file(output_file, reference_file), f"Files differ: {output_file} and {reference_file}"
+
+    if os.path.exists(output_file):
+        os.remove(output_file)
 
 ##TODO:Bishwa - Need to test all if else case inside parse_records.
 # def test_parse_records():
