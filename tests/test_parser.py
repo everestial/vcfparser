@@ -49,7 +49,6 @@ def test_record():
 
 
 def test_vars_for_gt():
-    print("Type of first_record:", type(first_record))
     assert genotype_property.isMissing() == {'ms01e': './.', 'ms02g': './.', 'ms03g': './.'}
     assert genotype_property.isHOMVAR() == {'ms04h': '1/1'}
     assert genotype_property.isHOMREF() == {'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0'}
