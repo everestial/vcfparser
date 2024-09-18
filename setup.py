@@ -1,5 +1,11 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, Extension
 import sys
+from Cython.Build import cythonize
+
+# List of extensions to be cythonized
+extensions = [
+    Extension("vcfparser.record_parser", ["vcfparser/record_parser.pyx"]),
+]
 
 if len(sys.argv) == 1:
     sys.argv.append('install')
@@ -39,12 +45,13 @@ setup(
     include_package_data=True,
     keywords='vcfparser',
     name='vcfparser',
+    ext_modules=cythonize(extensions, compiler_directives={'language_level': '3'}),
     packages=find_packages(include=['vcfparser']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/everestial/vcfparser',
-    version='0.2.2',
+    version='0.2.3',
     zip_safe=False,
 )
 

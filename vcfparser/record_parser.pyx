@@ -1,33 +1,19 @@
 import re
-import warnings
-from collections import OrderedDict
 from itertools import zip_longest
+import warnings
 import sys
+from collections import OrderedDict
+cimport cython
 
-# Note: A very good example for handling inheritance among classes
-# https://pythonspot.com/inner-classes/
+# Constants (optional performance boost)
+cdef class Record:
+    cdef list record_values, record_keys, ALT, ref_alt, format_, sample_vals
+    cdef str CHROM, POS, ID, REF, QUAL, info_str, rec_line
+    cdef list FILTER
+    cdef dict mapped_format_to_sample
+    cdef object genotype_property
 
-
-class Record:
-    """
-    A class that converts the record lines from input VCF into accessible record object.
-    """
-
-    def __init__(self, record_values, record_keys):
-        """
-        Initializes the class with header keys and record values.
-
-        Parameters
-        ----------
-        record_keys: list
-            - list of record keys generated for the record values
-            - generated from string in the VCF that starts with #CHROM
-            - stays the same for a particular VCF file
-        record_values: list
-            - list of record values generated from the VCF record line 
-            - genrated from the lines below # CHROM in VCF file
-            - values are dynamically updated in each for-loop        
-        """
+    def __init__(self, list record_values, list record_keys):
         self.rec_line = "\t".join(record_values)
         self.record_values = record_values
         self.record_keys = record_keys
@@ -46,28 +32,24 @@ class Record:
         try:
             self.sample_vals = self.record_values[9:]
         except IndexError:
-            warnings.warn(
-                "Sample values are not presented correctly in given vcf file."
-            )
+            warnings.warn("Sample values are not presented correctly in given vcf file.")
+
         self.mapped_format_to_sample = self._map_format_tags_to_sample_values()
 
-        # instance attributes to get genotype and allele level information
-        self.genotype_property = GenotypeProperty(self)
-        # self.allele_property = AlleleProperty(self)
-
-
     def __str__(self):
-        return str(self.rec_line)
+        return self.rec_line
 
     def _map_format_tags_to_sample_values(self):
-        """Private method to map format tags to sample values"""
-        mapped_data = {}
+        """Optimized version of mapping format tags to sample values"""
+        cdef dict mapped_data = {}
+        cdef int i
         for i, name in enumerate(self.sample_names):
             mapped_data[name] = dict(
                 zip_longest(self.format_, self.sample_vals[i].split(":"), fillvalue=".")
             )
         return mapped_data
 
+    # TODO: Other methods can be cythonized similarly by adding specific types to variables
     # TODO (Bhuwan) Done - if required this should be a lazy method too. 
     def get_format_to_sample_map(self, sample_names=None, formats=None, convert_to_iupac=None):
         """
@@ -699,24 +681,27 @@ class GenotypeProperty:
 allele_delimiter = re.compile(r'''[|/]''')
 # allele_obj = Alleles(mapped_format_to_sample,tag)
 ## ASK: If this needs to be named allele or genotype
-class Alleles: # TODO : Rename to something like GenotypeProperty?
-    def __init__(self,mapped_samples, tag= 'GT'): # TODO - may be add another flag
+cdef class Alleles:
+    cdef list hom_ref_samples, hom_var_samples, het_var_samples, missing_samples, phased_samples
+    cdef dict mapped_samples
+    cdef str tag
+
+    def __init__(self, dict mapped_samples, str tag='GT'):
         """
-        This class is used to store sample names with their types.
+        This class stores sample names and their genotype types.
         """
         self.hom_ref_samples = []
         self.hom_var_samples = []
         self.het_var_samples = []
         self.missing_samples = []
-        self.phased_samples = [] # TODO - this probably is a duplicate method? fix it?
+        self.phased_samples = []
+        self.mapped_samples = mapped_samples
+        self.tag = tag
 
-        # TODO: add new genotype property checks?
-        # is_SNP, is_INDEL, is_SV, etc. 
+        cdef str sample, tag_val
+        cdef object genotype_val
 
-        # REF = self.REF
-
-
-
+        # Iterate over the sample keys and store the genotype types
         for sample in mapped_samples.keys():
             tag_val = mapped_samples.get(sample, {}).get(tag, None)
             if tag_val is not None:
@@ -725,44 +710,42 @@ class Alleles: # TODO : Rename to something like GenotypeProperty?
                     self.phased_samples.append(sample)
                 if genotype_val._ismissing:
                     self.missing_samples.append(sample)
-                if genotype_val.gt_type == 'hom_ref':
+                elif genotype_val.gt_type == 'hom_ref':
                     self.hom_ref_samples.append(sample)
                 elif genotype_val.gt_type == 'hom_var':
                     self.hom_var_samples.append(sample)
                 elif genotype_val.gt_type == 'het_var':
                     self.het_var_samples.append(sample)
-                else:
-                    pass
             else:
                 warnings.warn(f'{sample} has no mapped value for {tag} tag')
-        
-
-        def homref_samples(self):
-            pass
+    def homref_samples(self):
+        pass
 
 ## ASK: What to do if following scenario arises?
 ## Are they homref, hetvar './.' , '.', './0', '0/.'
 
-class GenotypeVal:
-    def __init__(self,allele):
-        """"
-        For a given genotype data like ('0/0', '1|1', '0/1'); this class computes and store values
-        like whether it is homref, hom_alt or hetvar
+cdef class GenotypeVal:
+    cdef list _alleles
+    cdef str gt_type
+    cdef bool phased, _ismissing
+
+    def __init__(self, str allele):
         """
-        # TODO: add new genotype property checks?
-        # is_SNP, is_INDEL, is_SV, etc. 
+        For a given genotype data like ('0/0', '1|1', '0/1'), this class computes
+        and stores whether it is hom_ref, hom_var, or het_var.
+        """
+        self.phased = False
+        self.gt_type = None
 
-        # here gt_type store either homvar, hetvar, or homref
-
-        self.gt_type= None
-        self.phased= False
+        # Split the allele string and replace "." with None
         self._alleles = [(al if al != '.' else None) for al in allele_delimiter.split(allele)]
         self._ismissing = not any(al is not None for al in self._alleles)
+
         if '|' in allele:
             self.phased = True
 
-        # hetvar 
-        alleles_list = self._alleles
+        # Determine the genotype type (hom_ref, hom_var, het_var)
+        cdef list alleles_list = self._alleles
         if not self._ismissing:
             if len(set(alleles_list)) == 1:
                 if alleles_list[0] == '0':
@@ -773,13 +756,3 @@ class GenotypeVal:
                 self.gt_type = 'het_var'
         else:
             self.gt_type = 'missing'
-
-
-
-
-
-
-
-
-
-
