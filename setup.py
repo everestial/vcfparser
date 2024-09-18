@@ -15,7 +15,7 @@ with open('README.md', encoding='utf-8') as readme_file:
 
 requirements = []
 
-setup_requirements = ['pytest-runner', ]
+setup_requirements = ['pytest-runner', 'cython']
 
 test_requirements = ['pytest', ]
 
