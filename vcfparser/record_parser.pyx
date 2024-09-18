@@ -7,7 +7,7 @@ cimport cython
 
 # Constants (optional performance boost)
 cdef class Record:
-    cdef list record_values, record_keys, ALT, ref_alt, format_, sample_vals
+    cdef list record_values, record_keys, ALT, ref_alt, format_, sample_vals, sample_names  
     cdef str CHROM, POS, ID, REF, QUAL, info_str, rec_line
     cdef list FILTER
     cdef dict mapped_format_to_sample
@@ -27,7 +27,7 @@ cdef class Record:
         self.FILTER = self.record_values[6].split(",")
         self.info_str = self.record_values[7]
         self.format_ = self.record_values[8].split(":")
-        self.sample_names = self.record_keys[9:] if len(self.record_keys) > 9 else None
+        self.sample_names = self.record_keys[9:] if len(self.record_keys) > 9 else []
 
         try:
             self.sample_vals = self.record_values[9:]
@@ -195,11 +195,14 @@ cdef class Record:
         return format_tag_values
         
     def get_mapped_tag_list(self, sample_names=None, tag=None, bases="numeric"):
-        mapped_list = [
-            self._to_iupac(self.ref_alt, self.mapped_format_to_sample[sample][tag], bases)
-            for sample in sample_names
-        ]
-        return mapped_list
+        if sample_names:
+            mapped_list = [
+                self._to_iupac(self.ref_alt, self.mapped_format_to_sample[sample][tag], bases)
+                for sample in sample_names 
+            ]
+
+            return mapped_list
+        return []
 
 
     @staticmethod
@@ -292,6 +295,7 @@ cdef class Record:
         """
 
         sample_str_all = ""
+        format_str = ""
         for sample in self.sample_names:
             # TODO make format compute only once
             format_str = ":".join(key for key in mapped_dict[sample])
