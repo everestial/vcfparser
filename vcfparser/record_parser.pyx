@@ -727,7 +727,7 @@ cdef class Alleles:
 cdef class GenotypeVal:
     cdef list _alleles
     cdef str gt_type
-    cdef bool phased, _ismissing
+    cdef bint phased, _ismissing  
 
     def __init__(self, str allele):
         """
