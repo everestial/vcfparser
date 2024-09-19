@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=42", "wheel"]
+requires = ["setuptools>=42", "wheel", "cython"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "vcfparser"
-version = "0.2.2"
+version = "0.2.4.dev0"
 description = "Python (version <=3.12) package for parsing the genomics and transcriptomics VCF data."
 readme = "README.md"
 keywords = ["vcfparser"]
