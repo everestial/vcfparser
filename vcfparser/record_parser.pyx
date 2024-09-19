@@ -4,20 +4,22 @@ import warnings
 import sys
 from collections import OrderedDict
 cimport cython
+from libc.string cimport strcpy
+
 
 # Constants (optional performance boost)
 cdef class Record:
-    cdef list record_values, record_keys, ALT, ref_alt, format_, sample_vals, sample_names  
-    cdef str CHROM, POS, ID, REF, QUAL, info_str, rec_line
-    cdef list FILTER
-    cdef dict mapped_format_to_sample
-    cdef object genotype_property
+    cdef:
+        readonly list record_values, record_keys, ALT, ref_alt, format_, sample_vals, sample_names  
+        readonly str CHROM, POS, ID, REF, QUAL, info_str, rec_line
+        readonly list FILTER
+        readonly dict mapped_format_to_sample
 
     def __init__(self, list record_values, list record_keys):
         self.rec_line = "\t".join(record_values)
         self.record_values = record_values
         self.record_keys = record_keys
-        self.CHROM = self.record_values[0]
+        self.CHROM = str(self.record_values[0])
         self.POS = self.record_values[1]
         self.ID = self.record_values[2]
         self.REF = self.record_values[3]
