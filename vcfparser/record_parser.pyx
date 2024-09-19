@@ -28,6 +28,7 @@ cdef class Record:
         self.info_str = self.record_values[7]
         self.format_ = self.record_values[8].split(":")
         self.sample_names = self.record_keys[9:] if len(self.record_keys) > 9 else []
+        self.genotype_property = None
 
         try:
             self.sample_vals = self.record_values[9:]
