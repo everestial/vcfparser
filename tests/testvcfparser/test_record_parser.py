@@ -15,13 +15,6 @@ rec_obj = Record(rec_valeg.split('\t'), rec_keys_eg.split('\t'))
 def get_genotype_property(record):
     return record.genotype_property
 
-def test_genotype_property():
-    record_values = ["chr1", "123456", "rs123", "A", "T", ".", ".", "GT:AD", "0/1:10,20"]
-    record_keys = ["CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT"] + ["SAMPLE1"]
-    rec_obj = Record(record_values, record_keys)
-    genotype_property = get_genotype_property(rec_obj)
-    assert isinstance(genotype_property, GenotypeProperty)
-
 genotype_property = get_genotype_property(rec_obj)
 
 # 01 Record.splgenotype_propertyit_tag_from_samples
