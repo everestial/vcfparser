@@ -364,7 +364,7 @@ cdef class Record:
     cdef list record_values
     cdef list record_keys
     cdef public str CHROM, POS, ID, REF, QUAL
-    cdef list ALT, FILTER, format_, sample_names, sample_vals
+    cdef public list ALT, FILTER, format_, sample_names, sample_vals
     cdef dict mapped_format_to_sample
     cdef public GenotypeProperty genotype_property
     cdef readonly ref_alt
