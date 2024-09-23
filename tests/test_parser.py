@@ -34,7 +34,6 @@ def test_sample_names():
 
 records = vcf_object.parse_records()
 first_record = next(records)
-# print(dir(first_record))
 
 def get_genotype_property(record):
     return record.genotype_property
