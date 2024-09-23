@@ -2933,6 +2933,15 @@ static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_20unmap_fmt_samples
 static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_22mapped_rec_to_str(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_mapped_sample_dict); /* proto */
 static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_24iupac_to_numeric(CYTHON_UNUSED struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_ref_alt, PyObject *__pyx_v_genotype_in_iupac); /* proto */
 static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_26deletion_overlapping_variant(CYTHON_UNUSED struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_8rec_line___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_8rec_line_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_8rec_line_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_13record_values___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_13record_values_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_13record_values_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_11record_keys___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_11record_keys_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_11record_keys_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_5CHROM___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
 static int __pyx_pf_9vcfparser_13record_parser_6Record_5CHROM_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
 static int __pyx_pf_9vcfparser_13record_parser_6Record_5CHROM_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
@@ -2948,6 +2957,24 @@ static int __pyx_pf_9vcfparser_13record_parser_6Record_3REF_4__del__(struct __py
 static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_4QUAL___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
 static int __pyx_pf_9vcfparser_13record_parser_6Record_4QUAL_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
 static int __pyx_pf_9vcfparser_13record_parser_6Record_4QUAL_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_3ALT___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_3ALT_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_3ALT_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_6FILTER___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_6FILTER_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_6FILTER_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_7format____get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_7format__2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_7format__4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_12sample_names___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_12sample_names_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_12sample_names_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_11sample_vals___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_11sample_vals_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_11sample_vals_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_23mapped_format_to_sample___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_23mapped_format_to_sample_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_9vcfparser_13record_parser_6Record_23mapped_format_to_sample_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_17genotype_property___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
 static int __pyx_pf_9vcfparser_13record_parser_6Record_17genotype_property_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
 static int __pyx_pf_9vcfparser_13record_parser_6Record_17genotype_property_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self); /* proto */
@@ -13605,12 +13632,354 @@ static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_26deletion_overlapp
   return __pyx_r;
 }
 
+/* "vcfparser/record_parser.pyx":363
+ *     """
+ * 
+ *     cdef public str rec_line             # <<<<<<<<<<<<<<
+ *     cdef public list record_values
+ *     cdef public list record_keys
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_8rec_line_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_8rec_line_1__get__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_8rec_line___get__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_8rec_line___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__", 1);
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->rec_line);
+  __pyx_r = __pyx_v_self->rec_line;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_8rec_line_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_8rec_line_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_8rec_line_2__set__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_8rec_line_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 1);
+  if (!(likely(PyUnicode_CheckExact(__pyx_v_value))||((__pyx_v_value) == Py_None) || __Pyx_RaiseUnexpectedTypeError("unicode", __pyx_v_value))) __PYX_ERR(0, 363, __pyx_L1_error)
+  __pyx_t_1 = __pyx_v_value;
+  __Pyx_INCREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_self->rec_line);
+  __Pyx_DECREF(__pyx_v_self->rec_line);
+  __pyx_v_self->rec_line = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("vcfparser.record_parser.Record.rec_line.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_8rec_line_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_8rec_line_5__del__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_8rec_line_4__del__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_8rec_line_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__", 1);
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->rec_line);
+  __Pyx_DECREF(__pyx_v_self->rec_line);
+  __pyx_v_self->rec_line = ((PyObject*)Py_None);
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "vcfparser/record_parser.pyx":364
+ * 
+ *     cdef public str rec_line
+ *     cdef public list record_values             # <<<<<<<<<<<<<<
+ *     cdef public list record_keys
+ *     cdef public str CHROM, POS, ID, REF, QUAL
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_13record_values_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_13record_values_1__get__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_13record_values___get__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_13record_values___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__", 1);
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->record_values);
+  __pyx_r = __pyx_v_self->record_values;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_13record_values_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_13record_values_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_13record_values_2__set__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_13record_values_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 1);
+  if (!(likely(PyList_CheckExact(__pyx_v_value))||((__pyx_v_value) == Py_None) || __Pyx_RaiseUnexpectedTypeError("list", __pyx_v_value))) __PYX_ERR(0, 364, __pyx_L1_error)
+  __pyx_t_1 = __pyx_v_value;
+  __Pyx_INCREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_self->record_values);
+  __Pyx_DECREF(__pyx_v_self->record_values);
+  __pyx_v_self->record_values = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("vcfparser.record_parser.Record.record_values.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_13record_values_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_13record_values_5__del__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_13record_values_4__del__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_13record_values_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__", 1);
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->record_values);
+  __Pyx_DECREF(__pyx_v_self->record_values);
+  __pyx_v_self->record_values = ((PyObject*)Py_None);
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "vcfparser/record_parser.pyx":365
+ *     cdef public str rec_line
+ *     cdef public list record_values
+ *     cdef public list record_keys             # <<<<<<<<<<<<<<
+ *     cdef public str CHROM, POS, ID, REF, QUAL
+ *     cdef public list ALT, FILTER, format_, sample_names, sample_vals
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_11record_keys_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_11record_keys_1__get__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_11record_keys___get__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_11record_keys___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__", 1);
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->record_keys);
+  __pyx_r = __pyx_v_self->record_keys;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_11record_keys_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_11record_keys_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_11record_keys_2__set__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_11record_keys_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 1);
+  if (!(likely(PyList_CheckExact(__pyx_v_value))||((__pyx_v_value) == Py_None) || __Pyx_RaiseUnexpectedTypeError("list", __pyx_v_value))) __PYX_ERR(0, 365, __pyx_L1_error)
+  __pyx_t_1 = __pyx_v_value;
+  __Pyx_INCREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_self->record_keys);
+  __Pyx_DECREF(__pyx_v_self->record_keys);
+  __pyx_v_self->record_keys = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("vcfparser.record_parser.Record.record_keys.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_11record_keys_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_11record_keys_5__del__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_11record_keys_4__del__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_11record_keys_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__", 1);
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->record_keys);
+  __Pyx_DECREF(__pyx_v_self->record_keys);
+  __pyx_v_self->record_keys = ((PyObject*)Py_None);
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
 /* "vcfparser/record_parser.pyx":366
- *     cdef list record_values
- *     cdef list record_keys
+ *     cdef public list record_values
+ *     cdef public list record_keys
  *     cdef public str CHROM, POS, ID, REF, QUAL             # <<<<<<<<<<<<<<
- *     cdef list ALT, FILTER, format_, sample_names, sample_vals
- *     cdef dict mapped_format_to_sample
+ *     cdef public list ALT, FILTER, format_, sample_names, sample_vals
+ *     cdef public dict mapped_format_to_sample
  */
 
 /* Python wrapper */
@@ -14143,9 +14512,661 @@ static int __pyx_pf_9vcfparser_13record_parser_6Record_4QUAL_4__del__(struct __p
   return __pyx_r;
 }
 
+/* "vcfparser/record_parser.pyx":367
+ *     cdef public list record_keys
+ *     cdef public str CHROM, POS, ID, REF, QUAL
+ *     cdef public list ALT, FILTER, format_, sample_names, sample_vals             # <<<<<<<<<<<<<<
+ *     cdef public dict mapped_format_to_sample
+ *     cdef public GenotypeProperty genotype_property
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_3ALT_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_3ALT_1__get__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_3ALT___get__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_3ALT___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__", 1);
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->ALT);
+  __pyx_r = __pyx_v_self->ALT;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_3ALT_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_3ALT_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_3ALT_2__set__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_3ALT_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 1);
+  if (!(likely(PyList_CheckExact(__pyx_v_value))||((__pyx_v_value) == Py_None) || __Pyx_RaiseUnexpectedTypeError("list", __pyx_v_value))) __PYX_ERR(0, 367, __pyx_L1_error)
+  __pyx_t_1 = __pyx_v_value;
+  __Pyx_INCREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_self->ALT);
+  __Pyx_DECREF(__pyx_v_self->ALT);
+  __pyx_v_self->ALT = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("vcfparser.record_parser.Record.ALT.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_3ALT_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_3ALT_5__del__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_3ALT_4__del__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_3ALT_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__", 1);
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->ALT);
+  __Pyx_DECREF(__pyx_v_self->ALT);
+  __pyx_v_self->ALT = ((PyObject*)Py_None);
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_6FILTER_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_6FILTER_1__get__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_6FILTER___get__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_6FILTER___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__", 1);
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->FILTER);
+  __pyx_r = __pyx_v_self->FILTER;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_6FILTER_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_6FILTER_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_6FILTER_2__set__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_6FILTER_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 1);
+  if (!(likely(PyList_CheckExact(__pyx_v_value))||((__pyx_v_value) == Py_None) || __Pyx_RaiseUnexpectedTypeError("list", __pyx_v_value))) __PYX_ERR(0, 367, __pyx_L1_error)
+  __pyx_t_1 = __pyx_v_value;
+  __Pyx_INCREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_self->FILTER);
+  __Pyx_DECREF(__pyx_v_self->FILTER);
+  __pyx_v_self->FILTER = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("vcfparser.record_parser.Record.FILTER.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_6FILTER_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_6FILTER_5__del__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_6FILTER_4__del__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_6FILTER_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__", 1);
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->FILTER);
+  __Pyx_DECREF(__pyx_v_self->FILTER);
+  __pyx_v_self->FILTER = ((PyObject*)Py_None);
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_7format__1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_7format__1__get__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_7format____get__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_7format____get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__", 1);
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->format_);
+  __pyx_r = __pyx_v_self->format_;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_7format__3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_7format__3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_7format__2__set__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_7format__2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 1);
+  if (!(likely(PyList_CheckExact(__pyx_v_value))||((__pyx_v_value) == Py_None) || __Pyx_RaiseUnexpectedTypeError("list", __pyx_v_value))) __PYX_ERR(0, 367, __pyx_L1_error)
+  __pyx_t_1 = __pyx_v_value;
+  __Pyx_INCREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_self->format_);
+  __Pyx_DECREF(__pyx_v_self->format_);
+  __pyx_v_self->format_ = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("vcfparser.record_parser.Record.format_.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_7format__5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_7format__5__del__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_7format__4__del__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_7format__4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__", 1);
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->format_);
+  __Pyx_DECREF(__pyx_v_self->format_);
+  __pyx_v_self->format_ = ((PyObject*)Py_None);
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_12sample_names_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_12sample_names_1__get__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_12sample_names___get__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_12sample_names___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__", 1);
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->sample_names);
+  __pyx_r = __pyx_v_self->sample_names;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_12sample_names_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_12sample_names_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_12sample_names_2__set__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_12sample_names_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 1);
+  if (!(likely(PyList_CheckExact(__pyx_v_value))||((__pyx_v_value) == Py_None) || __Pyx_RaiseUnexpectedTypeError("list", __pyx_v_value))) __PYX_ERR(0, 367, __pyx_L1_error)
+  __pyx_t_1 = __pyx_v_value;
+  __Pyx_INCREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_self->sample_names);
+  __Pyx_DECREF(__pyx_v_self->sample_names);
+  __pyx_v_self->sample_names = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("vcfparser.record_parser.Record.sample_names.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_12sample_names_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_12sample_names_5__del__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_12sample_names_4__del__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_12sample_names_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__", 1);
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->sample_names);
+  __Pyx_DECREF(__pyx_v_self->sample_names);
+  __pyx_v_self->sample_names = ((PyObject*)Py_None);
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_11sample_vals_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_11sample_vals_1__get__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_11sample_vals___get__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_11sample_vals___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__", 1);
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->sample_vals);
+  __pyx_r = __pyx_v_self->sample_vals;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_11sample_vals_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_11sample_vals_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_11sample_vals_2__set__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_11sample_vals_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 1);
+  if (!(likely(PyList_CheckExact(__pyx_v_value))||((__pyx_v_value) == Py_None) || __Pyx_RaiseUnexpectedTypeError("list", __pyx_v_value))) __PYX_ERR(0, 367, __pyx_L1_error)
+  __pyx_t_1 = __pyx_v_value;
+  __Pyx_INCREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_self->sample_vals);
+  __Pyx_DECREF(__pyx_v_self->sample_vals);
+  __pyx_v_self->sample_vals = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("vcfparser.record_parser.Record.sample_vals.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_11sample_vals_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_11sample_vals_5__del__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_11sample_vals_4__del__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_11sample_vals_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__", 1);
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->sample_vals);
+  __Pyx_DECREF(__pyx_v_self->sample_vals);
+  __pyx_v_self->sample_vals = ((PyObject*)Py_None);
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "vcfparser/record_parser.pyx":368
+ *     cdef public str CHROM, POS, ID, REF, QUAL
+ *     cdef public list ALT, FILTER, format_, sample_names, sample_vals
+ *     cdef public dict mapped_format_to_sample             # <<<<<<<<<<<<<<
+ *     cdef public GenotypeProperty genotype_property
+ *     cdef readonly ref_alt
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_23mapped_format_to_sample_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_9vcfparser_13record_parser_6Record_23mapped_format_to_sample_1__get__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_23mapped_format_to_sample___get__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9vcfparser_13record_parser_6Record_23mapped_format_to_sample___get__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__", 1);
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->mapped_format_to_sample);
+  __pyx_r = __pyx_v_self->mapped_format_to_sample;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_23mapped_format_to_sample_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_23mapped_format_to_sample_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_23mapped_format_to_sample_2__set__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_23mapped_format_to_sample_2__set__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 1);
+  if (!(likely(PyDict_CheckExact(__pyx_v_value))||((__pyx_v_value) == Py_None) || __Pyx_RaiseUnexpectedTypeError("dict", __pyx_v_value))) __PYX_ERR(0, 368, __pyx_L1_error)
+  __pyx_t_1 = __pyx_v_value;
+  __Pyx_INCREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_self->mapped_format_to_sample);
+  __Pyx_DECREF(__pyx_v_self->mapped_format_to_sample);
+  __pyx_v_self->mapped_format_to_sample = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("vcfparser.record_parser.Record.mapped_format_to_sample.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9vcfparser_13record_parser_6Record_23mapped_format_to_sample_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_9vcfparser_13record_parser_6Record_23mapped_format_to_sample_5__del__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_9vcfparser_13record_parser_6Record_23mapped_format_to_sample_4__del__(((struct __pyx_obj_9vcfparser_13record_parser_Record *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9vcfparser_13record_parser_6Record_23mapped_format_to_sample_4__del__(struct __pyx_obj_9vcfparser_13record_parser_Record *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__", 1);
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->mapped_format_to_sample);
+  __Pyx_DECREF(__pyx_v_self->mapped_format_to_sample);
+  __pyx_v_self->mapped_format_to_sample = ((PyObject*)Py_None);
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
 /* "vcfparser/record_parser.pyx":369
- *     cdef list ALT, FILTER, format_, sample_names, sample_vals
- *     cdef dict mapped_format_to_sample
+ *     cdef public list ALT, FILTER, format_, sample_names, sample_vals
+ *     cdef public dict mapped_format_to_sample
  *     cdef public GenotypeProperty genotype_property             # <<<<<<<<<<<<<<
  *     cdef readonly ref_alt
  *     cdef public str info_str
@@ -14258,7 +15279,7 @@ static int __pyx_pf_9vcfparser_13record_parser_6Record_17genotype_property_4__de
 }
 
 /* "vcfparser/record_parser.pyx":370
- *     cdef dict mapped_format_to_sample
+ *     cdef public dict mapped_format_to_sample
  *     cdef public GenotypeProperty genotype_property
  *     cdef readonly ref_alt             # <<<<<<<<<<<<<<
  *     cdef public str info_str
@@ -19902,6 +20923,45 @@ static int __pyx_tp_clear_9vcfparser_13record_parser_Record(PyObject *o) {
   return 0;
 }
 
+static PyObject *__pyx_getprop_9vcfparser_13record_parser_6Record_rec_line(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_9vcfparser_13record_parser_6Record_8rec_line_1__get__(o);
+}
+
+static int __pyx_setprop_9vcfparser_13record_parser_6Record_rec_line(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_8rec_line_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_8rec_line_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_9vcfparser_13record_parser_6Record_record_values(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_9vcfparser_13record_parser_6Record_13record_values_1__get__(o);
+}
+
+static int __pyx_setprop_9vcfparser_13record_parser_6Record_record_values(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_13record_values_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_13record_values_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_9vcfparser_13record_parser_6Record_record_keys(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_9vcfparser_13record_parser_6Record_11record_keys_1__get__(o);
+}
+
+static int __pyx_setprop_9vcfparser_13record_parser_6Record_record_keys(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_11record_keys_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_11record_keys_5__del__(o);
+  }
+}
+
 static PyObject *__pyx_getprop_9vcfparser_13record_parser_6Record_CHROM(PyObject *o, CYTHON_UNUSED void *x) {
   return __pyx_pw_9vcfparser_13record_parser_6Record_5CHROM_1__get__(o);
 }
@@ -19967,6 +21027,84 @@ static int __pyx_setprop_9vcfparser_13record_parser_6Record_QUAL(PyObject *o, Py
   }
 }
 
+static PyObject *__pyx_getprop_9vcfparser_13record_parser_6Record_ALT(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_9vcfparser_13record_parser_6Record_3ALT_1__get__(o);
+}
+
+static int __pyx_setprop_9vcfparser_13record_parser_6Record_ALT(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_3ALT_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_3ALT_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_9vcfparser_13record_parser_6Record_FILTER(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_9vcfparser_13record_parser_6Record_6FILTER_1__get__(o);
+}
+
+static int __pyx_setprop_9vcfparser_13record_parser_6Record_FILTER(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_6FILTER_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_6FILTER_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_9vcfparser_13record_parser_6Record_format_(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_9vcfparser_13record_parser_6Record_7format__1__get__(o);
+}
+
+static int __pyx_setprop_9vcfparser_13record_parser_6Record_format_(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_7format__3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_7format__5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_9vcfparser_13record_parser_6Record_sample_names(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_9vcfparser_13record_parser_6Record_12sample_names_1__get__(o);
+}
+
+static int __pyx_setprop_9vcfparser_13record_parser_6Record_sample_names(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_12sample_names_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_12sample_names_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_9vcfparser_13record_parser_6Record_sample_vals(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_9vcfparser_13record_parser_6Record_11sample_vals_1__get__(o);
+}
+
+static int __pyx_setprop_9vcfparser_13record_parser_6Record_sample_vals(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_11sample_vals_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_11sample_vals_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_9vcfparser_13record_parser_6Record_mapped_format_to_sample(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_9vcfparser_13record_parser_6Record_23mapped_format_to_sample_1__get__(o);
+}
+
+static int __pyx_setprop_9vcfparser_13record_parser_6Record_mapped_format_to_sample(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_23mapped_format_to_sample_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_9vcfparser_13record_parser_6Record_23mapped_format_to_sample_5__del__(o);
+  }
+}
+
 static PyObject *__pyx_getprop_9vcfparser_13record_parser_6Record_genotype_property(PyObject *o, CYTHON_UNUSED void *x) {
   return __pyx_pw_9vcfparser_13record_parser_6Record_17genotype_property_1__get__(o);
 }
@@ -20016,11 +21154,20 @@ static PyMethodDef __pyx_methods_9vcfparser_13record_parser_Record[] = {
 };
 
 static struct PyGetSetDef __pyx_getsets_9vcfparser_13record_parser_Record[] = {
+  {(char *)"rec_line", __pyx_getprop_9vcfparser_13record_parser_6Record_rec_line, __pyx_setprop_9vcfparser_13record_parser_6Record_rec_line, (char *)0, 0},
+  {(char *)"record_values", __pyx_getprop_9vcfparser_13record_parser_6Record_record_values, __pyx_setprop_9vcfparser_13record_parser_6Record_record_values, (char *)0, 0},
+  {(char *)"record_keys", __pyx_getprop_9vcfparser_13record_parser_6Record_record_keys, __pyx_setprop_9vcfparser_13record_parser_6Record_record_keys, (char *)0, 0},
   {(char *)"CHROM", __pyx_getprop_9vcfparser_13record_parser_6Record_CHROM, __pyx_setprop_9vcfparser_13record_parser_6Record_CHROM, (char *)0, 0},
   {(char *)"POS", __pyx_getprop_9vcfparser_13record_parser_6Record_POS, __pyx_setprop_9vcfparser_13record_parser_6Record_POS, (char *)0, 0},
   {(char *)"ID", __pyx_getprop_9vcfparser_13record_parser_6Record_ID, __pyx_setprop_9vcfparser_13record_parser_6Record_ID, (char *)0, 0},
   {(char *)"REF", __pyx_getprop_9vcfparser_13record_parser_6Record_REF, __pyx_setprop_9vcfparser_13record_parser_6Record_REF, (char *)0, 0},
   {(char *)"QUAL", __pyx_getprop_9vcfparser_13record_parser_6Record_QUAL, __pyx_setprop_9vcfparser_13record_parser_6Record_QUAL, (char *)0, 0},
+  {(char *)"ALT", __pyx_getprop_9vcfparser_13record_parser_6Record_ALT, __pyx_setprop_9vcfparser_13record_parser_6Record_ALT, (char *)0, 0},
+  {(char *)"FILTER", __pyx_getprop_9vcfparser_13record_parser_6Record_FILTER, __pyx_setprop_9vcfparser_13record_parser_6Record_FILTER, (char *)0, 0},
+  {(char *)"format_", __pyx_getprop_9vcfparser_13record_parser_6Record_format_, __pyx_setprop_9vcfparser_13record_parser_6Record_format_, (char *)0, 0},
+  {(char *)"sample_names", __pyx_getprop_9vcfparser_13record_parser_6Record_sample_names, __pyx_setprop_9vcfparser_13record_parser_6Record_sample_names, (char *)0, 0},
+  {(char *)"sample_vals", __pyx_getprop_9vcfparser_13record_parser_6Record_sample_vals, __pyx_setprop_9vcfparser_13record_parser_6Record_sample_vals, (char *)0, 0},
+  {(char *)"mapped_format_to_sample", __pyx_getprop_9vcfparser_13record_parser_6Record_mapped_format_to_sample, __pyx_setprop_9vcfparser_13record_parser_6Record_mapped_format_to_sample, (char *)0, 0},
   {(char *)"genotype_property", __pyx_getprop_9vcfparser_13record_parser_6Record_genotype_property, __pyx_setprop_9vcfparser_13record_parser_6Record_genotype_property, (char *)0, 0},
   {(char *)"ref_alt", __pyx_getprop_9vcfparser_13record_parser_6Record_ref_alt, 0, (char *)0, 0},
   {(char *)"info_str", __pyx_getprop_9vcfparser_13record_parser_6Record_info_str, __pyx_setprop_9vcfparser_13record_parser_6Record_info_str, (char *)0, 0},

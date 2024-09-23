@@ -360,12 +360,12 @@ cdef class Record:
     A class that converts the record lines from input VCF into accessible record object.
     """
 
-    cdef str rec_line
-    cdef list record_values
-    cdef list record_keys
+    cdef public str rec_line
+    cdef public list record_values
+    cdef public list record_keys
     cdef public str CHROM, POS, ID, REF, QUAL
     cdef public list ALT, FILTER, format_, sample_names, sample_vals
-    cdef dict mapped_format_to_sample
+    cdef public dict mapped_format_to_sample
     cdef public GenotypeProperty genotype_property
     cdef readonly ref_alt
     cdef public str info_str
