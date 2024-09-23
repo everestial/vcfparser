@@ -5,7 +5,7 @@ import csv
 from collections import OrderedDict
 
 from vcfparser import Record
-from vcfparser.record_parser import GenotypeProperty
+from vcfparser.record_parser import GenotypeProperty, Record
 
 output_file01 = "tests/testfiles/vcf_parser_output/record_parser_test_result01"
 rec_keys_eg = "CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	ms01e	ms02g	ms03g	ms04h	MA611	MA605	MA622"
@@ -14,6 +14,13 @@ rec_obj = Record(rec_valeg.split('\t'), rec_keys_eg.split('\t'))
 
 def get_genotype_property(record):
     return record.genotype_property
+
+def test_genotype_property():
+    record_values = ["chr1", "123456", "rs123", "A", "T", ".", ".", "GT:AD", "0/1:10,20"]
+    record_keys = ["CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT"] + ["SAMPLE1"]
+    rec_obj = Record(record_values, record_keys)
+    genotype_property = get_genotype_property(rec_obj)
+    assert isinstance(genotype_property, GenotypeProperty)
 
 genotype_property = get_genotype_property(rec_obj)
 
