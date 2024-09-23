@@ -23,8 +23,10 @@ cdef class GenotypeProperty:
 
     # allele_obj = _allele_obj
 
+    cdef Record record_obj 
 
-    def __init__(self, record_obj):
+
+    def __init__(self, Record record_obj):
         self.record_obj = record_obj
         # pass
 
@@ -361,29 +363,28 @@ cdef class Record:
     cdef str rec_line
     cdef list record_values
     cdef list record_keys
-    cdef str CHROM, POS, ID, REF, QUAL
+    cdef public str CHROM, POS, ID, REF, QUAL
     cdef list ALT, FILTER, format_, sample_names, sample_vals
     cdef dict mapped_format_to_sample
-    cdef GenotypeProperty genotype_property
+    cdef public GenotypeProperty genotype_property
     cdef readonly ref_alt
+    cdef public str info_str
 
     def __init__(self, list record_values, list record_keys):
-        print("@@")
-        print("Record Values:", record_values)  # Debugging line
-        print("Record Keys:", record_keys)  
+ 
         self.rec_line = "\t".join(record_values)
         self.record_values = record_values
         self.record_keys = record_keys
-        self.CHROM = self.record_values[0]
-        self.POS = self.record_values[1]
-        self.ID = self.record_values[2]
-        self.REF = self.record_values[3]
+        self.CHROM = self.record_values[0] if len(self.record_values) > 0 else None
+        self.POS = self.record_values[1] if len(self.record_values) > 1 else None
+        self.ID = self.record_values[2] if len(self.record_values) > 2 else None
+        self.REF = self.record_values[3] if len(self.record_values) > 3 else None
         self.ALT = self.record_values[4].split(",") if len(self.record_values) > 4 else []
-        self.ref_alt = [self.REF] + self.ALT
-        self.QUAL = self.record_values[5]
-        self.FILTER = self.record_values[6].split(",")
-        self.info_str = self.record_values[7]
-        self.format_ = self.record_values[8].split(":")
+        self.ref_alt = (self.REF.split(",") + self.ALT) if self.REF else self.ALT
+        self.QUAL = self.record_values[5] if len(self.record_values) > 5 else None
+        self.FILTER = self.record_values[6].split(",") if len(self.record_values) > 6 else []
+        self.info_str = self.record_values[7] if len(self.record_values) > 7 else None
+        self.format_ = self.record_values[8].split(":") if len(self.record_values) > 8 else []
         self.sample_names = self.record_keys[9:] if len(self.record_keys) > 9 else []
 
         try:
@@ -740,9 +741,9 @@ cdef class Alleles:
 ## Are they homref, hetvar './.' , '.', './0', '0/.'
 
 cdef class GenotypeVal:
-    cdef list _alleles
-    cdef str gt_type
-    cdef bint phased, _ismissing  
+    cdef public list _alleles
+    cdef public str gt_type
+    cdef public bint phased, _ismissing  
 
     def __init__(self, str allele):
         """

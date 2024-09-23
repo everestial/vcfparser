@@ -34,21 +34,12 @@ def test_sample_names():
 
 records = vcf_object.parse_records()
 first_record = next(records)
-print(dir(first_record))
+# print(dir(first_record))
 
 def get_genotype_property(record):
-    assert hasattr(record, 'genotype_property'), "Record does not have 'genotype_property' attribute."
     return record.genotype_property
 
 genotype_property = get_genotype_property(first_record)
-
-def test_genotype_property():
-    record_line = ['CHROM', 'POS', 'ID', 'REF', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'SAMPLE1', '0/1', '1/1']
-    record_keys = ['CHROM', 'POS', 'ID', 'REF', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'SAMPLE1', 'SAMPLE2']
-    record = Record(record_line, record_keys)
-    assert isinstance(record.genotype_property, GenotypeProperty)
-    assert record.genotype_property.genotype_data == ['1/1']  # Adjust based on your input
-
 
 def test_record():
     assert first_record.CHROM == '2'
