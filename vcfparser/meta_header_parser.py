@@ -72,16 +72,22 @@ class MetaDataParser:
 
                 if line_info[0] == "fileformat":
                     try:
-                        self.fileformat = line_info[1]
+                        value = line_info[1].strip()
+                        if not value:
+                            raise SyntaxError("fileformat must have a value")
+                        self.fileformat = value
                         self.VCFspec.append({"fileformat": self.fileformat})
                     except IndexError:
                         raise SyntaxError("fileformat must have a value")
 
                 elif line_info[0] == "reference":
                     try:
-                        self.reference.append(line_info[1])
+                        value = line_info[1].strip()
+                        if not value:
+                            raise SyntaxError("Reference value is not provided")
+                        self.reference.append(value)
                     except IndexError:
-                        raise SyntaxError("Refrence value is not provided")
+                        raise SyntaxError("Reference value is not provided")
 
                 elif line_info[0] == "INFO":
                     self.infos_.append(split_to_dict(line_info[1]))
