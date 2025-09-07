@@ -31,29 +31,74 @@ class Record:
         self.rec_line = "\t".join(record_values)
         self.record_values = record_values
         self.record_keys = record_keys
-        self.CHROM = self.record_values[0]
-        self.POS = self.record_values[1]
-        self.ID = self.record_values[2]
-        self.REF = self.record_values[3]
-        self.ALT = self.record_values[4].split(",")
+        
+        # Mandatory VCF fields (should always be present)
+        self.CHROM = self._get_field_safe(0, "CHROM", required=True)
+        self.POS = self._get_field_safe(1, "POS", required=True)
+        self.ID = self._get_field_safe(2, "ID", required=True, default=".")
+        self.REF = self._get_field_safe(3, "REF", required=True)
+        
+        # ALT field (index 4) - can be missing in some minimal VCF files
+        alt_raw = self._get_field_safe(4, "ALT", default=".")
+        self.ALT = alt_raw.split(",") if alt_raw else ["."]
         self.ref_alt = self.REF.split(",") + self.ALT
-        self.QUAL = self.record_values[5]
-        self.FILTER = self.record_values[6].split(",")
-        self.info_str = self.record_values[7]
-        self.format_ = self.record_values[8].split(":")
+        
+        # Optional VCF fields (can be missing in minimal VCF files)
+        self.QUAL = self._get_field_safe(5, "QUAL", default=".")
+        
+        filter_raw = self._get_field_safe(6, "FILTER", default=".")
+        self.FILTER = filter_raw.split(",") if filter_raw else ["."]
+        
+        self.info_str = self._get_field_safe(7, "INFO", default=".")
+        
+        format_raw = self._get_field_safe(8, "FORMAT", default=None)
+        self.format_ = format_raw.split(":") if format_raw else None
+        
+        # Sample names and values
         self.sample_names = self.record_keys[9:] if len(self.record_keys) > 9 else None
-
-        try:
-            self.sample_vals = self.record_values[9:]
-        except IndexError:
-            warnings.warn(
-                "Sample values are not presented correctly in given vcf file."
-            )
-        self.mapped_format_to_sample = self._map_format_tags_to_sample_values()
-
+        self.sample_vals = self.record_values[9:] if len(self.record_values) > 9 else None
+        
+        # Only map format to samples if both format and samples exist
+        if self.format_ is not None and self.sample_names is not None and self.sample_vals is not None:
+            self.mapped_format_to_sample = self._map_format_tags_to_sample_values()
+        else:
+            self.mapped_format_to_sample = {}
+        
         # instance attributes to get genotype and allele level information
         self.genotype_property = GenotypeProperty(self)
         # self.allele_property = AlleleProperty(self)
+    
+    def _get_field_safe(self, index, field_name, required=False, default=None):
+        """
+        Safely get a field value from record_values with proper error handling.
+        
+        Parameters
+        ----------
+        index : int
+            Index of the field in record_values
+        field_name : str
+            Name of the field (for warning messages)
+        required : bool
+            Whether this field is required (will raise exception if missing)
+        default : str or None
+            Default value to return if field is missing
+            
+        Returns
+        -------
+        str or None
+            Field value or default
+        """
+        try:
+            return self.record_values[index]
+        except IndexError:
+            if required:
+                raise ValueError(f"Required VCF field '{field_name}' (index {index}) is missing from record")
+            else:
+                if default is not None:
+                    warnings.warn(
+                        f"VCF field '{field_name}' (index {index}) is missing. Using default value: '{default}'"
+                    )
+                return default
 
 
     def __str__(self):
