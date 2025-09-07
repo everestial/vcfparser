@@ -199,7 +199,7 @@ class TestMetaDataParserErrors:
         ]
         
         parser = MetaDataParser(bad_lines)
-        with pytest.raises(SyntaxError, match="Refrence value is not provided"):
+        with pytest.raises(SyntaxError, match="Reference value is not provided"):
             parser.parse_lines()
             
     def test_malformed_format_line(self):

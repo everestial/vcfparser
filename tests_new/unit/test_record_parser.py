@@ -279,7 +279,7 @@ class TestRecordEdgeCases:
         record = Record(record_values, record_keys)
         
         info_dict = record.get_info_as_dict()
-        assert info_dict['MALFORMED'] == '.'  # Fields without '=' get '.' value
+        assert info_dict['MALFORMED'] == '.'  # INFO Fields without '=' get '.' value
         
     def test_string_representation(self, test_utils):
         """Test string representation of Record."""
