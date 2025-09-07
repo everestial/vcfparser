@@ -338,7 +338,7 @@ class Record:
 
         iupac_g_list = re.split(r"[/|]", genotype_in_iupac)
         sep = "/" if "/" in genotype_in_iupac else "|"
-        numeric_vals = [ref_alt.index(i) if i != "." else "." for i in iupac_g_list]
+        numeric_vals = [str(ref_alt.index(i)) if i != "." else "." for i in iupac_g_list]
         return sep.join(numeric_vals)
 
     def deletion_overlapping_variant(self):
