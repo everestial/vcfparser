@@ -107,7 +107,7 @@ class VcfParser:
         """
         # This produces an iterator of metadata lines (lines starting with '#')
         _raw_lines = itertools.takewhile(lambda x: x.startswith("#"), self._file)
-        return MetaDataParser(_raw_lines).parse_lines()
+        return MetaDataParser(list(_raw_lines)).parse_lines()
 
     # TODO (Bhuwan, low priority) - Could multiprocessing be invoked here?? with -n flag
     # multiprocessing should however follow the order (genomic position)
