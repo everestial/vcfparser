@@ -1,31 +1,33 @@
 import re
 import shlex
+from typing import List, Dict, Any, Optional, Union, Pattern
 
 
 class MetaDataParser:
     """Parses a meta lines of the vcf files."""
 
-    def __init__(self, header_file):
-        self.header_file = header_file
-        self.infos_ = []
-        self.filters_ = []
-        self.contig = []
-        self.format_ = []
-        self.alt_ = []
-        self.other_lines = []
-        self.fileformat = None
-        self.reference = []
-        self.sample_names = []
-        self.is_gvcf = False
-        self.gvcf_blocks = []
-        self.record_keys = []
-        self.VCFspec = []
-        self.gatk_commands = []
+    def __init__(self, header_file: List[str]) -> None:
+        self.header_file: List[str] = header_file
+        self.infos_: List[Dict[str, str]] = []
+        self.filters_: List[Dict[str, str]] = []
+        self.contig: List[Dict[str, str]] = []
+        self.format_: List[Dict[str, str]] = []
+        self.alt_: List[Dict[str, str]] = []
+        self.other_lines: List[Dict[str, str]] = []
+        self.fileformat: Optional[str] = None
+        self.reference: List[str] = []
+        self.sample_names: Optional[List[str]] = []
+        self.is_gvcf: bool = False
+        self.gvcf_blocks: List[Dict[str, str]] = []
+        self.record_keys: List[str] = []
+        self.VCFspec: List[Dict[str, Any]] = []
+        self.gatk_commands: List[Dict[str, str]] = []
+        self.sample_with_pos: List[Dict[str, Union[str, int]]] = []
 
         # to write header lines only
-        self.raw_meta_data = ""
+        self.raw_meta_data: str = ""
 
-        self._format_pattern = re.compile(
+        self._format_pattern: Pattern[str] = re.compile(
             r"""\#\#FORMAT=<
             ID=(?P<id>.+),\s*
             Number=(?P<number>-?\d+|\.|[AGR]),\s*
@@ -34,14 +36,35 @@ class MetaDataParser:
             >""",
             re.VERBOSE,
         )
-        self._meta_pattern = re.compile(r"""##(?P<key>.+?)=(?P<val>.+)""")
+        self._meta_pattern: Pattern[str] = re.compile(r"""##(?P<key>.+?)=(?P<val>.+)""")
 
     @staticmethod
-    def _parse_gvcf_block(lines):
-        """extract the GVCF blocks"""
+    def _parse_gvcf_block(lines: str) -> Dict[str, str]:
+        """extract the GVCF blocks
+        
+        Parameters
+        ----------
+        lines : str
+            GVCF block line from VCF header
+            
+        Returns
+        -------
+        Dict[str, str]
+            Dictionary containing GVCF block information
+            
+        Examples
+        --------
+        >>> line = "##GVCFBlock55-56=minGQ=55(inclusive),maxGQ=56(exclusive)"
+        >>> result = MetaDataParser._parse_gvcf_block(line)
+        >>> result['Block']
+        '55-56'
+        """
         # e.g input: ##GVCFBlock55-56=minGQ=55(inclusive),maxGQ=56(exclusive)
         # output: {'minGQ': '55(inclusive)', 'maxGQ': '56(exclusive)', 'Block': '55-56'}
-        gvcf_block = re.search("##GVCFBlock(.*?)=", lines, 0).group(1)
+        gvcf_block_match = re.search("##GVCFBlock(.*?)=", lines, 0)
+        if not gvcf_block_match:
+            raise ValueError(f"Invalid GVCF block line format: {lines}")
+        gvcf_block = gvcf_block_match.group(1)
 
         # update tags_dict
         to_replace = "##GVCFBlock" + gvcf_block + "="
@@ -52,17 +75,49 @@ class MetaDataParser:
         return tags_dict
 
     @staticmethod
-    def _parse_gatk_commands(lines):
-        """find the GATK commands used to generate the input VCF"""
-        ## e.g: ##GATKCommandLine.HaplotypeCaller=<ID=HaplotypeCaller....
-        gatk_cmd_middle_string = re.search("##GATKCommandLine(.*)=<ID=", lines).group(1)
+    def _parse_gatk_commands(lines: str) -> Dict[str, str]:
+        """find the GATK commands used to generate the input VCF
+        
+        Parameters
+        ----------
+        lines : str
+            GATK command line from VCF header
+            
+        Returns
+        -------
+        Dict[str, str]
+            Dictionary containing GATK command information
+            
+        Examples
+        --------
+        >>> line = '##GATKCommandLine.HaplotypeCaller=<ID=HaplotypeCaller,Version=4.0>'
+        >>> result = MetaDataParser._parse_gatk_commands(line)
+        >>> result['ID']
+        'HaplotypeCaller'
+        """
+        # e.g: ##GATKCommandLine.HaplotypeCaller=<ID=HaplotypeCaller....
+        gatk_match = re.search("##GATKCommandLine(.*)=<ID=", lines)
+        if not gatk_match:
+            raise ValueError(f"Invalid GATK command line format: {lines}")
+        gatk_cmd_middle_string = gatk_match.group(1)
         to_replace = "##GATKCommandLine" + gatk_cmd_middle_string + "=<"
         string = lines.rstrip("\n").rstrip(">").replace(to_replace, "")
         tags_dict = split_to_dict(string)
         return tags_dict
 
-    def parse_lines(self):
-        """Parse a vcf metadataline"""
+    def parse_lines(self) -> 'MetaDataParser':
+        """Parse a vcf metadataline
+        
+        Returns
+        -------
+        MetaDataParser
+            Self instance for method chaining
+            
+        Raises
+        ------
+        SyntaxError
+            If required metadata values are missing or malformed
+        """
         for line in self.header_file:
             self.raw_meta_data += line
             if line.startswith("##"):
@@ -142,17 +197,35 @@ class MetaDataParser:
                 pos_list = list(range(10, len(self.record_keys) + 1))
                 self.sample_with_pos = [
                     {"name": x, "position": y}
-                    for x, y in zip(self.sample_names, pos_list)
+                    for x, y in zip(self.sample_names or [], pos_list)
                 ]
         return self
 
 
-# function to split the string at "," and create key-value pair at "="
-# mainly aimed for parsing VCF metadata lines and create dictionary
-def split_to_dict(string):
+def split_to_dict(string: str) -> Dict[str, str]:
+    """Split string at "," and create key-value pairs at "="
+    
+    Mainly aimed for parsing VCF metadata lines and creating dictionaries.
+    
+    Parameters
+    ----------
+    string : str
+        Input string to split, typically VCF metadata content
+        
+    Returns
+    -------
+    Dict[str, str]
+        Dictionary with parsed key-value pairs
+        
+    Examples
+    --------
+    >>> result = split_to_dict('<ID=DP,Number=1,Type=Integer,Description="Depth">')
+    >>> result['ID']
+    'DP'
+    """
     string = string.lstrip("<").rstrip(">")
     splitter = shlex.shlex(string, posix=True)
     splitter.whitespace_split = True
     splitter.whitespace = ","
-    tags_dict = dict(pair.split("=", maxsplit=1) for pair in splitter)
+    tags_dict: Dict[str, str] = dict(pair.split("=", maxsplit=1) for pair in splitter)
     return tags_dict
