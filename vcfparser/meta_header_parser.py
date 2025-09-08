@@ -189,7 +189,8 @@ class MetaDataParser:
                         )
 
                     self.other_lines.append({match.group("key"): match.group("val")})
-            else:
+            elif line.startswith("#CHROM"):
+                # Only process the header line, ignore data lines
                 self.record_keys = line.lstrip(r"#").strip("\n").split("\t")
                 self.sample_names = (
                     self.record_keys[9:] if len(self.record_keys) > 9 else None
@@ -199,6 +200,9 @@ class MetaDataParser:
                     {"name": x, "position": y}
                     for x, y in zip(self.sample_names or [], pos_list)
                 ]
+            else:
+                # This is a data line - stop processing as we've reached the end of metadata
+                break
         return self
 
 
