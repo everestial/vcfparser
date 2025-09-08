@@ -1,6 +1,6 @@
 ##VCFspec
 #fileformat
-VCFv4.2
+VCFv4.3
 
 #GVCF
 True
@@ -66,6 +66,9 @@ chr05	181538259
 chr06	170805979
 chr07	159345973
 chr08	145138636
+
+##reference
+file:///seq/references/lyrata.fasta
 
 ##GVCFBlock
 #minGQ	maxGQ	Block

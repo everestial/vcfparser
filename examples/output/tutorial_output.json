@@ -1,7 +1,7 @@
 {
     "VCFspec": [
         {
-            "fileformat": "VCFv4.2"
+            "fileformat": "VCFv4.3"
         },
         {
             "GVCF": true
@@ -292,7 +292,9 @@
             "length": "145138636"
         }
     ],
-    "reference": [],
+    "reference": [
+        "file:///seq/references/lyrata.fasta"
+    ],
     "GATKCommandLine": [],
     "GVCFBlock": [
         {
