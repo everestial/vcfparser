@@ -29,7 +29,7 @@ class VCFWriter:
     w_file: Optional[Any]  # Using Any to handle file objects
     _is_closed: bool
 
-    def __init__(self, filename: str, mode: str = "a") -> None:
+    def __init__(self, filename: str, mode: str = "w") -> None:
         """
         Initialize VCFWriter with output filename.
         
