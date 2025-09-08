@@ -139,9 +139,9 @@ vcf = VcfParser("example.vcf")
 # Parse metadata (header information)
 metadata = vcf.parse_metadata()
 print(f"VCF version: {metadata.fileformat}")           # VCFv4.3
-print(f"Samples: {metadata.sample_names}")             # ['Sample1', 'Sample2']
-print(f"INFO fields: {len(metadata.infos_)}")          # 15
-print(f"FORMAT fields: {len(metadata.format_)}")       # 8
+print(f"Samples: {metadata.sample_names}")             # ['Sample01', 'Sample02', 'Sample03']
+print(f"INFO fields: {len(metadata.infos_)}")          # 6
+print(f"FORMAT fields: {len(metadata.format_)}")       # 4
 
 # Parse records (data lines) - returns iterator for memory efficiency
 records = vcf.parse_records()
@@ -162,10 +162,10 @@ first_record = next(records)
 gt = first_record.genotype_property
 
 # Find samples by genotype type (returns Dict[str, str])
-homref_samples = gt.isHOMREF()       # {'Sample1': '0/0', 'Sample2': '0/0'}
-hetvar_samples = gt.isHETVAR()       # {'Sample3': '0/1'} 
-homvar_samples = gt.isHOMVAR()       # {'Sample4': '1/1'}
-missing_samples = gt.isMissing()     # {'Sample5': './.'}
+homref_samples = gt.isHOMREF()       # {'Sample01': '0|0'}
+hetvar_samples = gt.isHETVAR()       # {'Sample02': '1|0'} 
+homvar_samples = gt.isHOMVAR()       # {'Sample03': '1/1'}
+missing_samples = gt.isMissing()     # {} (no missing samples in this example)
 
 # Variant type analysis
 if gt.hasSNP():
@@ -233,13 +233,13 @@ with VCFWriter("output.vcf") as writer:
     
     # Add column header
     writer.add_header_line(["#CHROM", "POS", "ID", "REF", "ALT", 
-                           "QUAL", "FILTER", "INFO", "FORMAT", "Sample1"])
+                           "QUAL", "FILTER", "INFO", "FORMAT", "Sample01"])
     
     # Add variant records
     writer.add_record_from_parts(
-        chrom="chr1", pos=123456, id="rs123", ref="A", alt="T", 
-        qual="60", filter_val="PASS", info="DP=20;AF=0.5", 
-        format_val="GT:DP", "1/1:20"  # sample data
+        "chr1", 123456, "rs123", "A", "T", 
+        "60", "PASS", "DP=20;AF=0.5", 
+        "GT:DP", "1/1:20"  # sample data
     )
     
 # File automatically closed and flushed
