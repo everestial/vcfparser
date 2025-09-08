@@ -35,8 +35,8 @@ class TestVCFWriterMetadataMethods:
         writer.w_file.close()
         
         content = temp_output_file.read_text()
-        assert "##fileformat= VCFv4.2" in content
-        assert "##source= test_program" in content
+        assert "##fileformat=VCFv4.2" in content
+        assert "##source=test_program" in content
         
     def test_add_info_metadata(self, temp_output_file):
         """Test adding INFO metadata."""
@@ -127,7 +127,7 @@ class TestVCFWriterMetadataMethods:
         writer.w_file.close()
         
         content = temp_output_file.read_text()
-        expected = "##contig=<ID=chr1, length=248956422>"
+        expected = "##contig=<ID=chr1,length=248956422>"
         assert expected in content
 
 
@@ -196,11 +196,11 @@ class TestVCFWriterIntegration:
         content = temp_output_file.read_text()
         
         # Check metadata
-        assert "##fileformat= VCFv4.2" in content
+        assert "##fileformat=VCFv4.2" in content
         assert '##INFO=<ID=AC,Number=A,Type=Integer,Description="Allele count">' in content
         assert '##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">' in content
         assert '##FILTER=<ID=PASS,Description="All filters passed">' in content
-        assert "##contig=<ID=chr1, length=248956422>" in content
+        assert "##contig=<ID=chr1,length=248956422>" in content
         
         # Check header and record
         assert header in content
@@ -315,7 +315,7 @@ class TestVCFWriterFileHandling:
         
         # Both initial content and new content should be present
         assert "Initial content" in content
-        assert "##test= value" in content
+        assert "##test=value" in content
         
     def test_file_exists_before_writing(self, temp_output_file):
         """Test that file handle is properly created."""
