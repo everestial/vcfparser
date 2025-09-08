@@ -114,7 +114,7 @@ class MetaDataViewer:
                                         w_file.write(f"{unpack_str(item.values())}\n")
                                         w_file.write("\n")
                             else:
-                                w_file.write(f"#{unpack_str(val[0].keys())}\n\n")
+                                w_file.write(f"#{unpack_str(val[0].keys())}\n")
                                 for item in val:
                                     if isinstance(item, dict):
                                         w_file.write(f"{unpack_str(item.values())}\n")
