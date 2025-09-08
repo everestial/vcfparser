@@ -61,11 +61,11 @@ vcfparser follows a clean, modular architecture designed for both ease of use an
     │                             │                      └─ .dict
     │
     └─── parse_records() ───➤ 🧬 Record Objects ──➤ 🔬 Genotype Analysis
-                                  │                      ├─ isHOMREF()
-                                  │                      ├─ isHETVAR()
-                                  │                      ├─ isHOMVAR()
-                                  │                      ├─ hasSNP()
-                                  │                      └─ hasINDEL()
+                                  │                      ├─ isHOMREF() / isHETVAR() / isHOMVAR()
+                                  │                      ├─ hasSNP() / hasINDEL()
+                                  │                      ├─ has_phased() / has_unphased()
+                                  │                      ├─ hasAllele() / hasVAR() / hasnoVAR()
+                                  │                      └─ isMissing()
                                   │
                                   └─── Sample Data ──➤ 📈 Statistics
 ```
@@ -331,14 +331,21 @@ print(f"Analysis complete: {result}")
 ### 🎯 **Common Patterns**
 
 ```python
-# Memory-efficient large file processing
-with VcfParser("large_file.vcf.gz") as vcf:  # Supports gzipped files
-    for i, record in enumerate(vcf.parse_records()):
-        if i > 1000:  # Process first 1000 records only
-            break
-        process_variant(record)
+# Memory-efficient large file processing (supports .gz files)
+vcf = VcfParser("examples/data/tutorial.vcf")  # or .vcf.gz files
+for i, record in enumerate(vcf.parse_records()):
+    if i > 100:  # Process first 100 records only
+        break
+    
+    # Analyze each variant
+    gt = record.genotype_property
+    if gt.hasSNP():
+        print(f"SNP found at {record.CHROM}:{record.POS}")
+    elif gt.hasINDEL():
+        print(f"INDEL found at {record.CHROM}:{record.POS}")
 
-# Batch sample analysis
+# Batch sample analysis with carrier detection
+vcf = VcfParser("examples/data/example.vcf")
 for record in vcf.parse_records():
     gt = record.genotype_property
     variant_stats = {
@@ -348,6 +355,8 @@ for record in vcf.parse_records():
     }
     if variant_stats['variant_carriers'] > 0:
         print(f"Variant {record.CHROM}:{record.POS} has {variant_stats['variant_carriers']} carriers")
+        print(f"  Heterozygous: {list(gt.isHETVAR().keys())}")
+        print(f"  Homozygous var: {list(gt.isHOMVAR().keys())}")
 ```
 
 ### 📚 **Detailed Guides**
@@ -369,8 +378,11 @@ pip install --upgrade vcfparser
 
 # ❌ Issue: Memory issues with large VCF files
 # ✅ Solution: Use record iteration instead of loading all at once
+vcf = VcfParser("large_file.vcf")
 for record in vcf.parse_records():  # Memory efficient
-    process(record)
+    # Process one record at a time
+    if float(record.QUAL) > 30:  # Example filtering
+        print(f"High quality variant: {record.CHROM}:{record.POS}")
 
 # Don't do this for large files:
 all_records = list(vcf.parse_records())  # Loads everything into memory
@@ -378,6 +390,7 @@ all_records = list(vcf.parse_records())  # Loads everything into memory
 # ❌ Issue: "malformed VCF" errors
 # ✅ Solution: Check file format and headers
 try:
+    vcf = VcfParser("examples/data/example.vcf")
     metadata = vcf.parse_metadata()
     print(f"VCF format: {metadata.fileformat}")  # Should be VCFv4.x
 except Exception as e:
@@ -409,17 +422,24 @@ vcfparser is designed for **high-performance genomics workflows**:
 
 ```python
 # ✅ DO: Use iteration for large files
+vcf = VcfParser("examples/data/tutorial.vcf")
+results = []
 for record in vcf.parse_records():
-    if meets_criteria(record):
-        results.append(process_record(record))
+    if float(record.QUAL) > 20:  # Quality filter
+        gt = record.genotype_property
+        if len(gt.isHETVAR()) > 0:  # Has heterozygous samples
+            results.append({
+                'pos': f"{record.CHROM}:{record.POS}",
+                'carriers': len(gt.isHETVAR()) + len(gt.isHOMVAR())
+            })
         
 # ❌ AVOID: Loading all records into memory
 all_records = list(vcf.parse_records())  # Memory intensive
 
 # ✅ DO: Parse metadata once, reuse
 metadata = vcf.parse_metadata()
-for analysis in analyses:
-    analysis.use_metadata(metadata)
+print(f"VCF version: {metadata.fileformat}")
+print(f"Sample count: {len(metadata.sample_names)}")
     
 # 🔥 FUTURE: Cython compilation (planned v2.1)
 # Expected 3-5x performance improvement
