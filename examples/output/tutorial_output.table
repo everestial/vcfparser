@@ -1,0 +1,86 @@
+##VCFspec
+#fileformat
+VCFv4.2
+
+#GVCF
+True
+
+##FORMAT
+#ID	Number	Type	Description
+AD	R	Integer	Allelic depths for the ref and alt alleles in the order listed
+DP	1	Integer	Approximate read depth (reads with MQ=255 or with bad mates are filtered)
+GQ	1	Integer	Genotype Quality
+GT	1	String	Genotype
+MIN_DP	1	Integer	Minimum DP observed within the GVCF block
+PGT	1	String	Physical phasing haplotype information, describing how the alternate alleles are phased in relation to one another
+PID	1	String	Physical phasing ID information, where each unique ID within a given sample (but not across samples) connects records within a phasing group
+PL	G	Integer	Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification
+RGQ	1	Integer	Unconditional reference genotype confidence, encoded as a phred quality -10*log10 p(genotype call is wrong)
+SB	4	Integer	Per-sample component statistics which comprise the Fisher's Exact Test to detect strand bias.
+PG	1	String	phASER Local Genotype
+PB	1	String	phASER Local Block
+PI	1	String	phASER Local Block Index (unique for each block)
+PM	1	String	phASER Local Block Maximum Variant MAF
+PW	1	String	phASER Genome Wide Genotype
+PC	1	String	phASER Genome Wide Confidence
+
+##INFO
+#ID	Number	Type	Description
+AF	A	Float	Allele Frequency, for each ALT allele, in the same order as listed
+BaseQRankSum	1	Float	Z-score from Wilcoxon rank sum test of Alt Vs. Ref base qualities
+ClippingRankSum	1	Float	Z-score From Wilcoxon rank sum test of Alt vs. Ref number of hard clipped bases
+DP	1	Integer	Approximate read depth; some reads may have been filtered
+DS	0	Flag	Were any of the samples downsampled?
+END	1	Integer	Stop position of the interval
+ExcessHet	1	Float	Phred-scaled p-value for exact test of excess heterozygosity
+FS	1	Float	Phred-scaled p-value using Fisher's exact test to detect strand bias
+HaplotypeScore	1	Float	Consistency of the site with at most two segregating haplotypes
+InbreedingCoeff	1	Float	Inbreeding coefficient as estimated from the genotype likelihoods per-sample when compared against the Hardy-Weinberg expectation
+MLEAC	A	Integer	Maximum likelihood expectation (MLE) for the allele counts (not necessarily the same as the AC), for each ALT allele, in the same order as listed
+MLEAF	A	Float	Maximum likelihood expectation (MLE) for the allele frequency (not necessarily the same as the AF), for each ALT allele, in the same order as listed
+MQ	1	Float	RMS Mapping Quality
+MQRankSum	1	Float	Z-score From Wilcoxon rank sum test of Alt vs. Ref read mapping qualities
+QD	1	Float	Variant Confidence/Quality by Depth
+RAW_MQ	1	Float	Raw data for RMS Mapping Quality
+ReadPosRankSum	1	Float	Z-score from Wilcoxon rank sum test of Alt vs. Ref read position bias
+SOR	1	Float	Symmetric Odds Ratio of 2x2 contingency table to detect strand bias
+set	1	String	Source VCF for the merged record in CombineVariants
+SF	.	String	Source File (index to sourceFiles, f when filtered)
+AC	.	Integer	Allele count in genotypes
+AN	1	Integer	Total number of alleles in called genotypes
+TS	Test	Allele count in genotypes
+
+##FILTER
+#ID	Description
+LowQual	Low quality
+my_indel_filter	QD < 2.0 || FS > 200.0 || ReadPosRankSum < -20.0
+my_snp_filter	QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0
+
+##contig
+#ID	length
+chr01	248956422
+chr02	242193529
+chr03	198295559
+chr04	190214555
+chr05	181538259
+chr06	170805979
+chr07	159345973
+chr08	145138636
+
+##GVCFBlock
+#minGQ	maxGQ	Block
+55(inclusive)	56(exclusive)	55-56
+56(inclusive)	57(exclusive)	56-57
+57(inclusive)	58(exclusive)	57-58
+58(inclusive)	59(exclusive)	58-59
+
+##samples
+#name	position
+Sample01	10
+Sample02	11
+Sample03	12
+Sample04	13
+Sample05	14
+Sample06	15
+Sample07	16
+

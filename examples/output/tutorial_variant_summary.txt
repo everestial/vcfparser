@@ -1,0 +1,18 @@
+VCF Variant Summary Report
+==============================
+
+Total variants: 612
+Chromosomes: chr02
+
+First 10 variants:
+CHROM	POS	REF	ALT	QUAL	FILTER
+chr02	15881018	G	['A', 'C']	5082.45	['PASS']
+chr02	15881080	A	['G']	4336.44	['PASS']
+chr02	15881106	C	['CA']	33.32	['PASS']
+chr02	15881156	A	['G']	3595.22	['PASS']
+chr02	15881224	T	['G']	143.24	['PASS']
+chr02	15881229	C	['G']	3589.44	['PASS']
+chr02	15881230	GTT	['G', 'GTTT']	3864.17	['PASS']
+chr02	15881246	A	['AT']	3885.13	['PASS']
+chr02	15881256	A	['T']	3809.22	['PASS']
+chr02	15881266	T	['G']	3590.88	['PASS']

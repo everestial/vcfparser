@@ -1,0 +1,38 @@
+##VCFspec
+#fileformat
+VCFv4.3
+
+##FORMAT
+#ID	Number	Type	Description
+GT	1	String	Genotype
+GQ	1	Integer	Genotype Quality
+DP	1	Integer	Read Depth
+HQ	2	Integer	Haplotype Quality
+
+##INFO
+#ID	Number	Type	Description
+NS	1	Integer	Number of Samples With Data
+DP	1	Integer	Total Depth
+AF	A	Float	Allele Frequency
+AA	1	String	Ancestral Allele
+DB	0	Flag	dbSNP membership, build 129
+H2	0	Flag	HapMap2 membership
+
+##FILTER
+#ID	Description
+q10	Quality below 10
+s50	Less than 50% of samples have data
+
+##contig
+#ID	length	assembly	md5	species	taxonomy
+20	62435964	B36	f126cdf8a6e0c7f379d618ff66beb2da	Homo sapiens	x
+
+##reference
+file:///seq/references/1000GenomesPilot-NCBI36.fasta
+
+##samples
+#name	position
+Sample01	10
+Sample02	11
+Sample03	12
+

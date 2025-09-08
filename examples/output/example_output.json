@@ -1,0 +1,110 @@
+{
+    "VCFspec": [
+        {
+            "fileformat": "VCFv4.3"
+        }
+    ],
+    "FORMAT": [
+        {
+            "ID": "GT",
+            "Number": "1",
+            "Type": "String",
+            "Description": "Genotype"
+        },
+        {
+            "ID": "GQ",
+            "Number": "1",
+            "Type": "Integer",
+            "Description": "Genotype Quality"
+        },
+        {
+            "ID": "DP",
+            "Number": "1",
+            "Type": "Integer",
+            "Description": "Read Depth"
+        },
+        {
+            "ID": "HQ",
+            "Number": "2",
+            "Type": "Integer",
+            "Description": "Haplotype Quality"
+        }
+    ],
+    "INFO": [
+        {
+            "ID": "NS",
+            "Number": "1",
+            "Type": "Integer",
+            "Description": "Number of Samples With Data"
+        },
+        {
+            "ID": "DP",
+            "Number": "1",
+            "Type": "Integer",
+            "Description": "Total Depth"
+        },
+        {
+            "ID": "AF",
+            "Number": "A",
+            "Type": "Float",
+            "Description": "Allele Frequency"
+        },
+        {
+            "ID": "AA",
+            "Number": "1",
+            "Type": "String",
+            "Description": "Ancestral Allele"
+        },
+        {
+            "ID": "DB",
+            "Number": "0",
+            "Type": "Flag",
+            "Description": "dbSNP membership, build 129"
+        },
+        {
+            "ID": "H2",
+            "Number": "0",
+            "Type": "Flag",
+            "Description": "HapMap2 membership"
+        }
+    ],
+    "FILTER": [
+        {
+            "ID": "q10",
+            "Description": "Quality below 10"
+        },
+        {
+            "ID": "s50",
+            "Description": "Less than 50% of samples have data"
+        }
+    ],
+    "contig": [
+        {
+            "ID": "20",
+            "length": "62435964",
+            "assembly": "B36",
+            "md5": "f126cdf8a6e0c7f379d618ff66beb2da",
+            "species": "Homo sapiens",
+            "taxonomy": "x"
+        }
+    ],
+    "reference": [
+        "file:///seq/references/1000GenomesPilot-NCBI36.fasta"
+    ],
+    "GATKCommandLine": [],
+    "GVCFBlock": [],
+    "samples": [
+        {
+            "name": "Sample01",
+            "position": 10
+        },
+        {
+            "name": "Sample02",
+            "position": 11
+        },
+        {
+            "name": "Sample03",
+            "position": 12
+        }
+    ]
+}
