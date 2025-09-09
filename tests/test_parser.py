@@ -3,7 +3,7 @@ from vcfparser import VcfParser
 import expected_config as expected
 from vcfparser.record_parser import GenotypeProperty
 
-vcf_object = VcfParser("input_test.vcf")
+vcf_object = VcfParser("tests/testfiles/vcf_parser_input/reference_input_test.vcf")
 metainfo = vcf_object.parse_metadata()
 
 
@@ -49,30 +49,30 @@ def test_record():
 
 
 def test_vars_for_gt():
-    assert genotype_property.isMissing() == {'ms01e': './.', 'ms02g': './.', 'ms03g': './.'}
+    assert genotype_property.isMissing() == {'ms02g': './.', 'ms03g': './.'}  
     assert genotype_property.isHOMVAR() == {'ms04h': '1/1'}
     assert genotype_property.isHOMREF() == {'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0'}
-    assert genotype_property.isHETVAR() == {}
+    assert genotype_property.isHETVAR() == {'ms01e': '0/1'}
 
 
 def test_is_vars_for_iupac():
-    assert genotype_property.isMissing(tag='PG') == {'ms01e': './.', 'ms02g': './.', 'ms03g': './.'}
+    assert genotype_property.isMissing(tag='PG') == {'ms02g': './.', 'ms03g': './.'}  
     assert genotype_property.isHOMVAR(tag='PG', bases='iupac') == {'ms04h': 'A/A'}
     assert genotype_property.isHOMREF(tag='PG', bases='iupac') == {'MA611': 'G/G', 'MA605': 'G/G', 'MA622': 'G/G'}
-    assert genotype_property.isHETVAR(tag='PG', bases='iupac') == {}
+    assert genotype_property.isHETVAR(tag='PG', bases='iupac') == {'ms01e': 'G|A'}
 
 
 def test_has_allele():
-    assert genotype_property.hasAllele('0') == {'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0'}
-    assert genotype_property.hasAllele('1') == {'ms04h': '1/1'}
+    assert genotype_property.hasAllele('0') == {'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0', 'ms01e': '0/1'}  
+    assert genotype_property.hasAllele('1') == {'ms04h': '1/1', 'ms01e': '0/1'}
     assert genotype_property.hasAllele('2') == {}
 
 
 def test_has_variant():
-    assert genotype_property.hasVAR('0/0') == {'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0'}
-    assert genotype_property.hasVAR('0/1') == {}
+    assert genotype_property.hasVAR('0/0') == {'MA611': '0/0', 'MA605': '0/0', 'MA622': '0/0'}  
+    assert genotype_property.hasVAR('0/1') == {'ms01e': '0/1'}
     assert genotype_property.hasVAR('1/1') == {'ms04h': '1/1'}
 
 
 def test_missing_var():
-    assert genotype_property.hasnoVAR() == {'ms01e': './.', 'ms02g': './.', 'ms03g': './.'}
+    assert genotype_property.hasnoVAR() == {'ms02g': './.', 'ms03g': './.'}

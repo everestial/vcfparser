@@ -271,7 +271,7 @@ try:
     print("✅ Import successful")
     
     # Test the fixed iupac_to_numeric bug
-    vcf = VcfParser("input_test.vcf")
+    vcf = VcfParser("tests/testfiles/vcf_parser_input/reference_input_test.vcf")
     records = vcf.parse_records()
     first_record = next(records)
     

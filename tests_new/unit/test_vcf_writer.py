@@ -302,12 +302,12 @@ class TestVCFWriterFileHandling:
     """Test file handling aspects of VCFWriter."""
     
     def test_append_mode(self, temp_output_file):
-        """Test that VCFWriter opens files in append mode."""
+        """Test that VCFWriter can open files in append mode when specified."""
         # Write something first
         temp_output_file.write_text("Initial content\\n")
         
-        # Use VCFWriter
-        writer = VCFWriter(str(temp_output_file))
+        # Use VCFWriter with explicit append mode
+        writer = VCFWriter(str(temp_output_file), mode="a")
         writer.add_normal_metadata("test", "value")
         writer.w_file.close()
         
