@@ -108,3 +108,4 @@ venv.bak/
 
 # Local archive files (keep locally, don't push to remote)
 archive/
+uv.lock
