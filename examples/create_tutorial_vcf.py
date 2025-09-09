@@ -11,7 +11,7 @@ This script generates a comprehensive tutorial VCF file with:
 Usage:
     python create_tutorial_vcf.py
 
-The generated tutorial.vcf file is used by examples/advanced_tutorial.py
+The generated tutorial.vcf file is used by examples/advanced_usage.py
 """
 
 import re
@@ -126,7 +126,7 @@ def create_tutorial_vcf():
         print(f"  • FORMAT fields: {len(metadata.format_)}")
         
         print(f"\n🎯 Ready for advanced tutorial!")
-        print(f"Run: python examples/advanced_tutorial.py")
+        print(f"Run: python examples/advanced_usage.py")
         
     except ImportError:
         print(f"\n⚠️  Could not verify with vcfparser (not installed)")
