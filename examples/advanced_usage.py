@@ -13,7 +13,7 @@ The examples/data/tutorial.vcf file contains sanitized genomics data with:
 - Various types of variants (SNPs, INDELs, complex variants)
 
 Run this script from the vcfparser root directory:
-    python examples/advanced_tutorial.py
+    python examples/advanced_usage.py
 """
 
 import sys
